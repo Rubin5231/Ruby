@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxEdt xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns=""
+	i:type="AxEdtString">
+	<Name>RMarketStrategyId</Name>
+	<HelpText>Identification of the strategy</HelpText>
+	<Label>Strategy</Label>
+	<ReferenceTable>RMarketStrategy</ReferenceTable>
+	<ArrayElements />
+	<Relations />
+	<TableReferences>
+		<AxEdtTableReference>
+			<RelatedField>StrategyId</RelatedField>
+			<Table>RMarketStrategy</Table>
+		</AxEdtTableReference>
+	</TableReferences>
+	<StringSize>15</StringSize>
+</AxEdt>

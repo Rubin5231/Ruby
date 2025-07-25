@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketJobTest_Kline_Bybit</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+internal final class RMarketJobTest_Kline_Bybit
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>main</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Class entry point. The system will call this method when a designated menu
+    /// is selected or when execution starts and this class is set as the startup class.
+    /// </summary>
+    /// <param name = "_args">The specified arguments.</param>
+    public static void main(Args _args)
+    {
+        str responseStr = @'
+{
+  "retCode": 5,
+  "retMsg": "OK",
+  "result": {
+    "category": "spot",
+    "symbol": "BTCUSDT",
+    "list": [
+      [
+        "1749722400000",
+        "107506.9",
+        "107530.8",
+        "107219.4",
+        "107354.9",
+        "204.013062",
+        "21901864.05274471"
+      ],
+      [
+        "1749718800000",
+        "107731.2",
+        "107784",
+        "107495.8",
+        "107506.9",
+        "217.831905",
+        "23443660.8842308"
+      ],
+      [
+        "1749715200000",
+        "107627.3",
+        "107840.2",
+        "107428.8",
+        "107731.2",
+        "226.735273",
+        "24413627.45403742"
+      ]
+    ]
+  },
+  "retExtInfo": {},
+  "time": 1749724242696
+}
+';
+    
+RMarketJson_Bybit_Kline response = RMarketJsonSerializer::deserializeObject(
+                classNum(RMarketJson_Bybit_Kline),
+                responseStr) as RMarketJson_Bybit_Kline;
+
+// Вывод основных данных
+Info(strFmt('"retCode": %1, "retMsg": "%2", "time": %3',
+            response.parmRetCode(),
+            response.parmRetMsg(),
+            response.parmTime()));
+            
+RMarketJson_Bybit_Kline_Result result = response.parmResult();
+Info(strFmt('"category": "%1", "symbol": "%2"',
+            result.parmCategory(),
+            result.parmSymbol()));
+            
+// Обработка массива list как списка контейнеров
+List items = result.parmList();
+ListEnumerator enumerator = items.getEnumerator();
+int counter = 1;
+        
+while (enumerator.moveNext())
+{
+    container itemCon = enumerator.current();
+            
+    str openTime = conPeek(itemCon, 1);
+    str openPrice = conPeek(itemCon, 2);
+    str highPrice = conPeek(itemCon, 3);
+    str lowPrice = conPeek(itemCon, 4);
+    str closePrice = conPeek(itemCon, 5);
+    str volume = conPeek(itemCon, 6);
+    str turnover = conPeek(itemCon, 7);
+            
+    Info(strFmt("Item %1: [%2, %3, %4, %5, %6, %7, %8]",
+                counter,
+                openTime,
+                openPrice,
+                highPrice,
+                lowPrice,
+                closePrice,
+                volume,
+                turnover));
+                
+    counter++;
+}
+    }
+    // DataCollectionAttribute.itemType()
+    // FormJsonSerializer.deserializeObjectInternal()
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

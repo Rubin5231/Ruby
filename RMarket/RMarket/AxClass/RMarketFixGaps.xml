@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketFixGaps</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class RMarketFixGaps extends RunBaseBatch implements BatchRetryable
+{
+    protected RMarketId marketId;
+    protected RMarketSymbolId symbolId;
+    protected RMarketCandleInterval interval;
+    protected UtcDateTime dtFrom;
+    protected UtcDateTime dtTo;
+
+    protected DialogField dialogMarketId;
+    protected DialogField dialogSymbolId;
+    protected DialogField dialogInterval;
+    protected DialogField dialogFrom;
+    protected DialogField dialogTo;
+    
+    Common callerRecord;
+
+    #DEFINE.CurrentVersion(1)
+    
+    #LOCALMACRO.CurrentList
+        marketId,
+        symbolId,
+        interval,
+        dtFrom,
+        dtTo
+    #ENDMACRO
+    
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>dialog</Name>
+				<Source><![CDATA[
+    public Object dialog()
+    {
+        DialogRunbase       dialogRunbase = super();
+        ;
+        dialogMarketId = dialogRunbase.addFieldValue(extendedTypeStr(RMarketId), marketId, "Market");
+        dialogSymbolId = dialogRunbase.addFieldValue(extendedTypeStr(RMarketSymbolId), symbolId, "Symbol");
+        dialogInterval = dialogRunbase.addFieldValue(enumStr(RMarketCandleInterval), interval, "Interval");
+        dialogFrom = dialogRunbase.addFieldValue(extendedTypeStr(RMarketCandleDateTime), dtFrom, "From");
+        dialogTo = dialogRunbase.addFieldValue(extendedTypeStr(RMarketCandleDateTime), dtTo, "To");
+
+        if (callerRecord)
+        {
+            dialogMarketId.enabled(false);
+            dialogSymbolId.enabled(false);
+            dialogInterval.enabled(false);
+            dialogFrom.enabled(false);
+            dialogTo.enabled(false);
+        }
+        
+        return dialogRunbase;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getFromDialog</Name>
+				<Source><![CDATA[
+    public boolean getFromDialog()
+    {
+        ;
+        marketId = dialogMarketId.value();
+        symbolId = dialogSymbolId.value();
+        interval = dialogInterval.value();
+        dtFrom = dialogFrom.value();
+        dtTo = dialogTo.value();
+        
+        return super();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmMarketId</Name>
+				<Source><![CDATA[
+    public RMarketId parmMarketId(RMarketId _marketId = marketId)
+    {
+        marketId = _marketId;
+        return marketId;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmSymbolId</Name>
+				<Source><![CDATA[
+    public RMarketSymbolId parmSymbolId(RMarketSymbolId _symbolId = symbolId)
+    {
+        symbolId = _symbolId;
+        return symbolId;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmInterval</Name>
+				<Source><![CDATA[
+    public RMarketCandleInterval parmInterval(RMarketCandleInterval _interval = interval)
+    {
+        interval = _interval;
+        return interval;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmDtFrom</Name>
+				<Source><![CDATA[
+    public UtcDateTime parmDtFrom(UtcDateTime _dtFrom = dtFrom)
+    {
+        dtFrom = _dtFrom;
+        return dtFrom;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmDtTo</Name>
+				<Source><![CDATA[
+    public UtcDateTime parmDtTo(UtcDateTime _dtTo = dtTo)
+    {
+        dtTo = _dtTo;
+        return dtTo;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmCallerRecord</Name>
+				<Source><![CDATA[
+    public Common parmCallerRecord(Common _callerRecord = callerRecord)
+    {
+        callerRecord = _callerRecord;
+        return callerRecord;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>pack</Name>
+				<Source><![CDATA[
+    public container pack()
+    {
+        return [#CurrentVersion, #CurrentList];
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>unpack</Name>
+				<Source><![CDATA[
+    public boolean unpack(container _packedClass)
+    {
+        if (!this.isInBatch())
+            return false;
+
+        Version    version = RunBase::getVersion(_packedClass);
+        switch (version)
+        {
+            case #CurrentVersion:
+                [version,#CurrentList] = _packedClass;
+                break;
+            default:
+                return false;
+        }
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>run</Name>
+				<Source><![CDATA[
+    public void run()
+    {
+        if (! this.validate())
+        {
+            throw error("Validation error");
+        }
+        
+        this.doRun();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>doRun</Name>
+				<Source><![CDATA[
+    protected void doRun()
+    {
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>canRunInNewSession</Name>
+				<Source><![CDATA[
+    public boolean canRunInNewSession()
+    {
+        return false;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>canGoBatch</Name>
+				<Source><![CDATA[
+    public boolean canGoBatch()
+    {
+        return false;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>isRetryable</Name>
+				<Source><![CDATA[
+    public boolean isRetryable()
+    {
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>construct</Name>
+				<Source><![CDATA[
+    public static RMarketFixGaps construct()
+    {
+        return new RMarketFixGaps();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>constructArgs</Name>
+				<Source><![CDATA[
+    public static RMarketFixGaps constructArgs(Args _args)
+    {
+        RMarketFixGaps    runObject;
+        RMarketCandleGapsView   candleGapsView;
+
+        
+        
+        switch (_args.dataset())
+        {
+            case tablenum(RMarketCandleGapsView):
+                switch (_args.parmEnum())
+                {
+                    case RMarketFixGapsEnum::Download:
+                        runObject = new RMarketFixGapsCandlesDownload();
+                        break;
+                    case RMarketFixGapsEnum::Calc:
+                        runObject = new RMarketFixGapsCandlesCalc();
+                        break;
+                    default:
+                        throw error(Error::wrongUseOfFunction(funcname()));
+                }
+                candleGapsView = _args.record();
+                runObject.parmCallerRecord(_args.record());
+                runObject.parmMarketId(candleGapsView.MarketId);
+                runObject.parmSymbolId(candleGapsView.SymbolId);
+                runObject.parmInterval(candleGapsView.Interval);
+                runObject.parmDtFrom(candleGapsView.GapStartDateTime);
+                runObject.parmDtTo(candleGapsView.GapEndDateTime);
+                break;
+            default:
+                throw error(Error::missingRecord(funcname()));
+        }
+
+        return runObject;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>description</Name>
+				<Source><![CDATA[
+    static ClassDescription description()
+    {
+        return "Fix gaps";
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>main</Name>
+				<Source><![CDATA[
+    public static void main(Args _args)
+    {
+        RMarketFixGaps runObject = RMarketFixGaps::constructArgs(_args);
+        ;
+
+        if (runObject.prompt())
+        {
+            //runObject.runOperation();
+            runObject.run();
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

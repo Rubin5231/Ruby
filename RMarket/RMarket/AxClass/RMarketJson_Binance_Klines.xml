@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketJson_Binance_Klines</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[DataContract]
+public class RMarketJson_Binance_Klines
+{
+    private List list;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmList</Name>
+				<Source><![CDATA[
+    [DataMember('list'), DataCollectionAttribute(Types::Container)]
+    public List parmList(List _list = list)
+    {
+        list = _list;
+        return list;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getKlineList</Name>
+				<Source><![CDATA[
+    public List getKlineList()
+    {
+        List retList = new List(Types::Container);
+        int64 timestamp, dummyInt;
+        str dummyStr;
+        str open;
+        str high;
+        str low;
+        str close;
+        str volume;
+        str turnover;
+
+        if (list)
+        {
+            ListEnumerator listEnum = list.getEnumerator();
+
+            while (listEnum.moveNext())
+            {
+                [timestamp, open, high, low, close, volume, dummyInt, turnover, dummyInt, dummyStr, dummyStr, dummyStr] = listEnum.current();
+                retList.addEnd([
+                    timestamp div 1000,
+                    str2Num(open),
+                    str2Num(high),
+                    str2Num(low),
+                    str2Num(close),
+                    str2Num(volume),
+                    str2Num(turnover)]);
+            }
+        }
+        return retList;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

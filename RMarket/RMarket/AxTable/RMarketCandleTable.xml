@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxTable xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketCandleTable</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class RMarketCandleTable extends common
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>initFromKlineContainer</Name>
+				<Source><![CDATA[
+    public void initFromKlineContainer(container _con)
+    {
+        [this.Timestamp,
+            this.Open,
+            this.High,
+            this.Low,
+            this.Close,
+            this.Volume,
+            this.Turnover] = _con;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getValue</Name>
+				<Source><![CDATA[
+    public real getValue(RMarketIndicatorBaseEnum _baseEnum = RMarketIndicatorBaseEnum::Close)
+    {
+        real ret;
+        switch (_baseEnum)
+        {
+            case RMarketIndicatorBaseEnum::Open:      ret = this.Open; break;
+            case RMarketIndicatorBaseEnum::Close:     ret = this.Close; break;
+            case RMarketIndicatorBaseEnum::High:      ret = this.High; break;
+            case RMarketIndicatorBaseEnum::Low:       ret = this.Low; break;
+            case RMarketIndicatorBaseEnum::Volume:    ret = this.Volume; break;
+            case RMarketIndicatorBaseEnum::Turnover:  ret = this.Turnover; break;
+            case RMarketIndicatorBaseEnum::HLC3:      ret = (this.High + this.Low + this.Close) / 3; break; //Typical Price (TP)
+            case RMarketIndicatorBaseEnum::HL2:       ret = (this.High + this.Low) / 2; break; //Median Price (MP)
+            case RMarketIndicatorBaseEnum::HLCC4:     ret = (this.High + this.Low + 2 * this.Close) / 4; break; //Weighted Close (WC)
+            case RMarketIndicatorBaseEnum::Body:      ret = abs(this.Close - this.Open); break; // Body Size (AbsBody)
+            case RMarketIndicatorBaseEnum::BodyPct:   ret = (this.High == this.Low) ? 0 : 100 * abs(this.Close - this.Open) / (this.High - this.Low); break;
+            /*
+            case RMarketIndicatorBaseEnum:::  ret = this.Volume; break;
+            case RMarketIndicatorBaseEnum::Volume:  ret = this.Volume; break;
+            case RMarketIndicatorBaseEnum::Volume:  ret = this.Volume; break;
+            case RMarketIndicatorBaseEnum::Volume:  ret = this.Volume; break;
+            case RMarketIndicatorBaseEnum::Volume:  ret = this.Volume; break;
+
+                Upper Shadow Size (UpperShadow)
+
+                Формула: UpperShadow = H - MAX(O, C)
+
+                Описание: Размер верхней тени (фитиля). Показывает отвержение ценой уровней выше тела.
+
+                Lower Shadow Size (LowerShadow)
+
+                Формула: LowerShadow = MIN(O, C) - L
+
+                Описание: Размер нижней тени (фитиля). Показывает отвержение ценой уровней ниже тела.
+
+                Shadow Percent (Upper/Lower ShadowPct)
+
+                Формула (Upper): UpperShadowPct = (H - MAX(O, C)) / (H - L) * 100%
+
+                Формула (Lower): LowerShadowPct = (MIN(O, C) - L) / (H - L) * 100%
+
+                Описание: Процентное соотношение размера соответствующей тени к общему диапазону свечи. Анализ формы свечи.
+
+                Close - Open (C-O)
+
+                Формула: C - O
+
+                Описание: Разница между закрытием и открытием. Прямое представление направления и "силы" свечи (положительное для бычьей, отрицательное для медвежьей). Основа для Momentum, Rate of Change (ROC) за 1 период.
+
+                True Range (TR)
+
+                Формула: TR = MAX( H - L, |H - Cp|, |L - Cp| ) где Cp - Close предыдущей свечи.
+
+                Описание: Мера волатильности, учитывающая гэпы. Абсолютно необходим для ATR, SuperTrend, Keltner Channels, волатильностного стоп-лосса.
+
+                Heikin-Ashi Close (HA Close)
+
+                Формула: HA_Close = (O + H + L + C) / 4
+
+                Описание: Цена закрытия свечи в стиле Хейкин-Аши. Основа всех индикаторов, построенных на модифицированных свечах Хейкин-Аши (HA Open, HA High, HA Low также рассчитываются специфически).
+
+                VWAP (Volume Weighted Average Price)
+
+                Формула (за период): VWAP = Σ(P_i * V_i) / ΣV_i где P_i - цена сделки, V_i - объем сделки (внутри периода).
+
+                Описание: Средняя цена, взвешенная по объему. Рассчитывается нарастающим итогом в течение торговой сессии (или выбранного периода). Строго говоря, это индикатор, а не базовое значение одной свечи, но он ОЧЕНЬ часто выступает как база для анализа (отклонения от VWAP) и построения других индикаторов (VWAP Bands).
+
+                Ключевые моменты:
+
+                OHLCV: Открытие, High, Low, Закрытие, Объем - это первичные базовые данные.
+
+                Производные: Все остальные значения в списке (кроме OHLCV) - это производные, рассчитанные на основе первичных OHLC(V) одной или нескольких свечей.
+
+                Индикаторы: Эти базовые/производные значения являются строительными блоками для технических индикаторов. Например:
+
+                RSI = F(N-period AvgGain / N-period AvgLoss) на основе C - C_prev.
+
+                MACD = F(EMA(C, 12) - EMA(C, 26)).
+
+                Bollinger Bands = SMA(C, 20) ± (2 * StdDev(C, 20)).
+
+                ATR = SMA(TR, N).
+
+                Контекст: Выбор базового значения зависит от логики индикатора и того, какой аспект цены/объема он пытается уловить (направление, волатильность, силу закрытия, среднюю цену с учетом объема и т.д.).
+
+                Этот список покрывает подавляющее большинство базовых значений, используемых в распространенных индикаторах технического анализа.
+            */
+
+            default:                                ret = this.Close;
+        }
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>find</Name>
+				<Source><![CDATA[
+    public static RMarketCandleTable find(RefRecId         _dimRecId,
+                                          RMarketTimestamp _timestamp,
+                                          boolean          _forUpdate = false)
+    {
+        RMarketCandleTable marketCandleTable;
+        ;
+        if (_dimRecId && _timestamp)
+        {
+            marketCandleTable.selectForUpdate(_forUpdate);
+            
+            select firstonly marketCandleTable
+                where marketCandleTable.DimRecId     == _dimRecId
+                   && marketCandleTable.Timestamp    == _timestamp;
+        }
+        
+        return marketCandleTable;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>createArtificial</Name>
+				<Source><![CDATA[
+    public static RMarketCandleTable createArtificial(RMarketTimestamp _timestamp, real _lastClose)
+    {
+        RMarketCandleTable artificial;
+        artificial.clear();
+        artificial.initValue();
+        artificial.Timestamp = _timestamp;
+        artificial.Open = _lastClose;
+        artificial.High = _lastClose;
+        artificial.Low = _lastClose;
+        artificial.Close = _lastClose;
+        artificial.Volume = 0;
+        artificial.Turnover = 0;
+        return artificial;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+	<Label>Candles</Label>
+	<TableGroup>Group</TableGroup>
+	<TitleField1>DimRecId</TitleField1>
+	<TitleField2>Timestamp</TitleField2>
+	<CacheLookup>Found</CacheLookup>
+	<ClusteredIndex>MainIdx</ClusteredIndex>
+	<PrimaryIndex>MainIdx</PrimaryIndex>
+	<DeleteActions />
+	<FieldGroups>
+		<AxTableFieldGroup>
+			<Name>AutoReport</Name>
+			<IsManuallyUpdated>Yes</IsManuallyUpdated>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoLookup</Name>
+			<IsManuallyUpdated>Yes</IsManuallyUpdated>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoIdentification</Name>
+			<AutoPopulate>Yes</AutoPopulate>
+			<IsManuallyUpdated>Yes</IsManuallyUpdated>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoSummary</Name>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoBrowse</Name>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>Overview</Name>
+			<Label>Overview</Label>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>Timestamp</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Open</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>High</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Low</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Close</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Volume</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Turnover</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+	</FieldGroups>
+	<Fields>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldInt64">
+			<Name>DimRecId</Name>
+			<ExtendedDataType>RMarketDimRecId</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+			<Mandatory>Yes</Mandatory>
+			<RelationContext>RMarketDim</RelationContext>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldInt64">
+			<Name>Timestamp</Name>
+			<ExtendedDataType>RMarketTimestamp</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldReal">
+			<Name>Open</Name>
+			<ExtendedDataType>RMarketCandleOpen</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldReal">
+			<Name>High</Name>
+			<ExtendedDataType>RMarketCandleHigh</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldReal">
+			<Name>Low</Name>
+			<ExtendedDataType>RMarketCandleLow</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldReal">
+			<Name>Close</Name>
+			<ExtendedDataType>RMarketCandleClose</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldReal">
+			<Name>Volume</Name>
+			<ExtendedDataType>RMarketCandleVolume</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldReal">
+			<Name>Turnover</Name>
+			<ExtendedDataType>RMarketCandleTurnover</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+		</AxTableField>
+	</Fields>
+	<FullTextIndexes />
+	<Indexes>
+		<AxTableIndex>
+			<Name>MainIdx</Name>
+			<Fields>
+				<AxTableIndexField>
+					<DataField>DimRecId</DataField>
+				</AxTableIndexField>
+				<AxTableIndexField>
+					<DataField>Timestamp</DataField>
+				</AxTableIndexField>
+			</Fields>
+		</AxTableIndex>
+		<AxTableIndex>
+			<Name>DimRecIdIdx</Name>
+			<AllowDuplicates>Yes</AllowDuplicates>
+			<Fields>
+				<AxTableIndexField>
+					<DataField>DimRecId</DataField>
+				</AxTableIndexField>
+			</Fields>
+		</AxTableIndex>
+	</Indexes>
+	<Mappings />
+	<Relations>
+		<AxTableRelation>
+			<Name>RMarketTimestampTable</Name>
+			<RelatedTable>RMarketTimestampTable</RelatedTable>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>Timestamp</Name>
+					<Field>Timestamp</Field>
+					<RelatedField>Timestamp</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+		<AxTableRelation>
+			<Name>RMarketDim</Name>
+			<RelatedTable>RMarketDim</RelatedTable>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>DimRecId</Name>
+					<Field>DimRecId</Field>
+					<RelatedField>RecId</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+	</Relations>
+	<StateMachines />
+</AxTable>

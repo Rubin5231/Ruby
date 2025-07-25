@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxTable xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketEventLog</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class RMarketEventLog extends common
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>findRecId</Name>
+				<Source><![CDATA[
+    public static RMarketEventLog findRecId(RecId    _recId,
+                                            boolean  _forUpdate = false)
+    {
+        RMarketEventLog log;
+        ;
+        if (_recId)
+        {
+            log.selectForUpdate(_forUpdate);
+            
+            select firstonly log
+                where log.RecId  == _recId;
+        }
+        
+        return log;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>putRecord</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Usage:
+    /// RMarketEventLog::putRecord(AccountId, SubaccountId, RMarketLogLevel::Info, RMarketEventType::ErrorOccurred, 
+    ///     "");
+    /// </summary>
+    public static void putRecord(
+        RMarketAccountId    _accountId    = "",
+        RMarketSubAccountId _subAccountId = "",
+        RMarketLogLevel     _logLevel     = RMarketLogLevel::None,
+        RMarketEventType    _eventType    = RMarketEventType::ErrorOccurred,
+        Description255      _description  = "")
+    {
+        RMarketEventLog log;
+        ttsbegin;
+        log.clear();
+        log.initValue();
+        log.AccountId = _accountId;
+        log.SubAccountId = _subAccountId;
+        log.LogLevel = _logLevel;
+        log.EventType = _eventType;
+        log.Description = _description;
+        if (log.validateWrite())
+            log.insert();
+        ttscommit;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+	<Label>Market events log</Label>
+	<TableGroup>Group</TableGroup>
+	<TitleField1>RecId</TitleField1>
+	<CacheLookup>Found</CacheLookup>
+	<ClusteredIndex>MainIdx</ClusteredIndex>
+	<CreatedBy>Yes</CreatedBy>
+	<CreatedDateTime>Yes</CreatedDateTime>
+	<ModifiedBy>Yes</ModifiedBy>
+	<ModifiedDateTime>Yes</ModifiedDateTime>
+	<DeleteActions />
+	<FieldGroups>
+		<AxTableFieldGroup>
+			<Name>AutoReport</Name>
+			<IsManuallyUpdated>Yes</IsManuallyUpdated>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoLookup</Name>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoIdentification</Name>
+			<AutoPopulate>Yes</AutoPopulate>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoSummary</Name>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoBrowse</Name>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>Overview</Name>
+			<Label>Overview</Label>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>LogLevel</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>SubAccountId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>CreatedDateTime</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Description</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+	</FieldGroups>
+	<Fields>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>AccountId</Name>
+			<ExtendedDataType>RMarketAccountId</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>SubAccountId</Name>
+			<ExtendedDataType>RMarketSubAccountId</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>LogLevel</Name>
+			<EnumType>RMarketLogLevel</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>EventType</Name>
+			<EnumType>RMarketEventType</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>Description</Name>
+			<ExtendedDataType>Description255</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+		</AxTableField>
+	</Fields>
+	<FullTextIndexes />
+	<Indexes>
+		<AxTableIndex>
+			<Name>MainIdx</Name>
+			<AllowDuplicates>Yes</AllowDuplicates>
+			<Fields>
+				<AxTableIndexField>
+					<DataField>CreatedDateTime</DataField>
+				</AxTableIndexField>
+				<AxTableIndexField>
+					<DataField>AccountId</DataField>
+				</AxTableIndexField>
+				<AxTableIndexField>
+					<DataField>SubAccountId</DataField>
+				</AxTableIndexField>
+				<AxTableIndexField>
+					<DataField>LogLevel</DataField>
+				</AxTableIndexField>
+				<AxTableIndexField>
+					<DataField>EventType</DataField>
+				</AxTableIndexField>
+			</Fields>
+		</AxTableIndex>
+	</Indexes>
+	<Mappings />
+	<Relations>
+		<AxTableRelation>
+			<Name>RMarketSubAccount</Name>
+			<RelatedTable>RMarketSubAccount</RelatedTable>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>SubAccountId</Name>
+					<Field>SubAccountId</Field>
+					<RelatedField>SubAccountId</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+	</Relations>
+	<StateMachines />
+</AxTable>

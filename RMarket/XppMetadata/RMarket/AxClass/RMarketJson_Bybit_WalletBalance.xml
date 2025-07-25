@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<z:anyType xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns=""
+	i:type="AxCompilerMetadata" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/">
+	<Extends>RMarketJson_Bybit_Response</Extends>
+	<IsPublic>true</IsPublic>
+	<Attributes>
+		<AxAttribute>
+			<Name>DataContractAttribute</Name>
+			<Parameters />
+		</AxAttribute>
+	</Attributes>
+	<Members>
+		<AxClassMemberVariable>
+			<Tags></Tags>
+			<Type>Class</Type>
+			<TypeName>RMarketJson_Bybit_WalletBalance_Result</TypeName>
+			<Name>result</Name>
+			<Attributes />
+			<Visibility>Private</Visibility>
+		</AxClassMemberVariable>
+	</Members>
+	<Methods>
+		<Method>
+			<Name>parmResult</Name>
+			<Visibility>Public</Visibility>
+			<Attributes>
+				<AxAttribute>
+					<Name>DataMemberAttribute</Name>
+					<Parameters>
+						<AxAttributeParameter>
+							<TypeValue>'result'</TypeValue>
+							<AdditionalData />
+						</AxAttributeParameter>
+					</Parameters>
+				</AxAttribute>
+			</Attributes>
+			<Parameters>
+				<AxMethodParameter>
+					<Tags></Tags>
+					<Type>Class</Type>
+					<TypeName>RMarketJson_Bybit_WalletBalance_Result</TypeName>
+					<DefaultValue>result</DefaultValue>
+					<Name>_result</Name>
+				</AxMethodParameter>
+			</Parameters>
+			<ReturnType>
+				<Tags></Tags>
+				<Type>Class</Type>
+				<TypeName>RMarketJson_Bybit_WalletBalance_Result</TypeName>
+			</ReturnType>
+		</Method>
+		<Method>
+			<Name>getAccountBalances</Name>
+			<Visibility>Public</Visibility>
+			<ReturnType>
+				<Tags></Tags>
+				<Type>Class</Type>
+				<TypeName>Map</TypeName>
+			</ReturnType>
+		</Method>
+	</Methods>
+</z:anyType>

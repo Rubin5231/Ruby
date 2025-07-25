@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketJson_Bybit_Time_Result</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[DataContract]
+public class RMarketJson_Bybit_Time_Result
+{
+    private int64 timeSecond;
+    private int64 timeNano;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmTimeSecond</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает серверное время </summary>
+    /// <param name="_serverTime"> Время сервера в секундах </param>
+    /// <returns> Время сервера в секундах </returns>
+    [DataMember('timeSecond')]
+    public int64 parmTimeSecond(int64 _timeSecond = timeSecond)
+    {
+        timeSecond = _timeSecond;
+        return timeSecond;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmTimeNano</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает серверное время </summary>
+    /// <param name="_serverTime"> Время сервера в наносекундах </param>
+    /// <returns> Время сервера в наносекундах </returns>
+    [DataMember('timeNano')]
+    public int64 parmTimeNano(int64 _timeNano = timeNano)
+    {
+        timeNano = _timeNano;
+        return timeNano;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

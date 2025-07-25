@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<z:anyType xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns=""
+	i:type="AxCompilerMetadata" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/">
+	<IsPublic>true</IsPublic>
+	<Attributes>
+		<AxAttribute>
+			<Name>DataContract</Name>
+			<Parameters />
+		</AxAttribute>
+	</Attributes>
+	<Members>
+		<AxClassMemberVariable>
+			<Tags></Tags>
+			<Type>Class</Type>
+			<TypeName>List</TypeName>
+			<Name>list</Name>
+			<Attributes />
+			<Visibility>Private</Visibility>
+		</AxClassMemberVariable>
+	</Members>
+	<Methods>
+		<Method>
+			<Name>parmList</Name>
+			<Visibility>Public</Visibility>
+			<Attributes>
+				<AxAttribute>
+					<Name>DataMember</Name>
+					<Parameters>
+						<AxAttributeParameter>
+							<TypeValue>'list'</TypeValue>
+							<AdditionalData />
+						</AxAttributeParameter>
+					</Parameters>
+				</AxAttribute>
+				<AxAttribute>
+					<Name>DataCollectionAttribute</Name>
+					<Parameters>
+						<AxAttributeParameter>
+							<Type>Enum</Type>
+							<TypeValue>Types</TypeValue>
+							<AdditionalData>
+								<AxAttributeParameter>
+									<TypeValue>Class</TypeValue>
+									<AdditionalData />
+								</AxAttributeParameter>
+							</AdditionalData>
+						</AxAttributeParameter>
+						<AxAttributeParameter>
+							<Type>Intrinsic</Type>
+							<TypeValue>classStr</TypeValue>
+							<AdditionalData>
+								<AxAttributeParameter>
+									<TypeValue>RMarketJson_Binance_TradeList_Item</TypeValue>
+									<AdditionalData />
+								</AxAttributeParameter>
+								<AxAttributeParameter>
+									<AdditionalData />
+								</AxAttributeParameter>
+								<AxAttributeParameter>
+									<AdditionalData />
+								</AxAttributeParameter>
+							</AdditionalData>
+						</AxAttributeParameter>
+					</Parameters>
+				</AxAttribute>
+			</Attributes>
+			<Parameters>
+				<AxMethodParameter>
+					<Tags></Tags>
+					<Type>Class</Type>
+					<TypeName>List</TypeName>
+					<DefaultValue>list</DefaultValue>
+					<Name>_list</Name>
+				</AxMethodParameter>
+			</Parameters>
+			<ReturnType>
+				<Tags></Tags>
+				<Type>Class</Type>
+				<TypeName>List</TypeName>
+			</ReturnType>
+		</Method>
+	</Methods>
+</z:anyType>

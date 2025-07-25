@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketFixGapsCandlesCalc</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class RMarketFixGapsCandlesCalc extends RMarketFixGaps
+{
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>doRun</Name>
+				<Source><![CDATA[
+        protected void doRun()
+    {
+        if (interval == RMarketCandleInterval::m1)
+            this.calc_m1();
+        else
+            this.calcFrom_m1();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>calc_m1</Name>
+				<Source><![CDATA[
+    protected void calc_m1()
+    {
+        RMarketDim dim = RMarketDim::findOrCreateDims(marketId, symbolId, interval);
+
+        RMarketTimestamp fromTS = RMarketUtil::dateTime2Timestamp(dtFrom);
+        RMarketTimestamp toTS = RMarketUtil::dateTime2Timestamp(dtTo);
+        RMarketTimestamp curTS;
+
+        RMarketCandleTable candlePrev = RMarketCandleTable::find(dim.RecId, fromTS - dim.Seconds);
+        RMarketCandleTable candle;
+
+        RecordInsertList list = new RecordInsertList(tableNum(RMarketCandleTable));
+        
+        for (curTS = fromTS; curTS < toTS; curTS += dim.Seconds)
+        {
+            candle.clear();
+            candle.Timestamp = curTS;
+            candle.DimRecId = dim.RecId;
+            candle.initFromKlineContainer([curTS, candlePrev.Close, candlePrev.Close, candlePrev.Close, candlePrev.Close, 0.0, 0.0]);
+            list.add(candle);
+        }
+
+        list.insertDatabase();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>calcFrom_m1</Name>
+				<Source><![CDATA[
+    protected void calcFrom_m1()
+    {
+        RMarketDim dim   = RMarketDim::findOrCreateDims(marketId, symbolId, interval);
+        RMarketDim dim60 = RMarketDim::findOrCreateDims(marketId, symbolId, RMarketCandleInterval::m1);
+
+        RMarketTimestamp fromTS = RMarketUtil::dateTime2Timestamp(dtFrom);
+        RMarketTimestamp toTS = RMarketUtil::dateTime2Timestamp(dtTo);
+        RMarketTimestamp curTS;
+
+        RMarketCandleTable candleFull, candleOpen, candleClose;
+        RMarketCandleTable candle;
+
+        RecordInsertList list = new RecordInsertList(tableNum(RMarketCandleTable));
+
+        for (curTS = fromTS; curTS < toTS; curTS += dim.Seconds)
+        {
+            select firstonly candleOpen
+                        where candleOpen.DimRecId == dim60.RecId
+                           && candleOpen.Timestamp == curTS;
+            select firstOnly candleClose
+                        where candleClose.DimRecId == dim60.RecId
+                           && candleClose.Timestamp == curTS + dim.Seconds - dim60.Seconds;
+            select firstonly minof(Low), maxof(High), sum(Volume), sum(Turnover), count(RecId) from candleFull
+                        group by candleFull.DimRecId
+                        where candleFull.DimRecId == dim60.RecId
+                           && candleFull.Timestamp >= curTS
+                           && candleFull.Timestamp <  curTS + dim.Seconds;
+
+            if (candleFull.RecId * dim60.Seconds != dim.Seconds)
+                throw Error(strFmt("There isn't enough minute candles: %1 - %2", curTS, curTS + dim.Seconds));
+
+            candle.clear();
+            candle.Timestamp = curTS;
+            candle.DimRecId = dim.RecId;
+            candle.initFromKlineContainer([curTS,
+                        candleOpen.Open,
+                        candleFull.High,
+                        candleFull.Low,
+                        candleClose.Close,
+                        candleFull.Volume,
+                        candleFull.Turnover]);
+            list.add(candle);
+        }
+
+        list.insertDatabase();
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

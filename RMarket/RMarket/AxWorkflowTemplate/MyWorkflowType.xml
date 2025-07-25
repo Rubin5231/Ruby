@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxWorkflowTemplate xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="Microsoft.Dynamics.AX.Metadata.V2">
+	<Name>MyWorkflowType</Name>
+	<CancelMenuItem>MyWorkflowTypeCancelMenuItem</CancelMenuItem>
+	<CanceledEventHandler>MyWorkflowTypeEventHandler</CanceledEventHandler>
+	<Category>MyWorkflowCategory</Category>
+	<CompletedEventHandler>MyWorkflowTypeEventHandler</CompletedEventHandler>
+	<Document>MyWorkflowTypeDocument</Document>
+	<DocumentMenuItem>MyWorkflowTableForm</DocumentMenuItem>
+	<HelpText>Help text for the MyWorkflowType workflow type element'</HelpText>
+	<Label>My workflow type</Label>
+	<StartedEventHandler>MyWorkflowTypeEventHandler</StartedEventHandler>
+	<SubmitToWorkflowMenuItem>MyWorkflowTypeSubmitMenuItem</SubmitToWorkflowMenuItem>
+	<LineItemWorkflows />
+	<SupportedElements>
+		<AxWorkflowElementReference xmlns="">
+			<Name>MyWorkflowApproval</Name>
+			<ElementName>MyWorkflowApproval</ElementName>
+		</AxWorkflowElementReference>
+	</SupportedElements>
+</AxWorkflowTemplate>

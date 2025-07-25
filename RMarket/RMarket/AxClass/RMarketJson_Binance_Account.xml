@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketJson_Binance_Account</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[DataContract]
+public class RMarketJson_Binance_Account
+{
+    // GET /api/v3/account
+
+    private int makerCommission;
+    private int takerCommission;
+    private int buyerCommission;
+    private int sellerCommission;
+    private boolean canTrade;
+    private boolean canWithdraw;
+    private boolean canDeposit;
+    private int64 updateTime;
+    private str accountType;
+    private List balances;
+    private List permissions;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmMakerCommission</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Получает или устанавливает комиссию мейкера
+    /// </summary>
+    /// <param name="_makerCommission">
+    /// Комиссия мейкера (в базовых пунктах)
+    /// </param>
+    /// <returns>
+    /// Комиссия мейкера
+    /// </returns>
+    [DataMember('makerCommission')]
+    public int parmMakerCommission(int _makerCommission = makerCommission)
+    {
+        makerCommission = _makerCommission;
+        return makerCommission;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmTakerCommission</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Получает или устанавливает комиссию тейкера
+    /// </summary>
+    /// <param name="_takerCommission">
+    /// Комиссия тейкера (в базовых пунктах)
+    /// </param>
+    /// <returns>
+    /// Комиссия тейкера
+    /// </returns>
+    [DataMember('takerCommission')]
+    public int parmTakerCommission(int _takerCommission = takerCommission)
+    {
+        takerCommission = _takerCommission;
+        return takerCommission;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmBalances</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Получает или устанавливает список балансов
+    /// </summary>
+    /// <param name="_balances">
+    /// Список объектов с балансами активов
+    /// </param>
+    /// <returns>
+    /// Список балансов
+    /// </returns>
+    [DataMember('balances'), DataCollectionAttribute(Types::Class, classStr(RMarketJson_Binance_Account_Balance))]
+    public List parmBalances(List _balances = balances)
+    {
+        balances = _balances;
+        return balances;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmUpdateTime</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Получает или устанавливает время обновления
+    /// </summary>
+    /// <param name="_updateTime">
+    /// Время последнего обновления в миллисекундах
+    /// </param>
+    /// <returns>
+    /// Время обновления
+    /// </returns>
+    [DataMember('updateTime')]
+    public int64 parmUpdateTime(int64 _updateTime = updateTime)
+    {
+        updateTime = _updateTime;
+        return updateTime;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getBalance</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Извлекает баланс по указанной валюте
+    /// </summary>
+    /// <param name="_currency">
+    /// Код валюты (например, "BTC")
+    /// </param>
+    /// <returns>
+    /// Контейнер с балансами [free, locked]
+    /// </returns>
+    public container getBalance(CurrencyCode _currency)
+    {
+        if (balances && balances.elements() > 0)
+        {
+            ListEnumerator enumerator = balances.getEnumerator();
+            while (enumerator.moveNext())
+            {
+                RMarketJson_Binance_Account_Balance balance = enumerator.current();
+                if (balance.parmAsset() == _currency)
+                {
+                    return [balance.parmFree(), balance.parmLocked()];
+                }
+            }
+        }
+        return [0.0, 0.0];
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getTotalBalance</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Получает общий баланс (free + locked) по валюте
+    /// </summary>
+    /// <param name="_currency">
+    /// Код валюты
+    /// </param>
+    /// <returns>
+    /// Общий баланс
+    /// </returns>
+    public real getTotalBalance(CurrencyCode _currency)
+    {
+        container balance = this.getBalance(_currency);
+        return conPeek(balance, 1) + conPeek(balance, 2);
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

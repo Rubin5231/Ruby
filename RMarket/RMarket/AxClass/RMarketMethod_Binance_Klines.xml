@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketMethod_Binance_Klines</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Получение свечных данных Binance
+/// https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#klinecandlestick-data
+/// Usage:
+/// RMarketMethod_Binance_Klines apiMethod = new RMarketMethod_Binance_Klines();
+/// apiMethod.parmBaseUrl('https://api.binance.com');
+/// apiMethod.initParameters('BTCUSDT', '4h', 1000);
+/// apiMethod.initPeriod(1499040000000, 1499100999000);
+/// apiMethod.execute();
+/// List listCon = apiMethod.getKlineList();
+/// </summary>
+public class RMarketMethod_Binance_Klines extends RMarketMethod implements RMarketMethodInterface_Klines
+{
+    protected RMarketJson_Binance_Klines responseContract;
+
+    protected str symbol;
+    protected str interval;
+    protected int limit;
+    protected RMarketTimestamp fromTS;
+    protected RMarketTimestamp toTS;
+    
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>new</Name>
+				<Source><![CDATA[
+    /// <summary> Конструктор класса </summary>
+    public void new()
+    {
+        apiClient = new RMarketApiClientBinance();
+        apiClient.parmHttpMethod(RMarketAPIHttpMethod::GET);
+        apiClient.parmMethodUrl('/api/v3/klines');
+
+        // Do this before execute()
+        //apiClient.setBaseUrl('');
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>initParameters</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Устанавливает основные параметры запроса
+    /// </summary>
+    /// <param name="_symbol">Торговая пара</param>
+    /// <param name="_interval">Интервал свечи</param>
+    /// <param name="_limit">Количество свечей</param>
+    /// <param name="_category">Категория (spot, linear, inverse)</param>
+    public void initParameters(str _symbol, str _interval, str _category = 'spot', int _limit = 1000)
+    {
+        symbol = _symbol;
+        interval = _interval;
+        limit = _limit;
+
+        apiClient.addQueryParam('symbol', symbol);
+        apiClient.addQueryParam('interval', interval);
+        apiClient.addQueryParam('limit', int2Str(limit));
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>initPeriod</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Устанавливает период запроса
+    /// </summary>
+    /// <param name="_fromTSms">Начало периода</param>
+    /// <param name="_toTSms">Окончание периода</param>
+    public void initPeriod(RMarketTimestamp _fromTSms, RMarketTimestamp _toTSms)
+    {
+        fromTS = _fromTSms;
+        toTS = _toTSms;
+        apiClient.addQueryParam('startTime', int642Str(fromTS));
+        apiClient.addQueryParam('endTime', int642Str(toTS));
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getLimit</Name>
+				<Source><![CDATA[
+    public int getLimit()
+    {
+        return limit;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>prepare</Name>
+				<Source><![CDATA[
+    public void prepare()
+    {
+        // Add your code here...
+
+        super();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>checkApiKey</Name>
+				<Source><![CDATA[
+    public boolean checkApiKey()
+    {
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>processResponse</Name>
+				<Source><![CDATA[
+    public void processResponse()
+    {
+        super();
+
+        // Обработка массива массивов
+        // [ [1499040000000, "0.01634790", "0.80000000", ...] ]
+        str responseStr = apiClient.getResponseBody();
+
+        if (apiClient.getHttpStatus() != System.Net.HttpStatusCode::OK)
+            throw Error(strfmt("Request returns error!"));
+    
+        if (subStr(responseStr, strLen(responseStr) - 1, 2) != "]]")
+        {
+            while (subStr(responseStr, strLen(responseStr), 1) != "]")
+            {
+                responseStr = subStr(responseStr, 1, strLen(responseStr) - 1);
+                if (strLen(responseStr) == 0)
+                    break;
+            }
+            responseStr += "]";
+        }
+        if (responseStr == "")
+            responseStr = "[]";
+
+        responseStr = strFmt('{"List":%1}', responseStr);
+        
+        responseContract = RMarketJsonSerializer::deserializeObject(
+            classNum(RMarketJson_Binance_Klines),
+            responseStr) as RMarketJson_Binance_Klines;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getKlineList</Name>
+				<Source><![CDATA[
+    public List getKlineList()
+    {
+        List ret;
+        if (responseContract)
+            ret = responseContract.getKlineList();
+        else
+            ret = new List(Types::Container);
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

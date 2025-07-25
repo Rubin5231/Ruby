@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketAccountSynchronize</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class RMarketAccountSynchronize extends RunBaseBatch implements BatchRetryable
+{
+    #define.BinanceBalanceMethod('RMarketMethod_Binance_AccountBalance')
+    #define.BybitBalanceMethod('RMarketMethod_Bybit_WalletBalance')
+    #define.BinanceTradesMethod('RMarketMethod_Binance_MyTrades')
+    #define.BybitTradesMethod('RMarketMethod_Bybit_ExecutionList')
+    
+    RMarketAccountId     currentAccountId;
+    int                  processedAccounts;
+    int                  failedAccounts;
+    Map                  errorMap;
+    System.DateTime      syncStartTime;
+    RMarketApiType       currentApiType;
+
+    #define.CurrentVersion(1)
+    #localmacro.CurrentList
+        processedAccounts,
+        failedAccounts
+    #endmacro
+
+        
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>isRetryable</Name>
+				<Source><![CDATA[
+    public boolean isRetryable()
+    {
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>canRunInNewSession</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Describes whether the class is designed for execution in a new session.
+    /// </summary>
+    /// <returns> Always returns true. </returns>
+    protected boolean canRunInNewSession()
+    {
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>showQueryValues</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Indicates that query information is shown on the general tab of the dialog.
+    /// </summary>
+    /// <returns>
+    /// Always returns false. Query information isn't shown on the general tab of the dialog.
+    /// </returns>
+    public boolean showQueryValues()
+    {
+        return false;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>canGoBatch</Name>
+				<Source><![CDATA[
+    // Методы для RunBaseBatch
+    public boolean canGoBatch()
+    {
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>pack</Name>
+				<Source><![CDATA[
+    public container pack()
+    {
+        return [#CurrentVersion, #CurrentList];
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>unpack</Name>
+				<Source><![CDATA[
+    public boolean unpack(container _packedClass)
+    {
+        boolean         ret;
+        Integer         version     = conPeek(_packedClass,1);
+
+        switch (version)
+        {
+            case #CurrentVersion:
+                [version, #CurrentList] = _packedClass;
+                ret = true;
+                break;
+
+            default:
+                //interval = RMarketCandleInterval::None;
+                ret = false;
+        }
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>dialog</Name>
+				<Source><![CDATA[
+    // Диалог для ручного запуска
+    public Object dialog()
+    {
+        DialogRunbase dialog = super();
+        dialog.caption("Synchronize trading accounts");
+        return dialog;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>run</Name>
+				<Source><![CDATA[
+    public void run()
+    {
+        RMarketAccount account;
+        RMarketTable   market;
+        RMarketApiKey  apiKey;
+        
+        syncStartTime = DateTimeUtil::getSystemDateTime();
+        errorMap = new Map(Types::String, Types::String);
+
+        // Получаем все активные реальные счета
+        while select AccountId, MarketId, ApiKey
+            from account
+            where account.AccountType == RMarketAccountType::Real
+               && account.Active == NoYes::Yes
+        {
+            currentAccountId = account.AccountId;
+            
+            market = account.RMarketTable();
+            apiKey = account.RMarketApiKey();
+            currentApiType = market.ApiType;
+            
+            try
+            {
+                
+                // Синхронизация транзакций
+               /* List tradeData = this.loadExchangeData(
+                    currentApiType == RMarketApiType::Binance
+                        ? #BinanceTradesMethod
+                        : #BybitTradesMethod,
+                    market,
+                    apiKey
+                );
+                
+                this.syncTransactions(tradeData);
+                
+                // Синхронизация баланса
+                Map balanceData = this.loadExchangeData(
+                    currentApiType == RMarketApiType::Binance
+                        ? #BinanceBalanceMethod
+                        : #BybitBalanceMethod,
+                    market,
+                    apiKey
+                );*/
+                
+                //this.syncBalances(balanceData);
+                
+                processedAccounts++;
+            }
+            catch (Exception::Error)
+            {
+                failedAccounts++;
+                //errorMap.insert(currentAccountId, exceptionText);
+            }
+        }
+        
+        //this.logResults();
+    
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>loadExchangeData</Name>
+				<Source><![CDATA[
+    private void loadExchangeData(str _methodName, RMarketTable _market, RMarketApiKey _apiKey)
+    {
+        /*RMarketMethod apiMethod = SysExtensionAppClassFactory::getClassFromSysAttribute(
+            classNum(RMarketMethod),
+            _methodName) as RMarketMethod;
+        
+        apiMethod.setBaseUrl(_market.ApiUrl);
+        apiMethod.setApiKey(_apiKey);
+        
+        // Для методов истории передаем время последней транзакции
+        if (_methodName == #BinanceTradesMethod || _methodName == #BybitTradesMethod)
+        {
+            apiMethod.setStartTime(this.getLastTransactionTime());
+        }
+        
+        apiMethod.execute();
+        return apiMethod.getResult();*/
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>syncBalances</Name>
+				<Source><![CDATA[
+    private void syncBalances(Map _apiBalances)
+    {
+        /*MapEnumerator apiEnum = _apiBalances.getEnumerator();
+        
+        while (apiEnum.moveNext())
+        {
+            CurrencyCode currency = apiEnum.currentKey();
+            real apiBalance = apiEnum.currentValue();
+            
+            RMarketAccountBalance localBalance = RMarketAccountBalance::find(currentAccountId, currency, true);
+            
+            if (!localBalance)
+            {
+                localBalance.initValue();
+                localBalance.AccountId = currentAccountId;
+                localBalance.CurrencyCode = currency;
+                localBalance.Balance = apiBalance;
+                localBalance.insert();
+            }
+            else if (localBalance.Balance != apiBalance)
+            {
+                real adjustment = apiBalance - localBalance.Balance;
+                this.createTransaction(
+                    currency,
+                    adjustment,
+                    "Balance sync adjustment",
+                    RMarketTransType::Adjustment
+                );
+                localBalance.Balance = apiBalance;
+                localBalance.update();
+            }
+        }*/
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>syncTransactions</Name>
+				<Source><![CDATA[
+    private void syncTransactions(List _apiTransactions)
+    {
+        /*ListEnumerator transEnum = _apiTransactions.getEnumerator();
+        
+        while (transEnum.moveNext())
+        {
+            RMarketApiTransaction apiTrans = transEnum.current();
+            
+            if (!RMarketTrans::existByExternalId(apiTrans.ExternalId))
+            {
+                this.createTransaction(
+                    apiTrans.Currency,
+                    apiTrans.Amount,
+                    apiTrans.Description,
+                    apiTrans.TransactionType,
+                    apiTrans.ExternalId
+                );
+            }
+        }*/
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>createTransaction</Name>
+				<Source><![CDATA[
+    private void createTransaction(
+        RMarketCryptoCode _currency,
+        real _amount,
+        str _description,
+        RMarketTransOriginType _type,
+        str _externalId = ''
+    )
+    {
+        RMarketTrans trans;
+        trans.clear();
+        trans.initValue();
+        trans.AccountId = currentAccountId;
+        trans.CryptoCode = _currency;
+        trans.Amount = _amount;
+        trans.DateTime = DateTimeUtil::utcNow();
+        //trans.Description  = _description;
+        //trans.TransactionType = _type;
+        //trans.OriginType   = RMarketTransOriginType::Adjustment;
+        //trans.ExternalId = _externalId;
+        trans.insert();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getLastTransactionTime</Name>
+				<Source><![CDATA[
+    private System.DateTime getLastTransactionTime()
+    {
+        RMarketTrans lastTrans;
+        select maxOf(DateTime) from lastTrans
+            where lastTrans.AccountId == currentAccountId;
+        
+        return lastTrans.DateTime ? lastTrans.DateTime : DateTimeUtil::minValue();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>description</Name>
+				<Source><![CDATA[
+    static ClassDescription description()
+    {
+        return "Accounts synchronisation";
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>main</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Class entry point. The system will call this method when a designated menu 
+    /// is selected or when execution starts and this class is set as the startup class.
+    /// </summary>
+    /// <param name = "_args">The specified arguments.</param>
+    public static void main(Args _args)
+    {
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

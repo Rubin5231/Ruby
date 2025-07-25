@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxMenu xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="Microsoft.Dynamics.AX.Metadata.V1">
+	<Name>RMarketMenu</Name>
+	<Label>Exchange Markets</Label>
+	<Elements>
+		<AxMenuElement xmlns=""
+			i:type="AxMenuElementMenuItem">
+			<Name>RMarketAccount</Name>
+			<MenuItemName>RMarketAccount</MenuItemName>
+		</AxMenuElement>
+		<AxMenuElement xmlns=""
+			i:type="AxMenuElementMenuItem">
+			<Name>RMarketStrategy</Name>
+			<MenuItemName>RMarketStrategy</MenuItemName>
+		</AxMenuElement>
+		<AxMenuElement xmlns=""
+			i:type="AxMenuElementMenuItem">
+			<Name>RMarketPosition</Name>
+			<MenuItemName>RMarketPosition</MenuItemName>
+		</AxMenuElement>
+		<AxMenuElement xmlns=""
+			i:type="AxMenuElementMenuItem">
+			<Name>RMarketOrder</Name>
+			<MenuItemName>RMarketOrder</MenuItemName>
+		</AxMenuElement>
+		<AxMenuElement xmlns=""
+			i:type="AxMenuElementSubMenu">
+			<Name>Inquiries</Name>
+			<Label>Inquiries</Label>
+			<Elements>
+				<AxMenuElement xmlns=""
+					i:type="AxMenuElementMenuItem">
+					<Name>RMarketSum</Name>
+					<MenuItemName>RMarketSum</MenuItemName>
+				</AxMenuElement>
+				<AxMenuElement xmlns=""
+					i:type="AxMenuElementMenuItem">
+					<Name>RMarketTrans</Name>
+					<MenuItemName>RMarketTrans</MenuItemName>
+				</AxMenuElement>
+				<AxMenuElement xmlns=""
+					i:type="AxMenuElementMenuItem">
+					<Name>RMarketAutoTrade</Name>
+					<MenuItemName>RMarketAutoTrade</MenuItemName>
+					<MenuItemType>Action</MenuItemType>
+				</AxMenuElement>
+				<AxMenuElement xmlns=""
+					i:type="AxMenuElementSubMenu">
+					<Name>CandlesNIndicators</Name>
+					<Label>Candles and indicators</Label>
+					<Elements>
+						<AxMenuElement xmlns=""
+							i:type="AxMenuElementMenuItem">
+							<Name>RMarketCandleGapsForm</Name>
+							<MenuItemName>RMarketCandleGapsForm</MenuItemName>
+						</AxMenuElement>
+						<AxMenuElement xmlns=""
+							i:type="AxMenuElementMenuItem">
+							<Name>RMarketCandleTable</Name>
+							<MenuItemName>RMarketCandleTable</MenuItemName>
+						</AxMenuElement>
+						<AxMenuElement xmlns=""
+							i:type="AxMenuElementMenuItem">
+							<Name>RMarketIndicatorTable</Name>
+							<MenuItemName>RMarketIndicatorTable</MenuItemName>
+						</AxMenuElement>
+						<AxMenuElement xmlns=""
+							i:type="AxMenuElementMenuItem">
+							<Name>RMarketCandleStatForm</Name>
+							<MenuItemName>RMarketCandleStatForm</MenuItemName>
+						</AxMenuElement>
+					</Elements>
+				</AxMenuElement>
+				<AxMenuElement xmlns=""
+					i:type="AxMenuElementSubMenu">
+					<Name>Logs</Name>
+					<Label>Logs</Label>
+					<Elements>
+						<AxMenuElement xmlns=""
+							i:type="AxMenuElementMenuItem">
+							<Name>RMarketEventLog</Name>
+							<MenuItemName>RMarketEventLog</MenuItemName>
+						</AxMenuElement>
+						<AxMenuElement xmlns=""
+							i:type="AxMenuElementMenuItem">
+							<Name>RMarketAPIMethodLog</Name>
+							<MenuItemName>RMarketAPIMethodLog</MenuItemName>
+						</AxMenuElement>
+					</Elements>
+				</AxMenuElement>
+			</Elements>
+		</AxMenuElement>
+		<AxMenuElement xmlns=""
+			i:type="AxMenuElementSubMenu">
+			<Name>Periodic</Name>
+			<Label>Periodic</Label>
+			<Elements>
+				<AxMenuElement xmlns=""
+					i:type="AxMenuElementMenuItem">
+					<Name>RMarketCandlesLoad</Name>
+					<MenuItemName>RMarketCandlesLoad</MenuItemName>
+					<MenuItemType>Action</MenuItemType>
+				</AxMenuElement>
+				<AxMenuElement xmlns=""
+					i:type="AxMenuElementMenuItem">
+					<Name>RMarketIndicatorCalc</Name>
+					<MenuItemName>RMarketIndicatorCalc</MenuItemName>
+					<MenuItemType>Action</MenuItemType>
+				</AxMenuElement>
+			</Elements>
+		</AxMenuElement>
+		<AxMenuElement xmlns=""
+			i:type="AxMenuElementSubMenu">
+			<Name>Setup</Name>
+			<Label>Setup</Label>
+			<Elements>
+				<AxMenuElement xmlns=""
+					i:type="AxMenuElementMenuItem">
+					<Name>RMarketParameters</Name>
+					<MenuItemName>RMarketParameters</MenuItemName>
+				</AxMenuElement>
+				<AxMenuElement xmlns=""
+					i:type="AxMenuElementMenuItem">
+					<Name>RMarketCrypto</Name>
+					<MenuItemName>RMarketCrypto</MenuItemName>
+				</AxMenuElement>
+				<AxMenuElement xmlns=""
+					i:type="AxMenuElementMenuItem">
+					<Name>RMarketTable</Name>
+					<MenuItemName>RMarketTable</MenuItemName>
+				</AxMenuElement>
+				<AxMenuElement xmlns=""
+					i:type="AxMenuElementMenuItem">
+					<Name>RMarketSymbolTable</Name>
+					<MenuItemName>RMarketSymbolTable</MenuItemName>
+				</AxMenuElement>
+				<AxMenuElement xmlns=""
+					i:type="AxMenuElementMenuItem">
+					<Name>RMarketIndicatorSetupTable</Name>
+					<MenuItemName>RMarketIndicatorSetupTable</MenuItemName>
+				</AxMenuElement>
+				<AxMenuElement xmlns=""
+					i:type="AxMenuElementMenuItem">
+					<Name>RMarketApiKey</Name>
+					<MenuItemName>RMarketApiKey</MenuItemName>
+				</AxMenuElement>
+			</Elements>
+		</AxMenuElement>
+	</Elements>
+</AxMenu>

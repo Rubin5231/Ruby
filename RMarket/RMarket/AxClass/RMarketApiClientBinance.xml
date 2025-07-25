@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketApiClientBinance</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Клиент API для биржи Binance
+/// </summary>
+public class RMarketApiClientBinance extends RMarketApiClient
+{
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>new</Name>
+				<Source><![CDATA[
+    public void new()
+    {
+        super();
+        //baseUrl = 'https://api.binance.com';
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getServerTimeMS</Name>
+				<Source><![CDATA[
+    protected int64 getServerTimeMS()
+    {
+        RMarketMethod_Binance_Time apiMethod = new RMarketMethod_Binance_Time();
+        apiMethod.setBaseUrl(this.parmBaseUrl());
+        apiMethod.execute();
+        int64 miliSecond = apiMethod.miliSecond();
+
+        return miliSecond;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>buildAuth</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Построение аутентификации для Binance
+    /// </summary>
+    protected void buildAuth()
+    {
+        if (!apiKey || !apiKey.ApiKey || !apiKey.Secret) return;
+        
+        // Для Binance требуется подпись и временная метка
+        int64 timestamp = this.getServerTimeMS();
+        this.addQueryParam('timestamp', int642Str(timestamp));
+        
+        // Генерация подписи
+        //str signature = this.generateSignature();
+        //this.addQueryParam('signature', signature);
+        
+        // Добавление API-ключа
+        this.addHeader('X-MBX-APIKEY', apiKey.ApiKey);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>buildSignature</Name>
+				<Source><![CDATA[
+    protected void buildSignature()
+    {
+        if (!apiKey || !apiKey.ApiKey || !apiKey.Secret) return;
+        
+        // Генерация подписи
+        str signature = this.signHMACSHA256(methodQuery, apiKey.Secret);
+        this.addQueryParam('signature', signature);
+
+        this.buildMethodQuery();    // Шаг 4: перестроение с учетом подписи
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

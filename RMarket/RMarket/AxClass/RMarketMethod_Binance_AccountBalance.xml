@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketMethod_Binance_AccountBalance</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Получение баланса аккаунта Binance
+/// https://developers.binance.com/docs/binance-spot-api-docs/rest-api/account-endpoints
+/// Usage:
+/// RMarketMethod_Binance_AccountBalance apiMethod = new RMarketMethod_Binance_AccountBalance();
+/// or
+/// RMarketMethodInterface_GetAccountBalance apiMethod = 
+///     RMarketMethodInterface::RMarketMethodInterface_GetAccountBalance(_marketDim.RMarketTable().ApiType);
+/// apiMethod.setBaseUrl('https://api.binance.com');
+///     apiMethod.initParameters('BTCUSDT', '4h', 1000);
+///     apiMethod.initPeriod(1499040000000, 1499100999000);
+/// apiMethod.execute();
+///     List listCon = apiMethod.getKlineList();
+/// </summary>
+public class RMarketMethod_Binance_AccountBalance extends RMarketMethod implements RMarketMethodInterface_GetAccountBalance
+{
+    protected RMarketJson_Binance_Account responseContract;
+
+    }
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>new</Name>
+				<Source><![CDATA[
+    /// <summary> Конструктор класса </summary>
+    public void new()
+    {
+        apiClient = new RMarketApiClientBinance();
+        apiClient.parmHttpMethod(RMarketAPIHttpMethod::GET);
+        apiClient.parmMethodUrl('/api/v3/account');
+
+        // Do this before execute()
+        //apiClient.setBaseUrl(URL _baseUrl);
+        //apiClient.setApiKey(RMarketApiKey _apiKey)
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>initParameters</Name>
+				<Source><![CDATA[
+    void initParameters()
+    {
+        //omitZeroBalances	BOOLEAN	NO	When set to true, emits only the non-zero balances of an account.
+        //                                Default value: false
+        //recvWindow	    LONG	NO	The value cannot be greater than 60000
+        //timestamp	        LONG	YES
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>prepare</Name>
+				<Source><![CDATA[
+    public void prepare()
+    {
+        // Add your code here...
+
+        super();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>processResponse</Name>
+				<Source><![CDATA[
+    public void processResponse()
+    {
+        super();
+
+        str responseStr = apiClient.getResponseBody();
+
+        if (apiClient.getHttpStatus() != System.Net.HttpStatusCode::OK)
+            throw Error(strfmt("Request returns error!"));
+    
+        responseContract = RMarketJsonSerializer::deserializeObject(
+            classNum(RMarketJson_Binance_Account),
+            responseStr) as RMarketJson_Binance_Account;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getResultList</Name>
+				<Source><![CDATA[
+    public List getResultList()
+    {
+        List retList;
+        ListEnumerator enum;
+
+        //if (responseContract && responseContract.parmResult())
+        //{
+        //    List accountList = responseContract.parmResult().parmList();
+        //    if (accountList && accountList.elements() > 0)
+        //    {
+        //        enum = accountList.getEnumerator();
+        //        enum.moveNext();
+        //        RMarketJson_Bybit_WalletBalance_Account account = enum.current();
+        //        if (account)
+        //        {
+        //            List coinList = account.parmCoin();
+        //            if (coinList && coinList.elements() > 0)
+        //            {
+        //                enum = coinList.getEnumerator();
+        //                enum.moveNext();
+        //                RMarketJson_Bybit_WalletBalance_Coin coin = enum.current();
+        //                if (coin)
+        //                {
+        //                    //
+        //                }
+        //            }
+
+        //        }
+        //    }
+        //}
+        
+        return retList;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>DEVIntegJObject</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+using Newtonsoft.Json.Linq;
+class DEVIntegJObject
+{
+    public Newtonsoft.Json.Linq.JObject body;
+   
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>Parse</Name>
+				<Source><![CDATA[
+    public static DEVIntegJObject Parse(str _body)
+    {
+        DEVIntegJObject jo = new DEVIntegJObject();
+        
+        jo.body = JObject::Parse(_body);
+        
+        return jo;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>ParseToken</Name>
+				<Source><![CDATA[
+    public static DEVIntegJObject ParseToken(JToken _body)
+    {
+        DEVIntegJObject jo = new DEVIntegJObject();
+        
+        jo.body = _body;
+        
+        return jo;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>construct</Name>
+				<Source><![CDATA[
+    public static DEVIntegJObject construct()
+    {
+        DEVIntegJObject jo = new DEVIntegJObject();
+        
+        jo.body = new Newtonsoft.Json.Linq.JObject();
+        
+        return jo;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>Create</Name>
+				<Source><![CDATA[
+    public static DEVIntegJObject Create(JObject _body)
+    {
+        DEVIntegJObject jo = new DEVIntegJObject();
+        
+        jo.body = _body;
+        
+        return _body == null ? null : jo;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>GetValueString</Name>
+				<Source><![CDATA[
+    public str GetValueString(str _propertyName)
+    {
+        try
+        {
+            JToken jToken = this.body.GetValue(_propertyName);
+            
+            if (jToken == null)
+            {
+                return "";
+            }
+            str res = jToken.Type == JTokenType::Null ? "" : jToken.ToString();
+
+            return res;
+        }
+        catch (Exception::CLRError)
+        {
+            return "";
+        }
+        catch
+        {
+            return "";
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>GetValueInt64</Name>
+				<Source><![CDATA[
+    public int64 GetValueInt64(str _propertyName)
+    {
+        try
+        {
+            JToken jToken = this.body.GetValue(_propertyName);
+
+            if (jToken == null || jToken.Type == JTokenType::Null)
+            {
+                return 0;
+            }
+
+            int64 res =  System.Convert::ToInt64(jToken);
+
+            return res;
+        }
+        catch
+        {
+            return 0;
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>GetValueInt</Name>
+				<Source><![CDATA[
+    public int GetValueInt(str _propertyName)
+    {
+        try
+        {
+            JToken jToken = this.body.GetValue(_propertyName);
+
+            if (jToken == null || jToken.Type == JTokenType::Null)
+            {
+                return 0;
+            }
+
+            int res =  System.Convert::ToInt32(jToken);
+
+            return res;
+        }
+        catch
+        {
+            return 0;
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>GetValueReal</Name>
+				<Source><![CDATA[
+    public real GetValueReal(str _propertyName)
+    {
+        try
+        {
+            JToken jToken = this.body.GetValue(_propertyName);
+
+            if (jToken == null || jToken.Type == JTokenType::Null)
+            {
+                return 0;
+            }
+
+            real res = System.Convert::ToDouble(jToken);
+
+            return res;
+        }
+        catch
+        {
+            return 0;
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getValueDate</Name>
+				<Source><![CDATA[
+    public date getValueDate(str _propertyName, str _formatString = '')
+    {
+        TransDate           res;
+        System.DateTime     resValue;
+
+        JToken      jToken = this.body.GetValue(_propertyName);
+
+        if (jToken != null)
+        {
+            if (jToken.Type == Newtonsoft.Json.Linq.JTokenType::Date)
+            {
+                resValue = jToken;
+                res = resValue;
+            }
+            else
+            {
+                str  sDate = jToken.ToString();
+                if (sDate)
+                {
+                    if (_formatString)
+                    {
+                        boolean         parsingOK;
+
+                        parsingOK = System.DateTime::TryParseExact(sDate, _formatString, System.Globalization.CultureInfo::get_InvariantCulture(), System.Globalization.DateTimeStyles::None, byref resValue);
+                        if (! parsingOK)
+                        {
+                            throw error(strFmt("Failed to convert value %1 to a date for %2 JSON property using %3 format",
+                                        sDate, _propertyName, _formatString));
+                        }
+                        res = resValue;
+
+                    }
+                    else
+                    {
+                        res   = System.Convert::ToDateTime(sDate);
+                    }
+                }
+            }
+        }
+        return res;
+       
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getValueDateTime</Name>
+				<Source><![CDATA[
+    public TransDateTime getValueDateTime(str _propertyName, str _formatString = '')
+    {
+        TransDateTime   res = utcDateTimeNull();
+        System.DateTime resValue;
+
+        JToken jToken = this.body.GetValue(_propertyName);
+
+        if (jToken != null)
+        {
+            //need to check should we always use string
+            if (jToken.Type == Newtonsoft.Json.Linq.JTokenType::Date)
+            {
+                resValue = jToken;
+                res = resValue;
+            }
+            else
+            {
+                str  sDate = jToken.ToString();
+                if (sDate)
+                {
+                    if (_formatString)
+                    {
+                        boolean         parsingOK;
+
+                        parsingOK = System.DateTime::TryParseExact(sDate, _formatString, System.Globalization.CultureInfo::get_InvariantCulture(), System.Globalization.DateTimeStyles::None, byref resValue);
+                        if (! parsingOK)
+                        {
+                            throw error(strFmt("Failed to convert value %1 to a date for %2 JSON property using %3 format",
+                                        sDate, _propertyName, _formatString));
+                        }
+                        res = resValue;
+
+                    }
+                    else
+                    {
+                        res   = System.Convert::ToDateTime(sDate);
+                    }
+                }
+            }
+        }
+       
+        return res;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>GetValueArray</Name>
+				<Source><![CDATA[
+    public JArray GetValueArray(str _propertyName)
+    {
+        try
+        {
+
+            JArray  items = null;
+
+            var arrValue = this.body.GetValue(_propertyName);
+
+            if (arrValue)
+            {
+                items = arrValue;//JArray::Parse(arrValue);
+            }
+
+            return items;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>GetValueObject</Name>
+				<Source><![CDATA[
+    public DEVIntegJObject GetValueObject(str _propertyName)
+    {
+        JToken      jToken = this.body.GetValue(_propertyName);
+        DEVIntegJObject res;
+        
+        if (jToken)
+        {
+            res = jToken.Type == JTokenType::Null ? null : DEVIntegJObject::Parse(jToken.ToString());
+        }
+
+        return res;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>Add</Name>
+				<Source><![CDATA[
+    public void Add(str _propertyName, Newtonsoft.Json.Linq.JToken _propertyValue)
+    {
+        body.Add(_propertyName, _propertyValue);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>AddBoolean</Name>
+				<Source><![CDATA[
+    public Newtonsoft.Json.Linq.JObject AddBoolean(str _propertyName, boolean _propertyValue)
+    {
+        str boolStr = enum2Str(_propertyValue);
+        
+        body.Add(_propertyName, boolStr);
+    
+        return body;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxEnum xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketStrategyStatus</Name>
+	<Help>Strategy status</Help>
+	<Label>Status</Label>
+	<UseEnumValue>No</UseEnumValue>
+	<EnumValues>
+		<AxEnumValue>
+			<Name>Created</Name>
+			<Label>Created</Label>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>TestHistory</Name>
+			<Label>Test History</Label>
+			<Value>1</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>TestOnline</Name>
+			<Label>Test Online</Label>
+			<Value>2</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>Working</Name>
+			<Label>Working</Label>
+			<Value>3</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>Stopped</Name>
+			<Label>Stopped</Label>
+			<Value>4</Value>
+		</AxEnumValue>
+	</EnumValues>
+</AxEnum>

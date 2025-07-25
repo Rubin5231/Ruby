@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketJson_Bybit_WalletBalance_Account</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[DataContract]
+public class RMarketJson_Bybit_WalletBalance_Account
+{
+    private str accountType;
+    private real accountLTV;
+    private real accountIMRate;
+    private real accountMMRate;
+    private real totalEquity;
+    private real totalWalletBalance;
+    private real totalMarginBalance;
+    private real totalAvailableBalance;
+    private real totalPerpUPL;
+    private real totalInitialMargin;
+    private real totalMaintenanceMargin;
+    private List coin;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmAccountType</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает тип аккаунта </summary>
+    /// <param name="_accountType"> Тип аккаунта [ UNIFIED, CONTRACT, SPOT] </param>
+    /// <returns> Тип аккаунта </returns>
+    [DataMember('accountType')]
+    public str parmAccountType(str _accountType = accountType)
+    {
+        accountType = _accountType;
+        return accountType;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmAccountLTV</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Получает или устанавливает Loan-To-Value аккаунта
+    /// </summary>
+    /// <param name="_accountLTV">
+    /// Коэффициент займа к стоимости
+    /// </param>
+    /// <returns>
+    /// Значение LTV
+    /// </returns>
+    [DataMember('accountLTV')]
+    public real parmAccountLTV(real _accountLTV = accountLTV)
+    {
+        accountLTV = _accountLTV;
+        return accountLTV;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmAccountIMRate</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Получает или устанавливает начальную маржу аккаунта
+    /// </summary>
+    /// <param name="_accountIMRate">
+    /// Коэффициент начальной маржи
+    /// </param>
+    /// <returns>
+    /// Значение начальной маржи
+    /// </returns>
+    [DataMember('accountIMRate')]
+    public real parmAccountIMRate(real _accountIMRate = accountIMRate)
+    {
+        accountIMRate = _accountIMRate;
+        return accountIMRate;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmAccountMMRate</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Получает или устанавливает маржу поддержания аккаунта
+    /// </summary>
+    /// <param name="_accountMMRate">
+    /// Коэффициент маржи поддержания
+    /// </param>
+    /// <returns>
+    /// Значение маржи поддержания
+    /// </returns>
+    [DataMember('accountMMRate')]
+    public real parmAccountMMRate(real _accountMMRate = accountMMRate)
+    {
+        accountMMRate = _accountMMRate;
+        return accountMMRate;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmTotalEquity</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Получает или устанавливает общее эквити аккаунта
+    /// </summary>
+    /// <param name="_totalEquity">
+    /// Суммарное эквити аккаунта
+    /// </param>
+    /// <returns>
+    /// Значение общего эквити
+    /// </returns>
+    [DataMember('totalEquity')]
+    public real parmTotalEquity(real _totalEquity = totalEquity)
+    {
+        totalEquity = _totalEquity;
+        return totalEquity;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmTotalWalletBalance</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Получает или устанавливает общий баланс кошелька
+    /// </summary>
+    /// <param name="_totalWalletBalance">
+    /// Суммарный баланс кошелька
+    /// </param>
+    /// <returns>
+    /// Значение общего баланса
+    /// </returns>
+    [DataMember('totalWalletBalance')]
+    public real parmTotalWalletBalance(real _totalWalletBalance = totalWalletBalance)
+    {
+        totalWalletBalance = _totalWalletBalance;
+        return totalWalletBalance;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmTotalMarginBalance</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Получает или устанавливает общий маржинальный баланс
+    /// </summary>
+    /// <param name="_totalMarginBalance">
+    /// Суммарный маржинальный баланс
+    /// </param>
+    /// <returns>
+    /// Значение маржинального баланса
+    /// </returns>
+    [DataMember('totalMarginBalance')]
+    public real parmTotalMarginBalance(real _totalMarginBalance = totalMarginBalance)
+    {
+        totalMarginBalance = _totalMarginBalance;
+        return totalMarginBalance;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmTotalAvailableBalance</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Получает или устанавливает общий доступный баланс
+    /// </summary>
+    /// <param name="_totalAvailableBalance">
+    /// Суммарный доступный баланс
+    /// </param>
+    /// <returns>
+    /// Значение доступного баланса
+    /// </returns>
+    [DataMember('totalAvailableBalance')]
+    public real parmTotalAvailableBalance(real _totalAvailableBalance = totalAvailableBalance)
+    {
+        totalAvailableBalance = _totalAvailableBalance;
+        return totalAvailableBalance;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmTotalPerpUPL</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Получает или устанавливает общий нереализованный PnL для перпетуальных контрактов
+    /// </summary>
+    /// <param name="_totalPerpUPL">
+    /// Суммарный нереализованный PnL для перпетуальных контрактов
+    /// </param>
+    /// <returns>
+    /// Значение нереализованного PnL
+    /// </returns>
+    [DataMember('totalPerpUPL')]
+    public real parmTotalPerpUPL(real _totalPerpUPL = totalPerpUPL)
+    {
+        totalPerpUPL = _totalPerpUPL;
+        return totalPerpUPL;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmTotalInitialMargin</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Получает или устанавливает общую начальную маржу
+    /// </summary>
+    /// <param name="_totalInitialMargin">
+    /// Суммарная начальная маржа
+    /// </param>
+    /// <returns>
+    /// Значение начальной маржи
+    /// </returns>
+    [DataMember('totalInitialMargin')]
+    public real parmTotalInitialMargin(real _totalInitialMargin = totalInitialMargin)
+    {
+        totalInitialMargin = _totalInitialMargin;
+        return totalInitialMargin;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmTotalMaintenanceMargin</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Получает или устанавливает общую маржу поддержания
+    /// </summary>
+    /// <param name="_totalMaintenanceMargin">
+    /// Суммарная маржа поддержания
+    /// </param>
+    /// <returns>
+    /// Значение маржи поддержания
+    /// </returns>
+    [DataMember('totalMaintenanceMargin')]
+    public real parmTotalMaintenanceMargin(real _totalMaintenanceMargin = totalMaintenanceMargin)
+    {
+        totalMaintenanceMargin = _totalMaintenanceMargin;
+        return totalMaintenanceMargin;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmCoin</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Получает или устанавливает список монет
+    /// </summary>
+    /// <param name="_coin">
+    /// Список объектов с балансами по монетам
+    /// </param>
+    /// <returns>
+    /// Список монет
+    /// </returns>
+    [DataMember('coin'), DataCollectionAttribute(Types::Class, classStr(RMarketJson_Bybit_WalletBalance_Coin))]
+    public List parmCoin(List _coin = coin)
+    {
+        coin = _coin;
+        return coin;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

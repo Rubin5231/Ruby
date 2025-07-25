@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxTable xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketIndicatorTable</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class RMarketIndicatorTable extends common
+{
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>find</Name>
+				<Source><![CDATA[
+        /// <summary>
+    /// Find record in the table <t>RMarketIndicatorTable</t>
+    /// </summary>
+    /// <param name = "_setupRecId">a setupRecId</param>
+    /// <param name = "_dimRecId">a dimRecId</param>
+    /// <param name = "_timestamp">a timestamp</param>
+    /// <param name = "_forUpdate">if its updatable</param>
+    /// <returns>a table <t>RMarketIndicatorTable</t></returns>
+    public static RMarketIndicatorTable find(RMarketIndicatorId _indicatorId,
+                                             RMarketDimRecId    _dimRecId,
+                                             RMarketTimestamp   _timestamp,
+                                             boolean            _forUpdate = false)
+    {
+        RMarketIndicatorTable indicatorTable;
+        ;
+        if (_indicatorId && _dimRecId && _timestamp)
+        {
+            indicatorTable.selectForUpdate(_forUpdate);
+            
+            select firstonly indicatorTable
+                where indicatorTable.IndicatorId == _indicatorId &&
+                      indicatorTable.DimRecId    == _dimRecId &&
+                      indicatorTable.Timestamp   == _timestamp;
+        }
+        
+        return indicatorTable;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>findRecId</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Find record in the table <t>RMarketIndicatorTable</t>
+    /// </summary>
+    /// <param name = "_recId">the record id</param>
+    /// <param name = "_forUpdate">if its updatable</param>
+    /// <returns>a table <t>RMarketIndicatorTable</t></returns>
+    public static RMarketIndicatorTable findRecId(RefRecId _recId,  boolean _forUpdate = false)
+    {
+        RMarketIndicatorTable indicatorTable;
+        if (_recId)
+        {
+            indicatorTable.selectForUpdate(_forUpdate);
+            
+            select firstonly indicatorTable
+                where indicatorTable.RecId == _recId;
+        }
+        
+        return indicatorTable;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>exists</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Check if exists a record in the table <t>RMarketIndicatorTable</t> with the given parameters
+    /// </summary>
+    /// <param name = "_setupRecId">a setupRecId</param>
+    /// <param name = "_dimRecId">a dimRecId</param>
+    /// <param name = "_timestamp">a timestamp</param>
+    /// <returns>a table <t>RMarketIndicatorTable</t></returns>
+    public static boolean exists(RMarketIndicatorId _indicatorId,
+                                 RMarketDimRecId    _dimRecId,
+                                 RMarketTimestamp   _timestamp)
+    {
+        boolean res;
+        ;
+        if (_indicatorId && _dimRecId && _timestamp)
+        {
+            res = (select firstonly RecId from RMarketIndicatorTable
+                    where RMarketIndicatorTable.IndicatorId == _indicatorId &&
+                          RMarketIndicatorTable.DimRecId    == _dimRecId &&
+                          RMarketIndicatorTable.Timestamp   == _timestamp).RecId != 0;
+        }
+        
+        return res;
+    }
+
+    /// <summary>
+    /// Check if exists a record in the table <t>RMarketIndicatorTable</t> with the given parameters and give a warning if not found
+    /// </summary>
+    /// <param name = "_setupRecId">a setupRecId</param>
+    /// <param name = "_dimRecId">a dimRecId</param>
+    /// <param name = "_timestamp">a timestamp</param>
+    /// <returns>if exists a record in the table <t>RMarketIndicatorTable</t> with the given parameters</returns>
+    /*public static boolean checkExists(RefRecId          _setupRecId,
+                                      RefRecId          _dimRecId,
+                                      RMarketTimestamp  _timestamp)
+    {
+        if ((_setupRecId && _dimRecId && _timestamp)
+            && (!RMarketIndicatorTable::exists(_setupRecId, _dimRecId, _timestamp)))
+        {
+            return checkFailed(strFmt(RMarketIndicatorTable::txtNotExists(), _setupRecId , _dimRecId, _timestamp));
+        }
+        
+        return true;
+    }*/
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+	<Label>Indicator history</Label>
+	<TableGroup>Group</TableGroup>
+	<TitleField1>DimRecId</TitleField1>
+	<TitleField2>Timestamp</TitleField2>
+	<CacheLookup>Found</CacheLookup>
+	<ClusteredIndex>MainIdx</ClusteredIndex>
+	<CreatedBy>Yes</CreatedBy>
+	<CreatedDateTime>Yes</CreatedDateTime>
+	<ModifiedBy>Yes</ModifiedBy>
+	<ModifiedDateTime>Yes</ModifiedDateTime>
+	<PrimaryIndex>MainIdx</PrimaryIndex>
+	<ReplacementKey>MainIdx</ReplacementKey>
+	<DeleteActions />
+	<FieldGroups>
+		<AxTableFieldGroup>
+			<Name>AutoReport</Name>
+			<IsManuallyUpdated>Yes</IsManuallyUpdated>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoLookup</Name>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoIdentification</Name>
+			<AutoPopulate>Yes</AutoPopulate>
+			<IsManuallyUpdated>Yes</IsManuallyUpdated>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>DimRecId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Timestamp</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>IndicatorId</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoSummary</Name>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoBrowse</Name>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>Overview</Name>
+			<Label>Overview</Label>
+			<Fields />
+		</AxTableFieldGroup>
+	</FieldGroups>
+	<Fields>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>IndicatorId</Name>
+			<ExtendedDataType>RMarketIndicatorId</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldInt64">
+			<Name>DimRecId</Name>
+			<ExtendedDataType>RMarketDimRecId</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+			<Mandatory>Yes</Mandatory>
+			<RelationContext>RMarketDim</RelationContext>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldInt64">
+			<Name>Timestamp</Name>
+			<ExtendedDataType>RMarketTimestamp</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldReal">
+			<Name>Value</Name>
+			<ExtendedDataType>RMarketIndicatorValue</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldReal">
+			<Name>ValueAux1</Name>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldReal">
+			<Name>ValueAux2</Name>
+		</AxTableField>
+	</Fields>
+	<FullTextIndexes />
+	<Indexes>
+		<AxTableIndex>
+			<Name>MainIdx</Name>
+			<AlternateKey>Yes</AlternateKey>
+			<Fields>
+				<AxTableIndexField>
+					<DataField>IndicatorId</DataField>
+				</AxTableIndexField>
+				<AxTableIndexField>
+					<DataField>DimRecId</DataField>
+				</AxTableIndexField>
+				<AxTableIndexField>
+					<DataField>Timestamp</DataField>
+				</AxTableIndexField>
+			</Fields>
+		</AxTableIndex>
+	</Indexes>
+	<Mappings />
+	<Relations>
+		<AxTableRelation>
+			<Name>RMarketDim</Name>
+			<RelatedTable>RMarketDim</RelatedTable>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>DimRecId</Name>
+					<Field>DimRecId</Field>
+					<RelatedField>RecId</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+		<AxTableRelation>
+			<Name>RMarketTimestampTable</Name>
+			<RelatedTable>RMarketTimestampTable</RelatedTable>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>Timestamp</Name>
+					<Field>Timestamp</Field>
+					<RelatedField>Timestamp</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+		<AxTableRelation>
+			<Name>RMarketIndicatorSetupTable</Name>
+			<RelatedTable>RMarketIndicatorSetupTable</RelatedTable>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>IndicatorId</Name>
+					<Field>IndicatorId</Field>
+					<RelatedField>IndicatorId</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+	</Relations>
+	<StateMachines />
+</AxTable>

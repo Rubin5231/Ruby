@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketApiClient</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Базовый класс для клиентов API криптобирж
+/// </summary>
+abstract public class RMarketApiClient
+{
+    protected RMarketApiKey apiKey;
+    protected RMarketAPIMethodLog logRecord;
+    //protected RMarketTable marketTable;
+
+    protected str baseUrl;
+    protected str methodUrl;
+    protected str methodQuery;
+    protected str fullUrl;
+    protected RMarketAPIHttpMethod httpMethod;
+
+    //protected str endpoint;
+    protected Map queryParams;
+    protected Map headers;
+    protected str requestBody;
+    protected str responseBody;
+    protected System.Net.HttpStatusCode httpStatus;
+    protected int64 durationMs;
+    
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmLogRecord</Name>
+				<Source><![CDATA[
+    public RMarketAPIMethodLog parmLogRecord(RMarketAPIMethodLog _logRecord = logRecord)
+    {
+        logRecord = _logRecord;
+        return logRecord;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmApiKey</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Получает или устанавливает ключ API
+    /// </summary>
+    /// <param name="_apiKey">Ключ API</param>
+    /// <returns>Ключ API</returns>
+    public RMarketApiKey parmApiKey(RMarketApiKey _apiKey = apiKey)
+    {
+        apiKey = _apiKey;
+        return apiKey;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmMethodUrl</Name>
+				<Source><![CDATA[
+    public str parmMethodUrl(str _methodUrl = methodUrl)
+    {
+        methodUrl = _methodUrl;
+        return methodUrl;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmHttpMethod</Name>
+				<Source><![CDATA[
+    public RMarketAPIHttpMethod parmHttpMethod(RMarketAPIHttpMethod _httpMethod = httpMethod)
+    {
+        httpMethod = _httpMethod;
+        return httpMethod;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmBaseUrl</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Получает или устанавливает базовый URL
+    /// </summary>
+    /// <param name="_baseUrl">Базовый URL</param>
+    /// <param name="_baseUrl">Базовый URL</param>
+    public str parmBaseUrl(str _baseUrl = baseUrl)
+    {
+        baseUrl = _baseUrl;
+        return baseUrl;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>addQueryParam</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Добавляет параметр запроса
+    /// </summary>
+    /// <param name="_name">Имя параметра</param>
+    /// <param name="_value">Значение параметра</param>
+    public void addQueryParam(str _name, str _value)
+    {
+        if (!queryParams)
+            queryParams = new Map(Types::String, Types::String);
+        queryParams.insert(_name, _value);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>addHeader</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Добавляет заголовок
+    /// </summary>
+    /// <param name="_name">Имя заголовка</param>
+    /// <param name="_value">Значение заголовка</param>
+    public void addHeader(str _name, str _value)
+    {
+        if (!headers)
+            headers = new Map(Types::String, Types::String);
+        headers.insert(_name, _value);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>setRequestBody</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Устанавливает тело запроса
+    /// </summary>
+    /// <param name="_body">Тело запроса</param>
+    public void setRequestBody(str _body)
+    {
+        requestBody = _body;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>setApiKey</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Устанавливает API ключ
+    /// </summary>
+    /// <param name="_apiKey">API ключ</param>
+    public void setApiKey(RMarketApiKey _apiKey)
+    {
+        apiKey = _apiKey;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getResponseBody</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Возвращает тело ответа
+    /// </summary>
+    /// <returns>Тело ответа</returns>
+    public str getResponseBody()
+    {
+        return responseBody;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getHttpStatus</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Возвращает статус HTTP
+    /// </summary>
+    /// <returns>Статус HTTP</returns>
+    public System.Net.HttpStatusCode getHttpStatus()
+    {
+        return httpStatus;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getDurationMs</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Возвращает длительность запроса в мс
+    /// </summary>
+    /// <returns>Длительность запроса в мс</returns>
+    public int64 getDurationMs()
+    {
+        return durationMs;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getServerTimeMS</Name>
+				<Source><![CDATA[
+    protected int64 getServerTimeMS()
+    {
+        return RMarketUtil::dateTime2Timestamp(DateTimeUtil::utcNow()) * 1000;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>logRequest</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Логирование запроса
+    /// </summary>
+    /// <param name="_queryString">Строка параметров</param>
+    protected void logRequest()
+    {
+        str queryString;
+        MapEnumerator enumerator;
+
+        logRecord.HttpMethod = httpMethod;
+        logRecord.MethodUrl = fullUrl;
+        
+        if (queryParams && queryParams.elements() > 0)
+        {
+            enumerator = queryParams.getEnumerator();
+            while (enumerator.moveNext())
+            {
+                queryString += (queryString == "") ? "" : "\r\n";
+                queryString += enumerator.currentKey() + ' = ' + enumerator.currentValue();
+            }
+        }
+
+        logRecord.Parameters = queryString;
+        logRecord.Request = requestBody;
+        logRecord.Response = responseBody;
+        logRecord.RetCode = httpStatus;
+        logRecord.DurationMs = durationMs;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>combineUrlParts</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Объединяет две части URL, убирая лишние слеши
+    /// </summary>
+    /// <param name="_part1">Первая часть</param>
+    /// <param name="_part2">Вторая часть</param>
+    /// <returns>Объединенный URL</returns>
+    protected str combineUrlParts(str _part1, str _part2)
+    {
+        int len1 = strLen(_part1);
+        int len2 = strLen(_part2);
+        int endPos1 = len1;
+        int startPos2 = 1;
+        
+        // Определяем позицию последнего не-слеша в первой части
+        while (endPos1 > 0 &&
+              (subStr(_part1, endPos1, 1) == '/' ||
+               subStr(_part1, endPos1, 1) == '\\'))
+        {
+            endPos1--;
+        }
+        
+        // Определяем позицию первого не-слеша во второй части
+        while (startPos2 <= len2 &&
+              (subStr(_part2, startPos2, 1) == '/' ||
+               subStr(_part2, startPos2, 1) == '\\'))
+        {
+            startPos2++;
+        }
+        
+        // Формируем результирующую строку
+        str result = subStr(_part1, 1, endPos1);
+        str part2Trimmed = subStr(_part2, startPos2, len2 - startPos2 + 1);
+        
+        if (endPos1 > 0 && strLen(part2Trimmed) > 0)
+        {
+            result += '/' + part2Trimmed;
+        }
+        else
+        {
+            result += part2Trimmed;
+        }
+        
+        return result;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>buildMethodQuery</Name>
+				<Source><![CDATA[
+    protected void buildMethodQuery()
+    {
+        MapEnumerator enumerator;
+        methodQuery = "";
+        if (queryParams && queryParams.elements() > 0)
+        {
+            enumerator = queryParams.getEnumerator();
+            while (enumerator.moveNext())
+            {
+                methodQuery += (methodQuery == "") ? "" : "&";
+                methodQuery += strFmt("%1=%2",
+                    //System.Net.WebUtility::UrlEncode(enumerator.currentKey()),
+                    //System.Net.WebUtility::UrlEncode(enumerator.currentValue()));
+                    System.Uri::EscapeDataString(enumerator.currentKey()),
+                    System.Uri::EscapeDataString(enumerator.currentValue()));
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>buildAuth</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Построение аутентификации
+    /// </summary>
+    protected void buildAuth()
+    {
+        return;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>buildSignature</Name>
+				<Source><![CDATA[
+    abstract protected void buildSignature()
+    {
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>signHMACSHA256</Name>
+				<Source><![CDATA[
+    protected str signHMACSHA256(str _str, str _secret)
+    {
+        // Вычисляем HMAC-SHA256
+        System.Text.Encoding encoding = System.Text.Encoding::UTF8;
+        System.Security.Cryptography.HMACSHA256 hmac =
+                    new System.Security.Cryptography.HMACSHA256(encoding.GetBytes(_secret));
+                
+        str ret = System.BitConverter::ToString(hmac.ComputeHash(encoding.GetBytes(_str)))
+                    .Replace("-", "")
+                    .ToLower();
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>execute</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Выполняет HTTP запрос (абстрактный метод)
+    /// </summary>
+    public void execute()
+    {
+        System.Net.Http.HttpClient httpClient = new System.Net.Http.HttpClient();
+        System.Net.Http.HttpRequestMessage request;
+        System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+
+        System.UriBuilder uriBuilder;
+        str queryString;
+        MapEnumerator enumerator;
+        
+        // Построение URL
+        fullUrl = this.combineUrlParts(baseUrl, methodUrl);
+        uriBuilder = new System.UriBuilder(fullUrl);
+        
+        // Добавление параметров запроса
+        this.buildAuth();           // Шаг 1: добавление параметров аутентификации
+        this.buildMethodQuery();    // Шаг 2: построение строки запроса
+        this.buildSignature();      // Шаг 3: генерация подписи
+        //this.buildMethodQuery();    // Шаг 4: перестроение с учетом подписи только для Binance
+
+        uriBuilder.set_Query(methodQuery);
+        fullUrl = uriBuilder.get_Uri().AbsoluteUri;
+        
+        // Создание HTTP-запроса
+        request = new System.Net.Http.HttpRequestMessage();
+        
+        switch (httpMethod)
+        {
+            case RMarketAPIHttpMethod::GET:     request.set_Method(System.Net.Http.HttpMethod::Get);    break;
+            case RMarketAPIHttpMethod::POST:    request.set_Method(System.Net.Http.HttpMethod::Post);   break;
+            case RMarketAPIHttpMethod::DELETE:  request.set_Method(System.Net.Http.HttpMethod::Delete); break;
+            case RMarketAPIHttpMethod::PUT:     request.set_Method(System.Net.Http.HttpMethod::Put);    break;
+        }
+        
+        request.set_RequestUri(new System.Uri(fullUrl));
+
+        // Добавление тела запроса
+        if (requestBody)
+        {
+            str contentType = 'application/json';
+            if (headers && headers.exists('Content-Type'))
+            {
+                contentType = headers.lookup('Content-Type');
+                headers.remove('Content-Type');
+            }
+            request.Content = new System.Net.Http.StringContent(requestBody, System.Text.Encoding::UTF8, contentType);
+        }
+        
+        System.Net.Http.Headers.HttpRequestHeaders reqHeaders = request.Headers;
+        // Добавление заголовков
+        if (headers && headers.elements() > 0)
+        {
+            enumerator = headers.getEnumerator();
+            while (enumerator.moveNext())
+            {
+                reqHeaders.Add(enumerator.currentKey(), enumerator.currentValue());
+            }
+        }
+        
+        try
+        {
+            // Выполнение запроса
+            stopwatch.Start();
+            System.Net.Http.HttpResponseMessage response = httpClient.SendAsync(request).get_Result();
+            stopwatch.Stop();
+            
+            durationMs = stopwatch.get_ElapsedMilliseconds();
+            httpStatus = response.get_StatusCode();
+            
+            responseBody = response.Content.ReadAsStringAsync().get_Result();
+        }
+        catch (Exception::CLRError)
+        {
+            System.Exception clrException = CLRInterop::getLastException();
+            responseBody = clrException.get_Message(); // clrException.ToString();
+            httpStatus = System.Net.HttpStatusCode::InternalServerError;
+        }
+        catch (Exception::Error)
+        {
+            responseBody = "Ошибка выполнения запроса";
+            httpStatus = System.Net.HttpStatusCode::InternalServerError;
+        }
+        finally
+        {
+            // Логирование ответа
+            this.logRequest();
+        }
+        
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

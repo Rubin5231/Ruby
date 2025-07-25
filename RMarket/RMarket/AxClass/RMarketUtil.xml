@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketUtil</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class RMarketUtil
+{
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>normalizeDateTime2UTC</Name>
+				<Source><![CDATA[
+    public static UtcDateTime normalizeDateTime2UTC(UtcDateTime _value)
+    {
+        if (!_value)
+        {
+            return _value;
+        }
+
+        // Для Dynamics 365 F&O UtcDateTime уже хранится как GMT+0,
+        // но добавляем дополнительную нормализацию на случай кастомных реализаций
+        return DateTimeUtil::applyTimeZoneOffset(_value, Timezone::GMT_COORDINATEDUNIVERSALTIME);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getCurrentDateTimeUTC</Name>
+				<Source><![CDATA[
+    public static UtcDateTime getCurrentDateTimeUTC()
+    {
+        // Получаем текущее время в GMT без учета системных настроек
+        utcdatetime ret = dateTimeUtil::getSystemDateTime();
+        ret = RMarketUtil::normalizeDateTime2UTC(ret);
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>dateTime2Timestamp</Name>
+				<Source><![CDATA[
+    public static RMarketTimestamp dateTime2Timestamp(UtcDateTime _value)
+    {
+        RMarketTimestamp ret = 0;
+        if (_value)
+        {
+            _value = RMarketUtil::normalizeDateTime2UTC(_value);
+            UtcDateTime epoch = DateTimeUtil::newDateTime(01\01\1970, 0, Timezone::GMT_COORDINATEDUNIVERSALTIME);
+            ret = DateTimeUtil::getDifference(_value, epoch);
+        }
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>timestamp2dateTimeUTC</Name>
+				<Source><![CDATA[
+    public static UtcDateTime timestamp2dateTimeUTC(RMarketTimestamp _value)
+    {
+        UtcDateTime epoch = DateTimeUtil::newDateTime(01\01\1970, 0, Timezone::GMT_COORDINATEDUNIVERSALTIME);
+        UtcDateTime ret = DateTimeUtil::addSeconds(epoch, _value);
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>interval2Seconds</Name>
+				<Source><![CDATA[
+    public static RMarketTimestamp interval2Seconds(RMarketCandleInterval _interval)
+    {
+            switch (_interval)
+        {
+            case RMarketCandleInterval::s1:   return 1;
+            case RMarketCandleInterval::m1:   return 60;
+            case RMarketCandleInterval::m3:   return 60 * 3;
+            case RMarketCandleInterval::m5:   return 60 * 5;
+            case RMarketCandleInterval::m10:  return 60 * 10;
+            case RMarketCandleInterval::m15:  return 60 * 15;
+            case RMarketCandleInterval::m20:  return 60 * 20;
+            case RMarketCandleInterval::m30:  return 60 * 30;
+            case RMarketCandleInterval::h1:   return 3600;
+            case RMarketCandleInterval::h2:   return 3600 * 2;
+            case RMarketCandleInterval::h3:   return 3600 * 3;
+            case RMarketCandleInterval::h4:   return 3600 * 4;
+            case RMarketCandleInterval::h6:   return 3600 * 6;
+            case RMarketCandleInterval::h8:   return 3600 * 8;
+            case RMarketCandleInterval::h12:  return 3600 * 12;
+            case RMarketCandleInterval::d1:    return 86400;
+            case RMarketCandleInterval::d3:    return 86400 * 3;
+            case RMarketCandleInterval::w1:    return 86400 * 7;  // Mo to Su
+            case RMarketCandleInterval::mn1:   return 86400 * 30; // calendar month
+            default: throw error("Unsupported interval");
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>calculateCandleDateTime</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Calculate start datetime for current candle or candle with _shift number
+    /// </summary>
+    /// <param name = "_dt">vary DateTime</param>
+    /// <param name = "_interval">Candle interval</param>
+    /// <param name = "_shift">Optional. Shift number of candles from current</param>
+    /// <returns>Start Datetime of current or neighbour candle</returns>
+    public static UtcDateTime calculateCandleDateTime(UtcDateTime _dt, RMarketCandleInterval _interval, int _shift = 0)
+    {
+        switch (_interval)
+        {
+            case RMarketCandleInterval::s1:
+            case RMarketCandleInterval::m1:
+            case RMarketCandleInterval::m3:
+            case RMarketCandleInterval::m5:
+            case RMarketCandleInterval::m10:
+            case RMarketCandleInterval::m15:
+            case RMarketCandleInterval::m20:
+            case RMarketCandleInterval::m30:
+            case RMarketCandleInterval::h1:
+            case RMarketCandleInterval::h2:
+            case RMarketCandleInterval::h4:
+            case RMarketCandleInterval::h6:
+            case RMarketCandleInterval::h8:
+            case RMarketCandleInterval::h12:
+                int64 i = RMarketUtil::interval2Seconds(_interval);
+                utcdatetime dayStart = DateTimeUtil::newDateTime(DateTimeUtil::date(_dt), 0, Timezone::GMT_COORDINATEDUNIVERSALTIME);
+                int64 seconds = DateTimeUtil::getDifference(_dt, dayStart);
+                _dt = DateTimeUtil::addSeconds(dayStart, ((seconds div i) + _shift) * i);
+                break;
+            case RMarketCandleInterval::d1:
+                _dt = DateTimeUtil::newDateTime(DateTimeUtil::date(_dt), 0, Timezone::GMT_COORDINATEDUNIVERSALTIME);
+                _dt = DateTimeUtil::addDays(_dt, _shift);
+                break;
+            case RMarketCandleInterval::d3: //TODO make right for d3
+                throw error("calculateCandleDateTime for D3 interval haven't implemented yet");
+                break;
+            case RMarketCandleInterval::w1:
+                _dt = DateTimeUtil::newDateTime(DateTimeUtil::getStartOfWeekDate((new xSession()).PreferredLocale(),
+                                                                                       DateTimeUtil::date(_dt)), 0);
+                _dt = DateTimeUtil::addDays(_dt, _shift * 7);
+                break;
+            case RMarketCandleInterval::mn1:
+                _dt = DateTimeUtil::newDateTime(DateTimeUtil::date(_dt), 0, Timezone::GMT_COORDINATEDUNIVERSALTIME);
+                _dt = DateTimeUtil::addDays(_dt, 1 - (DateTimeUtil::day(_dt)));
+                _dt = DateTimeUtil::addMonths(_dt, _shift);
+                break;
+        }
+        return _dt;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>calculateCandleTimestamp</Name>
+				<Source><![CDATA[
+    public static RMarketTimestamp calculateCandleTimestamp(RMarketTimestamp _ts, RMarketCandleInterval _interval, int64 _shift = 0)
+    {
+        RMarketTimestamp ret;
+        UtcDateTime _dt = RMarketUtil::timestamp2dateTimeUTC(_ts);
+        _dt = RMarketUtil::calculateCandleDateTime(_dt, _interval, _shift);
+        ret = RMarketUtil::dateTime2Timestamp(_dt);
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

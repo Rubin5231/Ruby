@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketJob_HistoryLoadCalcBatchStart</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+internal final class RMarketJob_HistoryLoadCalcBatchStart
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>main</Name>
+				<Source><![CDATA[
+    public static void main(Args _args)
+    {
+        //sync
+        BatchHeader batchHeader;
+        SysRecurrenceData sysRecurrenceData;
+        utcDateTime batchStartTime;
+        RMarketCandlesLoad klineTask;
+        RMarketIndicatorCalc calcTask;
+ 
+        // 1. Создаем заголовок пакетного задания
+        batchHeader = BatchHeader::construct();
+        batchHeader.parmCaption("Load candles & Indicators calculation");
+        batchHeader.parmBatchGroup("RMarket");
+ 
+        // 2. Создаем и настраиваем первую задачу
+        klineTask = new RMarketCandlesLoad();
+        klineTask.parmMarketId("");
+        klineTask.parmSymbolId("");
+        klineTask.parmInterval(RMarketCandleInterval::None);
+        klineTask.parmDtFrom(DateTimeUtil::minValue());
+        klineTask.parmDtTo(DateTimeUtil::minValue());
+ 
+        // 3. Создаем и настраиваем вторую задачу
+        calcTask = new RMarketIndicatorCalc();
+        calcTask.parmMarketDimId(0);
+        calcTask.parmIndicatorId("");
+        calcTask.parmDtFrom(DateTimeUtil::minValue());
+        calcTask.parmDtTo(DateTimeUtil::minValue());
+
+        // 5. Добавляем задачи в заголовок
+        batchHeader.addTask(klineTask);
+        batchHeader.addTask(calcTask);
+ 
+        // 4. Устанавливаем зависимость: calcTask после klineTask
+        batchHeader.addDependency(calcTask,klineTask,BatchDependencyStatus::Finished);
+         
+        batchStartTime = DateTimeUtil::applyTimeZoneOffset(
+            RMarketUtil::calculateCandleDateTime(DateTimeUtil::utcNow(), RMarketCandleInterval::h1, 1),
+            DateTimeUtil::getClientMachineTimeZone());
+        // Set the recurrence data
+        sysRecurrenceData = SysRecurrence::defaultRecurrence();
+        sysRecurrenceData = SysRecurrence::setRecurrenceStartDateTime(sysRecurrenceData, batchStartTime);
+        sysRecurrenceData = SysRecurrence::setRecurrenceNoEnd(sysRecurrenceData);
+        sysRecurrenceData = SysRecurrence::setRecurrenceUnit(sysRecurrenceData, SysRecurrenceUnit::Hour, 1);
+ 
+        batchHeader.parmRecurrenceData(sysRecurrenceData);
+        //batchHeader.parmAlerts(NoYes::No, NoYes::Yes, NoYes::No, NoYes::Yes, NoYes::Yes);
+        batchHeader.parmStartDateTime(batchStartTime);
+ 
+        batchHeader.save();
+        info("Load candles & Indicators calculation sequence batch job scheduled successfully");
+        
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

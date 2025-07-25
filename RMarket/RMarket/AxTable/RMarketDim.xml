@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxTable xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketDim</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class RMarketDim extends common
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>find</Name>
+				<Source><![CDATA[
+        /// <summary>
+    /// Find record in the table <t>RMarketDim</t>
+    /// </summary>
+    /// <param name = "_marketId">a marketId</param>
+    /// <param name = "_symbolId">a symbolId</param>
+    /// <param name = "_interval">a interval</param>
+    /// <param name = "_forUpdate">if its updatable</param>
+    /// <returns>a table <t>RMarketDim</t></returns>
+    public static RMarketDim find(RMarketId              _marketId,
+                                  RMarketSymbolId        _symbolId,
+                                  RMarketCandleInterval  _interval,
+                                  boolean                _forUpdate = false)
+    {
+        RMarketDim marketDim;
+        ;
+        marketDim.selectForUpdate(_forUpdate);
+        
+        select firstonly marketDim
+            where marketDim.MarketId  == _marketId &&
+                  marketDim.SymbolId  == _symbolId &&
+                  marketDim.Interval  == _interval;
+        
+        return marketDim;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>findRecId</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Find record in the table <t>RMarketDim</t>
+    /// </summary>
+    /// <param name = "_recId">the record id</param>
+    /// <param name = "_forUpdate">if its updatable</param>
+    /// <returns>a table <t>RMarketDim</t></returns>
+    public static RMarketDim findRecId(RefRecId _recId,  boolean _forUpdate = false)
+    {
+        RMarketDim marketDim;
+        if (_recId)
+        {
+            marketDim.selectForUpdate(_forUpdate);
+            
+            select firstonly marketDim
+                where marketDim.RecId == _recId;
+        }
+        
+        return marketDim;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>exists</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Check if exists a record in the table <t>RMarketDim</t> with the given parameters
+    /// </summary>
+    /// <param name = "_marketId">a marketId</param>
+    /// <param name = "_symbolId">a symbolId</param>
+    /// <param name = "_interval">a interval</param>
+    /// <returns>a table <t>RMarketDim</t></returns>
+    public static boolean exists(RMarketId              _marketId,
+                                 RMarketSymbolId        _symbolId,
+                                 RMarketCandleInterval  _interval)
+    {
+        boolean res;
+        ;
+        res = (select firstonly RecId from RMarketDim
+                where RMarketDim.MarketId  == _marketId &&
+                      RMarketDim.SymbolId  == _symbolId &&
+                      RMarketDim.Interval  == _interval).RecId != 0;
+        
+        return res;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>checkExists</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Check if exists a record in the table <t>RMarketDim</t> with the given parameters and give a warning if not found
+    /// </summary>
+    /// <param name = "_marketId">a marketId</param>
+    /// <param name = "_symbolId">a symbolId</param>
+    /// <param name = "_interval">a interval</param>
+    /// <returns>if exists a record in the table <t>RMarketDim</t> with the given parameters</returns>
+    public static boolean checkExists(RMarketId              _marketId,
+                                      RMarketSymbolId        _symbolId,
+                                      RMarketCandleInterval  _interval)
+    {
+        return RMarketDim::exists(_marketId, _symbolId, _interval);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>findOrCreateDims</Name>
+				<Source><![CDATA[
+    static public RMarketDim findOrCreateDims(RMarketId              _marketId,
+                                              RMarketSymbolId        _symbolId,
+                                              RMarketCandleInterval  _interval)
+    {
+        RMarketDim marketDim;
+        marketDim.clear();
+        marketDim.MarketId = _marketId;
+        marketDim.SymbolId = _symbolId;
+        marketDim.Interval = _interval;
+        marketDim = RMarketDim::findOrCreate(marketDim);
+        return marketDim;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>findOrCreate</Name>
+				<Source><![CDATA[
+    static public RMarketDim findOrCreate(RMarketDim _marketDim)
+    {
+        RMarketDim marketDim = RMarketDim::find(_marketDim.MarketId, _marketDim.SymbolId, _marketDim.Interval);
+
+        if (!marketDim)
+        {
+            ttsbegin;
+
+            marketDim.selectForUpdate(true);
+            marketDim.clear();
+            marketDim.MarketId = _marketDim.MarketId;
+            marketDim.SymbolId = _marketDim.SymbolId;
+            marketDim.Interval = _marketDim.Interval;
+            if (marketDim.validateWrite())
+                marketDim.insert();
+
+            ttscommit;
+        }
+
+        return marketDim;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>modifiedField</Name>
+				<Source><![CDATA[
+    public void modifiedField(FieldId _fieldId)
+    {
+        super(_fieldId);
+
+        if (_fieldId == fieldNum(RMarketDim, Interval))
+        {
+            this.Seconds = RMarketUtil::interval2Seconds(this.Interval);
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>RMarketTable</Name>
+				<Source><![CDATA[
+    public RMarketTable RMarketTable(boolean _forUpdate = false)
+    {
+        RMarketTable ret = RMarketTable::find(this.MarketId, _forUpdate);
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>RMarketIntervals</Name>
+				<Source><![CDATA[
+    public RMarketIntervals RMarketIntervals(boolean _forUpdate = false)
+    {
+        RMarketIntervals ret = RMarketIntervals::find(this.MarketId, this.Interval, _forUpdate);
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+	<SubscriberAccessLevel>
+		<Read>Allow</Read>
+	</SubscriberAccessLevel>
+	<AllowRowVersionChangeTracking>Yes</AllowRowVersionChangeTracking>
+	<ClusteredIndex>RecIdIdx</ClusteredIndex>
+	<ReplacementKey>RecIdIdx</ReplacementKey>
+	<DeleteActions>
+		<AxTableDeleteAction>
+			<Name>RMarketIndicatorTable</Name>
+			<DeleteAction>Restricted</DeleteAction>
+			<Relation>RMarketDim</Relation>
+			<Table>RMarketIndicatorTable</Table>
+			<Tags></Tags>
+		</AxTableDeleteAction>
+		<AxTableDeleteAction>
+			<Name>RMarketCandleTable</Name>
+			<DeleteAction>Restricted</DeleteAction>
+			<Relation>RMarketDim</Relation>
+			<Table>RMarketCandleTable</Table>
+			<Tags></Tags>
+		</AxTableDeleteAction>
+	</DeleteActions>
+	<FieldGroups>
+		<AxTableFieldGroup>
+			<Name>AutoReport</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoLookup</Name>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>MarketId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>SymbolId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Interval</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoIdentification</Name>
+			<AutoPopulate>Yes</AutoPopulate>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>RecId</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoSummary</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoBrowse</Name>
+			<Fields />
+		</AxTableFieldGroup>
+	</FieldGroups>
+	<Fields>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>MarketId</Name>
+			<AllowEdit>No</AllowEdit>
+			<ExtendedDataType>RMarketId</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+			<Mandatory>Yes</Mandatory>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>SymbolId</Name>
+			<AllowEdit>No</AllowEdit>
+			<ExtendedDataType>RMarketSymbolId</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+			<Mandatory>Yes</Mandatory>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>Interval</Name>
+			<AllowEdit>No</AllowEdit>
+			<EnumType>RMarketCandleInterval</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldInt64">
+			<Name>Seconds</Name>
+			<ExtendedDataType>RMarketTimestamp</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+		</AxTableField>
+	</Fields>
+	<FullTextIndexes />
+	<Indexes>
+		<AxTableIndex>
+			<Name>MainIdx</Name>
+			<Fields>
+				<AxTableIndexField>
+					<DataField>MarketId</DataField>
+				</AxTableIndexField>
+				<AxTableIndexField>
+					<DataField>SymbolId</DataField>
+				</AxTableIndexField>
+				<AxTableIndexField>
+					<DataField>Interval</DataField>
+				</AxTableIndexField>
+			</Fields>
+		</AxTableIndex>
+		<AxTableIndex>
+			<Name>RecIdIdx</Name>
+			<AlternateKey>Yes</AlternateKey>
+			<Fields>
+				<AxTableIndexField>
+					<DataField>RecId</DataField>
+				</AxTableIndexField>
+			</Fields>
+		</AxTableIndex>
+	</Indexes>
+	<Mappings />
+	<Relations>
+		<AxTableRelation>
+			<Name>RMarketTable</Name>
+			<RelatedTable>RMarketTable</RelatedTable>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>MarketId</Name>
+					<Field>MarketId</Field>
+					<RelatedField>MarketId</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+		<AxTableRelation>
+			<Name>RMarketSymbolTable</Name>
+			<RelatedTable>RMarketSymbolTable</RelatedTable>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>SymbolId</Name>
+					<Field>SymbolId</Field>
+					<RelatedField>SymbolId</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+		<AxTableRelation>
+			<Name>RMarketIntervals</Name>
+			<RelatedTable>RMarketIntervals</RelatedTable>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>MarketId</Name>
+					<Field>MarketId</Field>
+					<RelatedField>MarketId</RelatedField>
+				</AxTableRelationConstraint>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>Interval</Name>
+					<Field>Interval</Field>
+					<RelatedField>Interval</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+		<AxTableRelation>
+			<Name>RMarketSymbolIntervals</Name>
+			<RelatedTable>RMarketSymbolIntervals</RelatedTable>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>MarketId</Name>
+					<Field>MarketId</Field>
+					<RelatedField>MarketId</RelatedField>
+				</AxTableRelationConstraint>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>SymbolId</Name>
+					<Field>SymbolId</Field>
+					<RelatedField>SymbolId</RelatedField>
+				</AxTableRelationConstraint>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>Interval</Name>
+					<Field>Interval</Field>
+					<RelatedField>Interval</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+	</Relations>
+	<StateMachines />
+</AxTable>

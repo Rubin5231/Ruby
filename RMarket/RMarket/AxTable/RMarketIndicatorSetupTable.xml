@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxTable xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketIndicatorSetupTable</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class RMarketIndicatorSetupTable extends common
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>find</Name>
+				<Source><![CDATA[
+    public static RMarketIndicatorSetupTable find(RMarketIndicatorId _indicatorId,
+                                                  boolean            _forUpdate = false)
+    {
+        RMarketIndicatorSetupTable marketIndicatorSetupTable;
+        ;
+        if (_indicatorId)
+        {
+            marketIndicatorSetupTable.selectForUpdate(_forUpdate);
+            
+            select firstonly marketIndicatorSetupTable
+                where marketIndicatorSetupTable.IndicatorId == _indicatorId;
+        }
+        
+        return marketIndicatorSetupTable;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>findRecId</Name>
+				<Source><![CDATA[
+    public static RMarketIndicatorSetupTable findRecId(RecId    _refRecId,
+                                                       boolean  _forUpdate = false)
+    {
+        RMarketIndicatorSetupTable marketIndicatorSetupTable;
+        ;
+        if (_refRecId)
+        {
+            marketIndicatorSetupTable.selectForUpdate(_forUpdate);
+            
+            select firstonly marketIndicatorSetupTable
+                where marketIndicatorSetupTable.RecId == _refRecId;
+        }
+        
+        return marketIndicatorSetupTable;
+    }
+
+    /*public static void indicatorSetupLookup(FormInt64Control _control)
+    {
+        SysTableLookup          sysTableLookUp;
+        Query query = new Query();
+
+        QueryBuildDataSource qbds = query.addDataSource(tableNum(RMarketIndicatorSetupTable));
+        qbds.addRange(fieldNum(RMarketIndicatorSetupTable, Active)).value(SysQuery::value(NoYes::Yes)); // Пример фильтра
+
+        sysTableLookUp = SysTableLookup::newParameters(tableNum(RMarketIndicatorSetupTable), _control, true);
+
+        // Добавление полей для отображения в lookup
+        sysTableLookUp.addLookupfield(fieldNum(RMarketIndicatorSetupTable, IndicatorType)); // Пример поля
+        sysTableLookUp.addLookupfield(fieldNum(RMarketIndicatorSetupTable, Parameter)); // Пример поля
+        sysTableLookUp.addLookupfield(fieldNum(RMarketIndicatorSetupTable, CalcBase)); // Пример поля
+        sysTableLookUp.addLookupfield(fieldNum(RMarketIndicatorSetupTable, RecId), true);
+
+        sysTableLookUp.parmQuery(query);
+        sysTableLookUp.performFormLookup();
+    }*/
+
+//-->>
+/*
+Рекомендуемый список значений для перечисления "База расчета" (Calculation Base):
+
+Этот список должен покрывать наиболее распространенные и полезные источники данных для индикаторов. Вот оптимальный набор:
+
+    Open: Цена открытия свечи.
+
+    High: Максимальная цена свечи.
+
+    Low: Минимальная цена свечи.
+
+    Close: Цена закрытия свечи. (Самый частый выбор)
+
+    Volume: Объем торгов (в лотах/контрактах/штуках).
+
+    Turnover: Оборот (объем в деньгах, Volume * Price). Важно! Уточните у источника данных, как именно рассчитывается Turnover (часто это Volume * (High+Low+Close)/3 или Volume * Close).
+
+    HL2: Среднее максимума и минимума ((High + Low) / 2).
+
+    HLC3: Типичная цена ((High + Low + Close) / 3). (Очень распространено)
+
+    HLCC4: Средневзвешенная цена закрытия ((High + Low + Close + Close) / 4 или (High + Low + 2*Close) / 4). (Используется в некоторых индикаторах)
+
+    Range: Размах свечи (High - Low). (Полезно для индикаторов волатильности)
+
+    Median: Медианная цена ((High + Low) / 2). (Синоним HL2, но иногда используется отдельный термин)
+
+    Body: Разница между Open и Close (Math.Abs(Open - Close)). (Менее распространено, но полезно для анализа силы свечи)
+
+    BodyPct: Тело свечи в % от диапазона ((Math.Abs(Open - Close) / (High - Low)) * 100). (Специфично, но может быть полезно)
+
+Важные соображения и рекомендации:
+
+    Turnover vs Volume: Четко определитесь, что вам важнее: количество бумаг/контрактов (Volume) или денежный оборот (Turnover). Оба важны, но смысл разный. Включите оба.
+
+    Производные значения (HL2, HLC3, HLCC4, Range): Обязательно включите их! Многие стандартные индикаторы (Pivot Points, CCI, некоторые MA) используют их напрямую. Рассчитывать их вне базы индикатора (например, в таблице свечей) и потом ссылаться — возможный вариант, но добавление в перечисление проще для конфигурации.
+
+    Расширяемость: Сделайте перечисление (ENUM) в базе данных. Это обеспечит контроль целостности и удобство выбора. Большинство СУБД позволяют относительно легко добавлять новые значения в ENUM при необходимости.
+
+    Сложные индикаторы (VWAP, ATR, Ишимоку): Для них вашего подхода может быть недостаточно:
+
+        VWAP: Требует двух базовых данных: Цену (обычно HLC3 или Close) и Объем (Volume). Он принципиально не может быть рассчитан на одной колонке.
+
+        ATR: Использует True Range, который основан на High, Low и предыдущем Close.
+
+        Ишимоку: Использует комбинации High/Low за разные периоды для разных линий.
+
+        MACD: Обычно строится на Close, но его компоненты (EMA) могли бы теоретически использовать другую базу, хотя это нестандартно.
+
+        Решение: Для таких индикаторов поле Calculation Base либо:
+
+            Оставляем пустым или NULL (и подразумеваем, что база жестко закодирована в логике расчета этого типа индикатора).
+
+            Создаем отдельную, более сложную структуру настройки (например, таблица ComplexIndicatorSettings), где можно задать несколько источников или специфические периоды. Это значительно усложнит систему.
+
+        Рекомендация для начала: Начните с вашей простой и элегантной структуры (Type, Param, Base). Для сложных индикаторов (VWAP, ATR, Ишимоку) пока не используйте поле Base (оно NULL) и обрабатывайте их как исключения в коде расчета. Когда простые индикаторы будут работать, подумаете о расширении модели для сложных.
+
+    "Индикатор на индикаторе": Ваша текущая структура не поддерживает напрямую расчет индикатора (например, SMA) на основе выходных данных другого индикатора (например, RSI). Для этого потребуется более сложная иерархическая модель (например, поле ParentIndicatorID в таблице настроек). Это следующий уровень сложности.
+
+    Документация в данных: Рассмотрите возможность добавления поля Description или Comment в таблицу настроек индикатора. Краткое описание зачем создана эта конкретная настройка (например, "SMA50 Volume для фильтрации слабых трендов") очень поможет потом.*/
+//--<<
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+	<FormRef>RMarketIndicatorSetupTable</FormRef>
+	<Label>Indicators setup</Label>
+	<TableGroup>Group</TableGroup>
+	<TitleField1>IndicatorType</TitleField1>
+	<TitleField2>Parameter</TitleField2>
+	<CacheLookup>Found</CacheLookup>
+	<ClusteredIndex>IndicatorIdIdx</ClusteredIndex>
+	<CreatedBy>Yes</CreatedBy>
+	<CreatedDateTime>Yes</CreatedDateTime>
+	<ModifiedBy>Yes</ModifiedBy>
+	<ModifiedDateTime>Yes</ModifiedDateTime>
+	<PrimaryIndex>IndicatorIdIdx</PrimaryIndex>
+	<ReplacementKey>IndicatorIdIdx</ReplacementKey>
+	<DeleteActions />
+	<FieldGroups>
+		<AxTableFieldGroup>
+			<Name>AutoReport</Name>
+			<IsManuallyUpdated>Yes</IsManuallyUpdated>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoLookup</Name>
+			<IsManuallyUpdated>Yes</IsManuallyUpdated>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>IndicatorId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>IndicatorType</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Active</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Description</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Parameter</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>CalcBase</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoIdentification</Name>
+			<AutoPopulate>Yes</AutoPopulate>
+			<IsManuallyUpdated>Yes</IsManuallyUpdated>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>IndicatorId</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoSummary</Name>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoBrowse</Name>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>Overview</Name>
+			<Label>Overview</Label>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>IndicatorId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Active</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Description</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>Details</Name>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>IndicatorId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Description</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Active</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>IndicatorType</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Parameter</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>CalcBase</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+	</FieldGroups>
+	<Fields>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>IndicatorId</Name>
+			<ExtendedDataType>RMarketIndicatorId</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>IndicatorType</Name>
+			<EnumType>RMarketIndicatorType</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>Description</Name>
+			<ExtendedDataType>Description</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldReal">
+			<Name>Parameter</Name>
+			<ExtendedDataType>RMarketIndicatorParameter</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>CalcBase</Name>
+			<EnumType>RMarketIndicatorBaseEnum</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>Active</Name>
+			<Label>Active</Label>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+	</Fields>
+	<FullTextIndexes />
+	<Indexes>
+		<AxTableIndex>
+			<Name>IndicatorIdIdx</Name>
+			<AlternateKey>Yes</AlternateKey>
+			<Fields>
+				<AxTableIndexField>
+					<DataField>IndicatorId</DataField>
+				</AxTableIndexField>
+			</Fields>
+		</AxTableIndex>
+	</Indexes>
+	<Mappings />
+	<Relations />
+	<StateMachines />
+</AxTable>

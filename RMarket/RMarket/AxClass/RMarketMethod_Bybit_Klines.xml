@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketMethod_Bybit_Klines</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Получение свечных данных Bybit
+/// 
+/// Usage:
+/// RMarketMethod_Bybit_Klines apiMethod = new RMarketMethod_Bybit_Klines();
+/// apiMethod.setBaseUrl('https://api.bybit.com');
+/// apiMethod.initParameters('spot', 'BTCUSDT', '4h', 1000);
+/// apiMethod.initPeriod(1499040000000, 1499100999000);
+/// apiMethod.execute();
+/// List listCon = apiMethod.getKlineList();
+/// </summary>
+public class RMarketMethod_Bybit_Klines extends RMarketMethod implements RMarketMethodInterface_Klines
+{
+    protected RMarketJson_Bybit_Kline responseContract;
+
+    protected str category;
+    protected str symbol;
+    protected str interval;
+    protected int limit;
+    protected RMarketTimestamp fromTS;
+    protected RMarketTimestamp toTS;
+    
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>new</Name>
+				<Source><![CDATA[
+    /// <summary> Конструктор класса </summary>
+    public void new()
+    {
+        apiClient = new RMarketApiClientBybit();
+        apiClient.parmHttpMethod(RMarketAPIHttpMethod::GET);
+        apiClient.parmMethodUrl('/v5/market/kline');
+
+        // Do this before execute()
+        //apiClient.setBaseUrl('');
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>initParameters</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Устанавливает параметры запроса
+    /// </summary>
+    /// <param name="_symbol">Торговая пара</param>
+    /// <param name="_interval">Интервал свечи</param>
+    /// <param name="_limit">Количество свечей</param>
+    /// <param name="_category">Категория (spot, linear, inverse)</param>
+    public void initParameters(str _symbol, str _interval, str _category = 'spot', int _limit = 1000)
+    {
+        category = _category;
+        symbol = strUpr(_symbol);
+        interval = _interval;
+        limit = _limit;
+
+        apiClient.addQueryParam('category', _category);
+        apiClient.addQueryParam('symbol', symbol);
+        apiClient.addQueryParam('interval', interval);
+        apiClient.addQueryParam('limit', int2Str(limit));
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>initPeriod</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Устанавливает период запроса
+    /// </summary>
+    /// <param name="_fromTSms">Начало периода</param>
+    /// <param name="_toTSms">Окончание периода</param>
+    public void initPeriod(RMarketTimestamp _fromTSms, RMarketTimestamp _toTSms)
+    {
+        fromTS = _fromTSms;
+        toTS = _toTSms;
+        apiClient.addQueryParam('start', int642Str(fromTS));
+        apiClient.addQueryParam('end', int642Str(toTS));
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getLimit</Name>
+				<Source><![CDATA[
+    public int getLimit()
+    {
+        return limit;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>prepare</Name>
+				<Source><![CDATA[
+    public void prepare()
+    {
+        // Add your code here...
+
+        super();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>checkApiKey</Name>
+				<Source><![CDATA[
+    public boolean checkApiKey()
+    {
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>processResponse</Name>
+				<Source><![CDATA[
+    public void processResponse()
+    {
+        super();
+
+        str responseStr = apiClient.getResponseBody();
+
+        if (apiClient.getHttpStatus() != System.Net.HttpStatusCode::OK)
+            throw Error(strfmt("Request returns error!"));
+    
+        responseContract = RMarketJsonSerializer::deserializeObject(
+            classNum(RMarketJson_Bybit_Kline),
+            responseStr) as RMarketJson_Bybit_Kline;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getKlineList</Name>
+				<Source><![CDATA[
+    public List getKlineList()
+    {
+        List ret;
+        if (responseContract)
+            ret = responseContract.getKlineList();
+        else
+            ret = new List(Types::Container);
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

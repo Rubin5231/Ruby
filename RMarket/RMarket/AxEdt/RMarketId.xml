@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxEdt xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns=""
+	i:type="AxEdtString">
+	<Name>RMarketId</Name>
+	<Extends>SysGroup</Extends>
+	<Label>Market</Label>
+	<ReferenceTable>RMarketTable</ReferenceTable>
+	<ArrayElements />
+	<Relations />
+	<TableReferences>
+		<AxEdtTableReference>
+			<RelatedField>MarketId</RelatedField>
+			<Table>RMarketTable</Table>
+		</AxEdtTableReference>
+	</TableReferences>
+</AxEdt>

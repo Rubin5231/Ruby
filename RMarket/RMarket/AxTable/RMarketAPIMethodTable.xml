@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxTable xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketAPIMethodTable</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class RMarketAPIMethodTable extends common
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>find</Name>
+				<Source><![CDATA[
+    public static RMarketAPIMethodTable find(RMarketId            _marketId,
+                                             RMarketAPIMethodEnum _methodEnum,
+                                             boolean              _forUpdate = false)
+    {
+        RMarketAPIMethodTable marketAPIMethodTable;
+        ;
+        if (_marketId)
+        {
+            marketAPIMethodTable.selectForUpdate(_forUpdate);
+            
+            select firstonly marketAPIMethodTable
+                where marketAPIMethodTable.MarketId   == _marketId
+                   && marketAPIMethodTable.MethodEnum == _methodEnum;
+        }
+        
+        return marketAPIMethodTable;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>RMarketTable</Name>
+				<Source><![CDATA[
+    public RMarketTable RMarketTable()
+    {
+        return RMarketTable::find(this.MarketId);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>url</Name>
+				<Source><![CDATA[
+    public RMarketAPIMethodURL url()
+    {
+        RMarketAPIMethodURL ret = this.RMarketTable().ApiURL;
+        ret += (subStr(this.MethodURL, 1, 1) != '/') ? '/' : '';
+        ret += this.MethodURL;
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+	<Label>Market API methods</Label>
+	<TableGroup>Group</TableGroup>
+	<TitleField1>MarketId</TitleField1>
+	<CacheLookup>Found</CacheLookup>
+	<ClusteredIndex>MarketAPIMethodTableIdIdx</ClusteredIndex>
+	<CreatedBy>Yes</CreatedBy>
+	<CreatedDateTime>Yes</CreatedDateTime>
+	<ModifiedBy>Yes</ModifiedBy>
+	<ModifiedDateTime>Yes</ModifiedDateTime>
+	<PrimaryIndex>MarketAPIMethodTableIdIdx</PrimaryIndex>
+	<ReplacementKey>MarketAPIMethodTableIdIdx</ReplacementKey>
+	<DeleteActions />
+	<FieldGroups>
+		<AxTableFieldGroup>
+			<Name>AutoReport</Name>
+			<IsManuallyUpdated>Yes</IsManuallyUpdated>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoLookup</Name>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoIdentification</Name>
+			<AutoPopulate>Yes</AutoPopulate>
+			<IsManuallyUpdated>Yes</IsManuallyUpdated>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>MethodEnum</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>MarketId</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoSummary</Name>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoBrowse</Name>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>Overview</Name>
+			<Label>Overview</Label>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>MethodEnum</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>MethodURL</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>LogLevel</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+	</FieldGroups>
+	<Fields>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>MarketId</Name>
+			<ExtendedDataType>RMarketId</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>MethodEnum</Name>
+			<EnumType>RMarketAPIMethodEnum</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>MethodURL</Name>
+			<ExtendedDataType>RMarketAPIMethodURL</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>Description</Name>
+			<ExtendedDataType>Description</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>LogLevel</Name>
+			<EnumType>RMarketLogLevel</EnumType>
+		</AxTableField>
+	</Fields>
+	<FullTextIndexes />
+	<Indexes>
+		<AxTableIndex>
+			<Name>MarketAPIMethodTableIdIdx</Name>
+			<AlternateKey>Yes</AlternateKey>
+			<Fields>
+				<AxTableIndexField>
+					<DataField>MarketId</DataField>
+				</AxTableIndexField>
+				<AxTableIndexField>
+					<DataField>MethodEnum</DataField>
+				</AxTableIndexField>
+			</Fields>
+		</AxTableIndex>
+	</Indexes>
+	<Mappings />
+	<Relations>
+		<AxTableRelation>
+			<Name>RMarketTable</Name>
+			<RelatedTable>RMarketTable</RelatedTable>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>MarketId</Name>
+					<Field>MarketId</Field>
+					<RelatedField>MarketId</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+	</Relations>
+	<StateMachines />
+</AxTable>

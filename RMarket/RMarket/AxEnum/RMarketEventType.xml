@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxEnum xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketEventType</Name>
+	<UseEnumValue>No</UseEnumValue>
+	<EnumValues>
+		<AxEnumValue>
+			<Name>SignalDetected</Name>
+			<Label>Signal Detected</Label>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>SignalIgnored</Name>
+			<Label>Signal Ignored</Label>
+			<Value>1</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>PositionOpened</Name>
+			<Label>Position Opened</Label>
+			<Value>2</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>PositionClosed</Name>
+			<Label>Position Closed</Label>
+			<Value>3</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>PositionPartiallyClosed</Name>
+			<Label>Position Partially Closed</Label>
+			<Value>4</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>OrderPlaced</Name>
+			<Label>Order Placed</Label>
+			<Value>5</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>OrderModified</Name>
+			<Label>Order Modified</Label>
+			<Value>6</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>OrderCanceled</Name>
+			<Label>Order Canceled</Label>
+			<Value>7</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>OrderFilled</Name>
+			<Label>Order Filled</Label>
+			<Value>8</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>StopLossTriggered</Name>
+			<Label>StopLoss Triggered</Label>
+			<Value>9</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>DrawdownAlert</Name>
+			<Label>Drawdown Alert</Label>
+			<Value>10</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>LossSeriesAlert</Name>
+			<Label>Loss Series Alert</Label>
+			<Value>11</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>BacktestStarted</Name>
+			<Label>Backtest Started</Label>
+			<Value>12</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>BacktestCompleted</Name>
+			<Label>Backtest Completed</Label>
+			<Value>13</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>ForwardTestTick</Name>
+			<Label>Forward Test Tick</Label>
+			<Value>14</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>StrategyEnabled</Name>
+			<Label>Strategy Enabled</Label>
+			<Value>15</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>StrategyDisabled</Name>
+			<Label>Strategy Disabled</Label>
+			<Value>16</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>ErrorOccurred</Name>
+			<Label>Error Occurred</Label>
+			<Value>17</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>DataGapDetected</Name>
+			<Label>Data Gap Detected</Label>
+			<Value>18</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>VolatilityFilterActive</Name>
+			<Label>Volatility Filter Active</Label>
+			<Value>19</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>NewsBlackout</Name>
+			<Label>News Blackout</Label>
+			<Value>20</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>ManualIntervention</Name>
+			<Label>Manual Intervention</Label>
+			<Value>21</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>StrategyParmsUpdated</Name>
+			<Label>Strategy Parms Updated</Label>
+			<Value>22</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>BalanceSnapshot</Name>
+			<Label>Balance Snapshot</Label>
+			<Value>23</Value>
+		</AxEnumValue>
+	</EnumValues>
+	<IsExtensible>true</IsExtensible>
+</AxEnum>

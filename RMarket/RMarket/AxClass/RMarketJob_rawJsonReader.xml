@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketJob_rawJsonReader</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+internal final class RMarketJob_rawJsonReader
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>main</Name>
+				<Source><![CDATA[
+    public static void main(Args _args)
+    {
+        str responseStr = @'
+{
+  "retCode": 5,
+  "retMsg": "OK",
+  "result": {
+    "category": "spot",
+    "symbol": "BTCUSDT",
+    "list": [
+      [
+        "1749722400000",
+        "107506.9",
+        "107530.8",
+        "107219.4",
+        "107354.9",
+        "204.013062",
+        "21901864.05274471"
+      ],
+      [
+        "1749718800000",
+        "107731.2",
+        "107784",
+        "107495.8",
+        "107506.9",
+        "217.831905",
+        "23443660.8842308"
+      ],
+      [
+        "1749715200000",
+        "107627.3",
+        "107840.2",
+        "107428.8",
+        "107731.2",
+        "226.735273",
+        "24413627.45403742"
+      ]
+    ]
+  },
+  "retExtInfo": {},
+  "time": 1749724242696
+}';
+        
+        // Используем JsonTextReader для ручного парсинга
+        // https://www.newtonsoft.com/json/help/html/Introduction.htm
+        /*
+        Newtonsoft.Json.JsonTextReader reader = new Newtonsoft.Json.JsonTextReader(responseStr);
+        Map responseMap = reader.readAsMap();
+        
+        // Парсим основные поля
+        int retCode = responseMap.get('retCode');
+        str retMsg = responseMap.get('retMsg');
+        Map retExtInfo = responseMap.get('retExtInfo');
+        int64 time = responseMap.get('time');
+        
+        Info(strFmt('"retCode": %1, "retMsg": "%2", "time": %3',
+            retCode, retMsg, time));
+        
+        // Парсим result
+        Map resultMap = responseMap.get('result');
+        str category = resultMap.get('category');
+        str symbol = resultMap.get('symbol');
+        List listArray = resultMap.get('list');
+        
+        Info(strFmt('"category": "%1", "symbol": "%2"', category, symbol));
+        
+        // Обрабатываем многомерный массив
+        ListEnumerator outerEnumerator = listArray.getEnumerator();
+        int counter = 1;
+        
+        while (outerEnumerator.moveNext())
+        {
+            List innerList = outerEnumerator.current();
+            ListEnumerator innerEnumerator = innerList.getEnumerator();
+            
+            // Извлекаем значения по порядку
+            innerEnumerator.moveNext(); str openTime = innerEnumerator.current();
+            innerEnumerator.moveNext(); str openPrice = innerEnumerator.current();
+            innerEnumerator.moveNext(); str highPrice = innerEnumerator.current();
+            innerEnumerator.moveNext(); str lowPrice = innerEnumerator.current();
+            innerEnumerator.moveNext(); str closePrice = innerEnumerator.current();
+            innerEnumerator.moveNext(); str volume = innerEnumerator.current();
+            innerEnumerator.moveNext(); str turnover = innerEnumerator.current();
+            
+            Info(strFmt("Item %1: [%2, %3, %4, %5, %6, %7, %8]",
+                counter,
+                openTime,
+                openPrice,
+                highPrice,
+                lowPrice,
+                closePrice,
+                volume,
+                turnover));
+                
+            counter++;
+        }*/
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

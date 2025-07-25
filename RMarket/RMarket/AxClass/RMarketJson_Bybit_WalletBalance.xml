@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketJson_Bybit_WalletBalance</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[DataContractAttribute]
+public class RMarketJson_Bybit_WalletBalance extends RMarketJson_Bybit_Response
+{
+    // GET /v5/account/wallet-balance
+
+    private RMarketJson_Bybit_WalletBalance_Result result;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmResult</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Получает или устанавливает результат запроса
+    /// </summary>
+    /// <param name="_result">
+    /// Основные данные баланса
+    /// </param>
+    /// <returns>
+    /// Объект с результатом
+    /// </returns>
+    [DataMemberAttribute('result')]
+    public RMarketJson_Bybit_WalletBalance_Result parmResult(RMarketJson_Bybit_WalletBalance_Result _result = result)
+    {
+        result = _result;
+        return result;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getAccountBalances</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Извлекает балансы всех валют по всем аккаунтам
+    /// </summary>
+    /// <returns>
+    /// Map с балансами в формате: ключ "ТипАккаунта_Валюта", значение [баланс, доступно, usdValue]
+    /// </returns>
+    public Map getAccountBalances()
+    {
+        Map balancesMap = new Map(Types::String, Types::Container);
+        
+        if (this.isSuccess() && result)
+        {
+            List accounts = result.parmList();
+            ListEnumerator accountEnum = accounts.getEnumerator();
+            
+            while (accountEnum.moveNext())
+            {
+                RMarketJson_Bybit_WalletBalance_Account account = accountEnum.current();
+                str accountType = account.parmAccountType();
+                
+                List coins = account.parmCoin();
+                ListEnumerator coinEnum = coins.getEnumerator();
+                
+                while (coinEnum.moveNext())
+                {
+                    RMarketJson_Bybit_WalletBalance_Coin coin = coinEnum.current();
+                    CurrencyCode currency = coin.parmCoin();
+                    
+                    // Сохраняем в формате: [Баланс, Доступно для вывода, USD-эквивалент]
+                    balancesMap.insert(
+                        strFmt("%1_%2", accountType, currency),
+                        [coin.parmWalletBalance(), coin.parmAvailableToWithdraw(), coin.parmUsdValue()]
+                    );
+                }
+            }
+        }
+        
+        return balancesMap;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

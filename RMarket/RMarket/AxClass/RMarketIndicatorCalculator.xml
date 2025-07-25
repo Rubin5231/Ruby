@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketIndicatorCalculator</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+abstract public class RMarketIndicatorCalculator
+{
+    protected RMarketIndicatorSetupTable indicatorSetup;
+    protected RMarketDim marketDim;
+    protected RMarketIndicatorValue value;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmIndicatorSetup</Name>
+				<Source><![CDATA[
+    public RMarketIndicatorSetupTable parmIndicatorSetup(RMarketIndicatorSetupTable _indicatorSetup = indicatorSetup)
+    {
+        indicatorSetup = _indicatorSetup;
+        return indicatorSetup;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmMarketDim</Name>
+				<Source><![CDATA[
+    public RMarketDim parmMarketDim(RMarketDim _marketDim = marketDim)
+    {
+        marketDim = _marketDim;
+        return marketDim;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>value</Name>
+				<Source><![CDATA[
+    public RMarketIndicatorValue value(RMarketIndicatorValue _value = value)
+    {
+        value = _value;
+        return value;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getExtraPeriodsNeeded</Name>
+				<Source><![CDATA[
+    abstract protected int getExtraPeriodsNeeded()
+    {
+        // Для SMA/EMA: return real2int(indicatorSetup.Parameter);
+        // Для RSI/ATR: return real2int(indicatorSetup.Parameter) + 1;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getStartLoopTS</Name>
+				<Source><![CDATA[
+    protected RMarketTimestamp getStartLoopTS(RMarketDim _marketDim, RMarketIndicatorSetupTable _indicatorSetup, RMarketTimestamp _startCalcTS = 0)
+    {
+        RMarketTimestamp ret;
+        RMarketCandleTable candle;
+        int periodsNeeded = this.getExtraPeriodsNeeded();
+
+        ret = _startCalcTS - (periodsNeeded - 1) * _marketDim.Seconds;
+        
+        //select firstonly Timestamp from candle
+        //    order by Timestamp
+        //    where candle.DimRecId == _marketDim.RecId;
+        //ret = max(candle.Timestamp, 
+        //    this.getStartCalcTS(_marketDim, _indicatorSetup) - (periodsNeeded - 1) * RMarketUtil::interval2Seconds(_marketDim.Interval));
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getStartCalcTS</Name>
+				<Source><![CDATA[
+    protected RMarketTimestamp getStartCalcTS(RMarketDim _marketDim, RMarketIndicatorSetupTable _indicatorSetup, RMarketTimestamp _fromTS = 0)
+    {
+        RMarketTimestamp ret;
+        RMarketIndicatorTable indicator;
+
+        select firstonly Timestamp from indicator
+            order by Timestamp desc
+            where indicator.DimRecId    == _marketDim.RecId
+               && indicator.IndicatorId == _indicatorSetup.IndicatorId;
+        ret = indicator.Timestamp + RMarketUtil::interval2Seconds(_marketDim.Interval);
+
+        if (_fromTS)
+        {
+            ret = ret ? max(ret, _fromTS) : _fromTS;
+        }
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getEndCalcTS</Name>
+				<Source><![CDATA[
+    protected RMarketTimestamp getEndCalcTS(RMarketDim _marketDim, RMarketIndicatorSetupTable _indicatorSetup, RMarketTimestamp _toTS = 0)
+    {
+        RMarketTimestamp ret;
+        RMarketCandleTable candle;
+
+        select firstonly Timestamp from candle
+            order by Timestamp desc
+            where candle.DimRecId == _marketDim.RecId;
+        ret = candle.Timestamp + _marketDim.Seconds;
+
+        if (_toTS)
+            ret = min(ret, _toTS);
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>calc</Name>
+				<Source><![CDATA[
+    abstract protected RMarketIndicatorTable calc(RMarketDim _marketDim, RMarketIndicatorSetupTable _indicatorSetup, RMarketCandleTable _candle, boolean _justCache = false)
+    {
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>calcRow</Name>
+				<Source><![CDATA[
+    public void calcRow(RMarketTimestamp _fromTS = 0, RMarketTimestamp _toTS = 0)
+    {
+        //, candleMin, candleMax;
+        RMarketTimestampTable timestamp;
+        //, total;
+        RMarketTimestamp     minTs, maxTs, intervalSeconds;
+        RMarketTimestamp lastIndicatorTimestamp;
+        RMarketTimestamp lastCandleTimestamp;
+        // -->>
+        RMarketCandleTable candle;
+        RMarketIndicatorTable indicator;
+        RecordInsertList insertList = new RecordInsertList(tableNum(RMarketIndicatorTable));
+        RMarketTimestamp startLoopTS, startCalcTS, endCalcTS;
+        int counter;
+
+        startCalcTS = this.getStartCalcTS(marketDim, indicatorSetup, _fromTS);
+        endCalcTS = this.getEndCalcTS(marketDim, indicatorSetup, _toTS);
+        startLoopTS = this.getStartLoopTS(marketDim, indicatorSetup, startCalcTS);
+
+        if (startLoopTS && startCalcTS && endCalcTS && startCalcTS <= endCalcTS)
+        {
+            while select candle
+                order by Timestamp
+                where candle.DimRecId == marketDim.RecId
+                && candle.Timestamp   >= startLoopTS
+                && candle.Timestamp   <  endCalcTS
+            {
+                indicator = this.calc(marketDim, indicatorSetup, candle, candle.Timestamp < startCalcTS);
+
+                if (indicator.Timestamp)
+                {
+                    insertList.add(indicator);
+
+                    counter++;
+                    if (counter div 1000 == 0)
+                    {
+                        insertList.insertDatabase();
+                        insertList = new RecordInsertList(tableNum(RMarketIndicatorTable));
+                    }
+                }
+            }
+            insertList.insertDatabase();
+        }
+        info(strFmt("Calculated for %1 candles", counter));
+        /*
+        // Цикл свечей
+            // Рассчет индикатора
+    
+        select maxOf(Timestamp) from candleMin
+            where candleMin.DimRecId == _marketDim.RecId;
+        select maxOf(Timestamp) from candleMax
+            where candleMax.DimRecId == _marketDim.RecId;
+    
+        if (!candleMax || candleMax.Timestamp == 0)
+            return;
+    
+        minTs = candleMin.Timestamp;
+        maxTs = candleMax.Timestamp;
+        intervalSeconds = RMarketUtil::interval2Seconds(_marketDim.Interval);
+
+        // 2. Построение запроса с восстановленной временной сеткой
+        Query   taskQuery = new Query();
+
+        QueryBuildDataSource qbdsTimestamp = taskQuery.addDataSource(tableNum(RMarketTimestampTable));
+        qbdsTimestamp.addRange(fieldNum(RMarketTimestampTable, Timestamp)).value(SysQuery::range(minTs, maxTs));
+        qbdsTimestamp.addSortField(fieldNum(RMarketTimestampTable, Timestamp), SortOrder::Ascending);
+    
+        QueryBuildDataSource qbdsCandle = qbdsTimestamp.addDataSource(tableNum(RMarketCandleTable));
+        qbdsCandle.relations(false);
+        qbdsCandle.addLink(fieldNum(RMarketTimestampTable, Timestamp), fieldNum(RMarketCandleTable, Timestamp));
+        qbdsCandle.joinMode(JoinMode::OuterJoin);
+        qbdsCandle.addRange(fieldNum(RMarketCandleTable, DimRecId)).value(SysQuery::value(_marketDim.RecId));
+    
+        // 3. Инициализация переменных для расчета
+        real lastClose = 0;
+        boolean isFirst = true;
+        int period = real2int(_indicatorSetup.Parameter);
+        RecordSortedList insertList = new RecordSortedList(tableNum(RMarketIndicatorTable));
+        insertList.sortOrder(fieldNum(RMarketIndicatorTable, Timestamp));
+    
+        // Структуры для хранения состояния индикаторов
+        //Map indicatorState = new Map(Types::Integer, Types::Class);
+        //indicatorState.insert(RMarketIndicatorType::SMA, new RSMAState(period));
+        //indicatorState.insert(RMarketIndicatorType::EMA, new REMAState(period));
+        //indicatorState.insert(RMarketIndicatorType::RSI, new RRSIState(period));
+    
+        RMarketIndicatorCalculator calculator = RMarketIndicatorCalculator::construct(_indicatorSetup);
+
+        QueryRun taskQueryRun = new QueryRun(taskQuery);
+        total = SysQuery::countLoops(taskQueryRun);
+        progress.setTotal(total, 2); // Уровень 2
+        
+        while (taskQueryRun.next())
+        {
+            timestamp = taskQueryRun.get(tableNum(RMarketTimestampTable));
+            candle = taskQueryRun.get(tableNum(RMarketCandleTable));
+            counter++;
+            progress.setCount(counter, 2);
+            progress.setText(strFmt("%1 / %2 - %3", counter, total, timestamp.DateTime), 2);
+            
+            // 5. Восстановление пропущенных свечей
+            if (!candle)
+            {
+                candle = RMarketCandleTable::createArtificial(timestamp.Timestamp, lastClose);
+            }
+            else
+            {
+                lastClose = candle.Close;
+                isFirst = false;
+            }
+        
+            // 6. Расчет значения индикатора
+            real baseValue = candle.getValue(_indicatorSetup.CalcBase);
+            real indicatorValue = calculator.calc(baseValue);
+        
+            // 7. Сохранение результата
+            if (calculator.isValid())
+            {
+                RMarketIndicatorTable indicatorRecord;
+                indicatorRecord.SetupRecId = _indicatorSetup.RecId;
+                indicatorRecord.DimRecId = _marketDim.RecId;
+                indicatorRecord.Timestamp = timestamp.Timestamp;
+                indicatorRecord.Value = indicatorValue;
+                insertList.ins(indicatorRecord);
+            }
+        
+            // 8. Пакетная вставка
+            if (counter % 1000 == 0)
+            {
+                insertList.insertDatabase();
+                insertList = new RecordSortedList(tableNum(RMarketIndicatorTable));
+                insertList.sortOrder(fieldNum(RMarketIndicatorTable, Timestamp));
+            }
+        }
+        // 9. Финализация
+        insertList.insertDatabase();
+        */
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>construct</Name>
+				<Source><![CDATA[
+    public static RMarketIndicatorCalculator construct(RMarketIndicatorSetupTable _indicatorSetup, RMarketDim _marketDim = null) 
+    {
+        RMarketIndicatorCalculator calculator;
+
+        switch (_indicatorSetup.IndicatorType)
+        {
+            case RMarketIndicatorType::ATR:
+                calculator = new RMarketIndicatorCalculator_ATR();
+                break;
+            
+            case RMarketIndicatorType::EMA:
+                calculator = new RMarketIndicatorCalculator_EMA();
+                break;
+
+            case RMarketIndicatorType::RSI:
+                calculator = new RMarketIndicatorCalculator_RSI();
+                break;
+
+            case RMarketIndicatorType::SMA:
+                calculator = new RMarketIndicatorCalculator_SMA();
+                break;
+            
+        }
+
+        if (!calculator)
+        {
+            throw error(strFmt("Calculator is not implemented: %1",
+                enum2str(_indicatorSetup.IndicatorType)));
+        }
+
+        calculator.parmIndicatorSetup(_indicatorSetup);
+        calculator.parmMarketDim(_marketDim);
+        
+        return calculator;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

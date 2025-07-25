@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<z:anyType xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns=""
+	i:type="AxFormPropertyCollection" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/">
+	<Methods>
+		<Method>
+			<Name>classDeclaration</Name>
+			<ReturnType />
+		</Method>
+	</Methods>
+	<DataSources>
+		<DataSource>
+			<Name>RMarketIndicatorLinkTable</Name>
+			<Methods>
+				<Method>
+					<Name>create</Name>
+					<Visibility>Public</Visibility>
+					<Parameters>
+						<AxMethodParameter>
+							<Type>Enum</Type>
+							<TypeName>boolean</TypeName>
+							<DefaultValue>false</DefaultValue>
+							<Name>_append</Name>
+						</AxMethodParameter>
+					</Parameters>
+					<ReturnType>
+						<TypeName></TypeName>
+					</ReturnType>
+					<Variables>
+						<AxMethodVariable>
+							<Type>Record</Type>
+							<TypeName>RMarketIndicatorLinkTable</TypeName>
+							<Name>linkTable</Name>
+						</AxMethodVariable>
+					</Variables>
+				</Method>
+			</Methods>
+			<Fields />
+		</DataSource>
+	</DataSources>
+	<DataControls>
+		<Control>
+			<Name>IndicatorLinkNewButton</Name>
+			<Type>Button</Type>
+			<Methods>
+				<Method>
+					<Name>clicked</Name>
+					<Visibility>Public</Visibility>
+					<ReturnType>
+						<TypeName></TypeName>
+					</ReturnType>
+				</Method>
+			</Methods>
+		</Control>
+		<Control>
+			<Name>IndicatorLinkDeleteButton</Name>
+			<Type>Button</Type>
+			<Methods>
+				<Method>
+					<Name>clicked</Name>
+					<Visibility>Public</Visibility>
+					<ReturnType>
+						<TypeName></TypeName>
+					</ReturnType>
+					<Variables>
+						<AxMethodVariable>
+							<Type>Record</Type>
+							<TypeName>RMarketIndicatorLinkTable</TypeName>
+							<Name>indicatorLink</Name>
+						</AxMethodVariable>
+					</Variables>
+				</Method>
+			</Methods>
+		</Control>
+	</DataControls>
+	<Members />
+</z:anyType>

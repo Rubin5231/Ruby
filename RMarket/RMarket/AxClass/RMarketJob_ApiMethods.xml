@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketJob_ApiMethods</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+internal final class RMarketJob_ApiMethods
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>main</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Class entry point. The system will call this method when a designated menu 
+    /// is selected or when execution starts and this class is set as the startup class.
+    /// </summary>
+    /// <param name = "_args">The specified arguments.</param>
+    public static void main(Args _args)
+    {
+        //RMarketJob_ApiMethods::GetAccountBalance(RMarketAccount::find('001')); //Test Bybit
+        RMarketJob_ApiMethods::Bybit_ExecutionList(RMarketAccount::find('001')); //Test Bybit
+        //RMarketJob_ApiMethods::GetAccountBalance(RMarketAccount::find('002')); //Test Binance
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>LoadCandles</Name>
+				<Source><![CDATA[
+    public void LoadCandles()
+    {
+        RMarketDim _marketDim = RMarketDim::findOrCreateDims(
+            'Bybit',
+            'BTCUSDT',
+            RMarketCandleInterval::h1
+            );
+        int64 currentEnd = RMarketUtil::dateTime2Timestamp(DateTimeUtil::utcNow());
+        int64 currentStart = currentEnd - 60 * 60 * 24;
+
+        RMarketMethodInterface_Klines apiMethod = RMarketMethodInterface::create_Klines(_marketDim.RMarketTable().ApiType);
+        apiMethod.setBaseUrl(_marketDim.RMarketTable().ApiURL);
+        apiMethod.initParameters(
+            _marketDim.SymbolId,                        // Торговый символ
+            _marketDim.RMarketIntervals().IntervalStr/*,  // Интервал
+            'spot',
+            1000*/);                                      // Лимит
+        apiMethod.initPeriod(currentStart * 1000, currentEnd * 1000);
+        apiMethod.execute();
+        List klineList = apiMethod.getKlineList();
+
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>GetAccountBalance</Name>
+				<Source><![CDATA[
+    public static void GetAccountBalance(RMarketAccount _account)
+    {
+        //RMarketAccount _account = RMarketAccount::find('001');
+    
+        RMarketMethodInterface_GetAccountBalance apiMethod = 
+            RMarketMethodInterface::create_GetAccountBalance(_account.RMarketTable().ApiType);
+        apiMethod.setBaseUrl(_account.RMarketTable().ApiURL);
+        apiMethod.setApiKey(_account.RMarketApiKey());
+        apiMethod.execute();
+        List resultList = apiMethod.getResultList();
+
+        Info("I've got it");
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>Bybit_ExecutionList</Name>
+				<Source><![CDATA[
+    public static void Bybit_ExecutionList(RMarketAccount _account)
+    {
+        RMarketMethodInterface_GetTradeHistory apiMethod =
+            RMarketMethodInterface::create_GetTradeHistory(_account.RMarketTable().ApiType);
+
+        apiMethod.setBaseUrl(_account.RMarketTable().ApiURL);
+        apiMethod.setApiKey(_account.RMarketApiKey());
+        apiMethod.execute();
+        List resultList = apiMethod.getResultList();
+
+        Info("I've got it");
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

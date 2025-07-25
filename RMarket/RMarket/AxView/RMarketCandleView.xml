@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxView xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketCandleView</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class RMarketCandleView extends common
+{
+    
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>NextTimestamp</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Вычисляет следующий таймстемп в SQL (Unix timestamp)
+    /// </summary>
+    /// <returns>SQL-выражение для вычисляемого поля</returns>
+    public static server str NextTimestamp()
+    {
+        str expression = SysComputedColumn::add(
+            SysComputedColumn::returnField(tablestr(RMarketCandleView), identifierstr(RMarketCandleTable), fieldstr(RMarketCandleTable, Timestamp)),
+            SysComputedColumn::returnField(tablestr(RMarketCandleView), identifierstr(RMarketDim), fieldstr(RMarketDim, Seconds))
+            );
+
+        return expression;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+	<SubscriberAccessLevel>
+		<Read>Allow</Read>
+	</SubscriberAccessLevel>
+	<Query>RMarketCandleViewQuery</Query>
+	<FieldGroups>
+		<AxTableFieldGroup>
+			<Name>AutoReport</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoLookup</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoIdentification</Name>
+			<AutoPopulate>Yes</AutoPopulate>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoSummary</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoBrowse</Name>
+			<Fields />
+		</AxTableFieldGroup>
+	</FieldGroups>
+	<Fields>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>MarketId</Name>
+			<DataField>MarketId</DataField>
+			<DataSource>RMarketDim</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>SymbolId</Name>
+			<DataField>SymbolId</DataField>
+			<DataSource>RMarketDim</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>Interval</Name>
+			<DataField>Interval</DataField>
+			<DataSource>RMarketDim</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>Seconds</Name>
+			<DataField>Seconds</DataField>
+			<DataSource>RMarketDim</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>DimRecId</Name>
+			<DataField>DimRecId</DataField>
+			<DataSource>RMarketCandleTable</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>CandleTableRecId</Name>
+			<DataField>RecId</DataField>
+			<DataSource>RMarketCandleTable</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>Timestamp</Name>
+			<DataField>Timestamp</DataField>
+			<DataSource>RMarketCandleTable</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>Open</Name>
+			<DataField>Open</DataField>
+			<DataSource>RMarketCandleTable</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>High</Name>
+			<DataField>High</DataField>
+			<DataSource>RMarketCandleTable</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>Low</Name>
+			<DataField>Low</DataField>
+			<DataSource>RMarketCandleTable</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>Close</Name>
+			<DataField>Close</DataField>
+			<DataSource>RMarketCandleTable</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>Volume</Name>
+			<DataField>Volume</DataField>
+			<DataSource>RMarketCandleTable</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>Turnover</Name>
+			<DataField>Turnover</DataField>
+			<DataSource>RMarketCandleTable</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldComputedInt64">
+			<Name>NextTimestamp</Name>
+			<ExtendedDataType>RMarketTimestamp</ExtendedDataType>
+			<ViewMethod>NextTimestamp</ViewMethod>
+		</AxViewField>
+	</Fields>
+	<Indexes />
+	<Mappings />
+	<Relations />
+	<StateMachines />
+	<ViewMetadata>
+		<Name>Metadata</Name>
+		<SourceCode>
+			<Methods />
+		</SourceCode>
+		<DataSources />
+	</ViewMetadata>
+</AxView>

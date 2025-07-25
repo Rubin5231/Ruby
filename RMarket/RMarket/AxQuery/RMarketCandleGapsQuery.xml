@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxQuery xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns=""
+	i:type="AxQuerySimple">
+	<Name>RMarketCandleGapsQuery</Name>
+	<SourceCode>
+		<Methods>
+			<Method>
+				<Name>classDeclaration</Name>
+				<Source><![CDATA[
+[Query]
+public class RMarketCandleGapsQuery extends QueryRun
+{
+}
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+	<DataSources>
+		<AxQuerySimpleRootDataSource>
+			<Name>RMarketDim</Name>
+			<Table>RMarketDim</Table>
+			<DataSources>
+				<AxQuerySimpleEmbeddedDataSource>
+					<Name>RMarketCandleView</Name>
+					<Table>RMarketCandleView</Table>
+					<DataSources>
+						<AxQuerySimpleEmbeddedDataSource>
+							<Name>RMarketCandleStatView</Name>
+							<Table>RMarketCandleStatView</Table>
+							<DataSources />
+							<DerivedDataSources />
+							<Fields />
+							<Ranges />
+							<JoinMode>NoExistsJoin</JoinMode>
+							<Relations>
+								<AxQuerySimpleDataSourceRelation>
+									<Name>QueryDataSourceRelation1</Name>
+									<Field>DimRecId</Field>
+									<JoinDataSource>RMarketCandleView</JoinDataSource>
+									<RelatedField>DimRecId</RelatedField>
+								</AxQuerySimpleDataSourceRelation>
+								<AxQuerySimpleDataSourceRelation>
+									<Name>QueryDataSourceRelation2</Name>
+									<Field>Timestamp</Field>
+									<JoinDataSource>RMarketCandleView</JoinDataSource>
+									<RelatedField>MaxTimestamp</RelatedField>
+								</AxQuerySimpleDataSourceRelation>
+							</Relations>
+						</AxQuerySimpleEmbeddedDataSource>
+						<AxQuerySimpleEmbeddedDataSource>
+							<Name>RMarketCandleTable</Name>
+							<Table>RMarketCandleTable</Table>
+							<DataSources />
+							<DerivedDataSources />
+							<Fields />
+							<Ranges />
+							<JoinMode>NoExistsJoin</JoinMode>
+							<Relations>
+								<AxQuerySimpleDataSourceRelation>
+									<Name>QueryDataSourceRelation1</Name>
+									<Field>DimRecId</Field>
+									<JoinDataSource>RMarketCandleView</JoinDataSource>
+									<RelatedField>DimRecId</RelatedField>
+								</AxQuerySimpleDataSourceRelation>
+								<AxQuerySimpleDataSourceRelation>
+									<Name>QueryDataSourceRelation2</Name>
+									<Field>NextTimestamp</Field>
+									<JoinDataSource>RMarketCandleView</JoinDataSource>
+									<RelatedField>Timestamp</RelatedField>
+								</AxQuerySimpleDataSourceRelation>
+							</Relations>
+						</AxQuerySimpleEmbeddedDataSource>
+						<AxQuerySimpleEmbeddedDataSource>
+							<Name>RMarketTimestampTable</Name>
+							<Table>RMarketTimestampTable</Table>
+							<DataSources />
+							<DerivedDataSources />
+							<Fields>
+								<AxQuerySimpleDataSourceField>
+									<Name>DateTime</Name>
+									<Field>DateTime</Field>
+								</AxQuerySimpleDataSourceField>
+							</Fields>
+							<Ranges />
+							<Relations>
+								<AxQuerySimpleDataSourceRelation>
+									<Name>QueryDataSourceRelation1</Name>
+									<Field>NextTimestamp</Field>
+									<JoinDataSource>RMarketCandleView</JoinDataSource>
+									<RelatedField>Timestamp</RelatedField>
+								</AxQuerySimpleDataSourceRelation>
+							</Relations>
+						</AxQuerySimpleEmbeddedDataSource>
+					</DataSources>
+					<DerivedDataSources />
+					<Fields>
+						<AxQuerySimpleDataSourceField>
+							<Name>DimRecId</Name>
+							<Field>DimRecId</Field>
+						</AxQuerySimpleDataSourceField>
+						<AxQuerySimpleDataSourceField>
+							<Name>NextTimestamp</Name>
+							<Field>NextTimestamp</Field>
+						</AxQuerySimpleDataSourceField>
+					</Fields>
+					<Ranges />
+					<Relations>
+						<AxQuerySimpleDataSourceRelation>
+							<Name>QueryDataSourceRelation1</Name>
+							<Field>RecId</Field>
+							<JoinDataSource>RMarketDim</JoinDataSource>
+							<RelatedField>DimRecId</RelatedField>
+						</AxQuerySimpleDataSourceRelation>
+					</Relations>
+				</AxQuerySimpleEmbeddedDataSource>
+			</DataSources>
+			<DerivedDataSources />
+			<Fields>
+				<AxQuerySimpleDataSourceField>
+					<Name>DataAreaId</Name>
+					<Field>DataAreaId</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>Interval</Name>
+					<Field>Interval</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>MarketId</Name>
+					<Field>MarketId</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>Partition</Name>
+					<Field>Partition</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>RecId</Name>
+					<Field>RecId</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>SymbolId</Name>
+					<Field>SymbolId</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>Seconds</Name>
+					<Field>Seconds</Field>
+				</AxQuerySimpleDataSourceField>
+			</Fields>
+			<Ranges />
+			<GroupBy />
+			<Having />
+			<OrderBy>
+				<AxQuerySimpleOrderByField>
+					<Name>MarketId</Name>
+					<DataSource>RMarketDim</DataSource>
+					<Field>MarketId</Field>
+				</AxQuerySimpleOrderByField>
+				<AxQuerySimpleOrderByField>
+					<Name>SymbolId</Name>
+					<DataSource>RMarketDim</DataSource>
+					<Field>SymbolId</Field>
+				</AxQuerySimpleOrderByField>
+				<AxQuerySimpleOrderByField>
+					<Name>Interval</Name>
+					<DataSource>RMarketDim</DataSource>
+					<Field>Interval</Field>
+				</AxQuerySimpleOrderByField>
+			</OrderBy>
+		</AxQuerySimpleRootDataSource>
+	</DataSources>
+</AxQuery>

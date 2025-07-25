@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>CustTableTableEventHandler</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+internal final class CustTableTableEventHandler
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>CustTable_Pre_insert</Name>
+				<Source><![CDATA[
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="args"></param>
+    [PreHandlerFor(tableStr(CustTable), tableMethodStr(CustTable, insert))]
+    public static void CustTable_Pre_insert(XppPrePostArgs args)
+    {
+        CustTable custTable = args.getThis() as CustTable;
+
+        // do something
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>CustTable_Post_insert</Name>
+				<Source><![CDATA[
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="args"></param>
+    [PostHandlerFor(tableStr(CustTable), tableMethodStr(CustTable, insert))]
+    public static void CustTable_Post_insert(XppPrePostArgs args)
+    {
+        CustTable custTable = args.getThis() as CustTable;
+
+        // do something
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

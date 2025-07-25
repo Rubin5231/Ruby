@@ -361,3 +361,30 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+
+
+### Custom rules for Dynamics 365 F&O ###
+
+# 1. Игнорировать ВСЁ в корне репозитория
+/*
+
+# 2. Исключить только нужный модуль (RMarket)
+!/RMarket/
+!/DEVCommon/
+!/DEVTools/
+!/DEVTutorial/
+
+# 3. Но внутри модуля игнорировать временные файлы
+RMarket/bin/
+RMarket/obj/
+RMarket/TestResults/
+DEVCommon/bin/
+DEVCommon/obj/
+DEVCommon/TestResults/
+DEVTools/bin/
+DEVTools/obj/
+DEVTools/TestResults/
+DEVTutorial/bin/
+DEVTutorial/obj/
+DEVTutorial/TestResults/

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketJson_Bybit_ExecutionList</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[DataContract]
+public class RMarketJson_Bybit_ExecutionList extends RMarketJson_Bybit_Response
+{
+    // GET /v5/execution/list
+    // https://bybit-exchange.github.io/docs/v5/order/execution
+
+    private RMarketJson_Bybit_ExecutionList_Result result;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmResult</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает результат запроса </summary>
+    /// <param name="_result"> Объект с данными исполнения ордеров </param>
+    /// <returns> Объект с данными исполнения ордеров </returns>
+    [DataMember('result')]
+    public RMarketJson_Bybit_ExecutionList_Result parmResult(RMarketJson_Bybit_ExecutionList_Result _result = result)
+    {
+        result = _result;
+        return result;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

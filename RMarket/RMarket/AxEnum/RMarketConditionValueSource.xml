@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxEnum xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketConditionValueSource</Name>
+	<UseEnumValue>No</UseEnumValue>
+	<EnumValues>
+		<AxEnumValue>
+			<Name>Const</Name>
+			<Label>Constant</Label>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>Indicator</Name>
+			<Label>Indicator</Label>
+			<Value>1</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>Candle</Name>
+			<Label>Candle</Label>
+			<Value>2</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>LosingTradesInARow</Name>
+			<Label>Losing trades in a row</Label>
+			<Value>3</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>DepositPercentDrawdown</Name>
+			<Label>Deposit drawdown in percent</Label>
+			<Value>4</Value>
+		</AxEnumValue>
+	</EnumValues>
+	<IsExtensible>true</IsExtensible>
+</AxEnum>

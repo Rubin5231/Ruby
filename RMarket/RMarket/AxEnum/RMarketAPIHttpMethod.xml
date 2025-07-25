@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxEnum xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketAPIHttpMethod</Name>
+	<UseEnumValue>No</UseEnumValue>
+	<EnumValues>
+		<AxEnumValue>
+			<Name>GET</Name>
+			<Label>GET</Label>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>POST</Name>
+			<Label>POST</Label>
+			<Value>1</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>DELETE</Name>
+			<Label>DELETE</Label>
+			<Value>2</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>PUT</Name>
+			<Label>PUT</Label>
+			<Value>3</Value>
+		</AxEnumValue>
+	</EnumValues>
+	<IsExtensible>true</IsExtensible>
+</AxEnum>

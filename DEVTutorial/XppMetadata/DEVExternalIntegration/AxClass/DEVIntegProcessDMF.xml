@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<z:anyType xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns=""
+	i:type="AxCompilerMetadata" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/">
+	<Extends>DEVIntegProcessMessageBase</Extends>
+	<IsPublic>true</IsPublic>
+	<Methods>
+		<Method>
+			<Name>processMessage</Name>
+			<Visibility>Public</Visibility>
+			<Parameters>
+				<AxMethodParameter>
+					<Type>Record</Type>
+					<TypeName>DEVIntegMessageTable</TypeName>
+					<Name>_messageTable</Name>
+				</AxMethodParameter>
+				<AxMethodParameter>
+					<Type>Class</Type>
+					<TypeName>DEVIntegMessageProcessResult</TypeName>
+					<Name>_messageProcessResult</Name>
+				</AxMethodParameter>
+			</Parameters>
+			<ReturnType>
+				<TypeName></TypeName>
+			</ReturnType>
+		</Method>
+		<Method>
+			<Name>executeDMFImport</Name>
+			<Visibility>Public</Visibility>
+			<Parameters>
+				<AxMethodParameter>
+					<Type>String</Type>
+					<TypeName></TypeName>
+					<Name>_fileId</Name>
+				</AxMethodParameter>
+			</Parameters>
+			<ReturnType>
+				<TypeName></TypeName>
+			</ReturnType>
+		</Method>
+		<Method>
+			<Name>readFileToStorage</Name>
+			<Visibility>Public</Visibility>
+			<ReturnType>
+				<Type>String</Type>
+				<TypeName></TypeName>
+			</ReturnType>
+		</Method>
+		<Method>
+			<Name>getDescription</Name>
+			<Visibility>Public</Visibility>
+			<ReturnType>
+				<Type>String</Type>
+				<TypeName></TypeName>
+			</ReturnType>
+		</Method>
+	</Methods>
+</z:anyType>

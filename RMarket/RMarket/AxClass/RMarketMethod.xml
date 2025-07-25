@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketMethod</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Базовый класс для методов API
+/// </summary>
+abstract public class RMarketMethod
+{
+    protected RMarketApiClient apiClient;
+
+    protected Map result;
+    
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>new</Name>
+				<Source><![CDATA[
+    /// <summary> Конструктор класса </summary>
+    public void new()
+    {
+        //apiClient = new RMarketApiClientBinance();
+        //apiClient = new RMarketApiClientBybit();
+        //apiClient.parmHttpMethod(RMarketAPIHttpMethod::GET);
+        //apiClient.parmMethodUrl('/v5/market/time');
+ 
+        // Do this before execute()
+        //apiClient.parmBaseUrl('');
+        //apiClient.parmApiKey();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmHttpMethod</Name>
+				<Source><![CDATA[
+    public RMarketAPIHttpMethod parmHttpMethod(RMarketAPIHttpMethod _httpMethod = apiClient.parmHttpMethod())
+    {
+        return apiClient.parmHttpMethod(_httpMethod);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>setBaseUrl</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// устанавливает базовый URL
+    /// </summary>
+    /// <param name="_baseUrl">Базовый URL</param>
+    /// <param name="_baseUrl">Базовый URL</param>
+    public void setBaseUrl(URL _baseUrl)
+    {
+        apiClient.parmBaseUrl(_baseUrl);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>setApiKey</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// устанавливает ключ API
+    /// </summary>
+    /// <param name="_apiKey">Ключ API</param>
+    /// <returns>Ключ API</returns>
+    public void setApiKey(RMarketApiKey _apiKey)
+    {
+        apiClient.parmApiKey(_apiKey);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>check</Name>
+				<Source><![CDATA[
+    public boolean check()
+    {
+        boolean check = true;
+
+        check = check && this.checkApiClient();
+        check = check && this.checkApiKey();
+
+        return check;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>checkApiClient</Name>
+				<Source><![CDATA[
+    public boolean checkApiClient()
+    {
+        boolean check = true;
+        if (!apiClient ||
+            !apiClient.parmBaseUrl() ||
+            !apiClient.parmMethodUrl())
+            check = checkFailed("API client are not created or setted up");
+        return check;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>checkApiKey</Name>
+				<Source><![CDATA[
+    public boolean checkApiKey()
+    {
+        boolean check = true;
+        if (!apiClient ||
+            !apiClient.parmApiKey() ||
+            !apiClient.parmApiKey().ApiKey ||
+            !apiClient.parmApiKey().Secret )
+            check = checkFailed("API key are not setted up");
+        return check;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>execute</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Выполняет метод
+    /// </summary>
+    public void execute()
+    {
+        this.prepare();
+
+        if (!this.check())
+            throw error("API call can't be executed!");
+
+        try
+        {
+            apiClient.execute();
+        }
+        finally
+        {
+            this.processResponse();
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>prepare</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Подготавливает запрос
+    /// </summary>
+    public void prepare()
+    {
+        RMarketAPIMethodLog logRecord;
+        logRecord.clear();
+        logRecord.initValue();
+        //logRecord.MarketId = marketTable.MarketId;
+        //logRecord.ApiType = marketTable.ApiType;
+        apiClient.parmLogRecord(logRecord);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>processResponse</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Обрабатывает ответ (абстрактный метод)
+    /// </summary>
+    public void processResponse()
+    {
+        ttsbegin;
+        RMarketAPIMethodLog logRecord = apiClient.parmLogRecord();
+        logRecord.insert();
+        ttscommit;
+    }
+
+    /// <summary>
+    /// Возвращает результат
+    /// </summary>
+    /// <returns>Результат выполнения метода</returns>
+    //public Map getResult()
+    //{
+    //    return result;
+    //}
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketMethod_Binance_Time</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Получение времени сервера Binance
+/// Usage:
+/// RMarketMethod_Binance_Time apiMethod = new RMarketMethod_Binance_Time();
+/// apiMethod.parmBaseUrl('https://api.binance.com');
+/// apiMethod.execute();
+/// RMarketTimestamp second = apiMethod.second();
+/// int64 miliSecond = apiMethod.miliSecond();
+/// </summary>
+public class RMarketMethod_Binance_Time extends RMarketMethod implements RMarketMethodInterface_Time
+{
+    protected RMarketJson_Binance_Time responseContract;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>new</Name>
+				<Source><![CDATA[
+    /// <summary> Конструктор класса </summary>
+    public void new()
+    {
+        apiClient = new RMarketApiClientBinance();
+        apiClient.parmHttpMethod(RMarketAPIHttpMethod::GET);
+        apiClient.parmMethodUrl('/api/v3/time');
+
+        // Do this before execute()
+        //apiClient.parmBaseUrl('');
+        //apiClient.parmApiKey();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>prepare</Name>
+				<Source><![CDATA[
+    public void prepare()
+    {
+        // Add your code here...
+
+        super();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>checkApiKey</Name>
+				<Source><![CDATA[
+    public boolean checkApiKey()
+    {
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>processResponse</Name>
+				<Source><![CDATA[
+    public void processResponse()
+    {
+        super();
+
+        // Ответ в мс: {"serverTime": 1499827319559}
+        str responseStr = apiClient.getResponseBody();
+
+        if (apiClient.getHttpStatus() != System.Net.HttpStatusCode::OK)
+            throw Error(strfmt("Request returns error!"));
+
+        responseContract = RMarketJsonSerializer::deserializeObject(
+            classNum(RMarketJson_Binance_Time),
+            responseStr) as RMarketJson_Binance_Time;
+
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>second</Name>
+				<Source><![CDATA[
+    public RMarketTimestamp second()
+    {
+        return responseContract.parmServerTime() div 1000;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>miliSecond</Name>
+				<Source><![CDATA[
+    public int64 miliSecond()
+    {
+        return responseContract.parmServerTime();
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

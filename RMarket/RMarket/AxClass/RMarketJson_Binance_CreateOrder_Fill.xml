@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketJson_Binance_CreateOrder_Fill</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[DataContract]
+public class RMarketJson_Binance_CreateOrder_Fill
+{
+    private str price;
+    private str qty;
+    private str commission;
+    private str commissionAsset;
+    private int64 tradeId;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmPrice</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает цену исполнения </summary>
+    /// <param name="_price"> Цена исполненной части </param>
+    /// <returns> Цена исполненной части </returns>
+    [DataMember('price')]
+    public str parmPrice(str _price = price)
+    {
+        price = _price;
+        return price;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmQty</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает количество исполнения </summary>
+    /// <param name="_qty"> Исполненное количество </param>
+    /// <returns> Исполненное количество </returns>
+    [DataMember('qty')]
+    public str parmQty(str _qty = qty)
+    {
+        qty = _qty;
+        return qty;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmCommission</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает комиссию </summary>
+    /// <param name="_commission"> Сумма комиссии </param>
+    /// <returns> Сумма комиссии </returns>
+    [DataMember('commission')]
+    public str parmCommission(str _commission = commission)
+    {
+        commission = _commission;
+        return commission;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmCommissionAsset</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает актив комиссии </summary>
+    /// <param name="_commissionAsset"> Актив, в котором взимается комиссия </param>
+    /// <returns> Актив, в котором взимается комиссия </returns>
+    [DataMember('commissionAsset')]
+    public str parmCommissionAsset(str _commissionAsset = commissionAsset)
+    {
+        commissionAsset = _commissionAsset;
+        return commissionAsset;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmTradeId</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает ID сделки </summary>
+    /// <param name="_tradeId"> Идентификатор сделки </param>
+    /// <returns> Идентификатор сделки </returns>
+    [DataMember('tradeId')]
+    public int64 parmTradeId(int64 _tradeId = tradeId)
+    {
+        tradeId = _tradeId;
+        return tradeId;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

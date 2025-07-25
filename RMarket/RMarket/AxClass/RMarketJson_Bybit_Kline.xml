@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketJson_Bybit_Kline</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[DataContractAttribute]
+public class RMarketJson_Bybit_Kline extends RMarketJson_Bybit_Response
+{
+    private RMarketJson_Bybit_Kline_Result result;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmResult</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает результат запроса </summary>
+    /// <param name="_result"> Объект с данными свечей </param>
+    /// <returns> Объект с данными свечей </returns>
+    [DataMemberAttribute('result')]
+    public RMarketJson_Bybit_Kline_Result parmResult(RMarketJson_Bybit_Kline_Result _result = result)
+    {
+        result = _result;
+        return result;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getKlineList</Name>
+				<Source><![CDATA[
+    public List getKlineList()
+    {
+        List retList = new List(Types::Container);
+        str timestamp;
+        str open;
+        str high;
+        str low;
+        str close;
+        str volume;
+        str turnover;
+
+        if (this.isSuccess())
+        {
+            List items = result.parmList();
+            ListEnumerator itemListEnum = items.getEnumerator();
+
+            while (itemListEnum.moveNext())
+            {
+                [timestamp, open, high, low, close, volume, turnover] = itemListEnum.current();
+                retList.addEnd([
+                    str2int64(timestamp) div 1000,
+                    str2Num(open),
+                    str2Num(high),
+                    str2Num(low),
+                    str2Num(close),
+                    str2Num(volume),
+                    str2Num(turnover)]);
+            }
+        }
+        return retList;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

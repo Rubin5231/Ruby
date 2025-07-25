@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketJson_Bybit_ExecutionList_Result</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[DataContract]
+public class RMarketJson_Bybit_ExecutionList_Result
+{
+    private str nextPageCursor;
+    private str category;
+    private List list;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmNextPageCursor</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает курсор следующей страницы </summary>
+    /// <param name="_nextPageCursor"> Курсор для пагинации </param>
+    /// <returns> Курсор для пагинации </returns>
+    [DataMember('nextPageCursor')]
+    public str parmNextPageCursor(str _nextPageCursor = nextPageCursor)
+    {
+        nextPageCursor = _nextPageCursor;
+        return nextPageCursor;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmCategory</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает категорию инструмента </summary>
+    /// <param name="_category"> Категория торгового инструмента </param>
+    /// <returns> Категория торгового инструмента </returns>
+    [DataMember('category')]
+    public str parmCategory(str _category = category)
+    {
+        category = _category;
+        return category;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmList</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает список исполнений </summary>
+    /// <param name="_list"> Список данных об исполнении ордеров </param>
+    /// <returns> Список данных об исполнении ордеров </returns>
+    [DataMember('list'), DataCollectionAttribute(Types::Class, classStr(RMarketJson_Bybit_ExecutionList_Item))]
+    public List parmList(List _list = list)
+    {
+        list = _list;
+        return list;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

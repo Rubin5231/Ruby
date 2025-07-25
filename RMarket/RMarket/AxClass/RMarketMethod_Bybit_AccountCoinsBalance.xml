@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketMethod_Bybit_AccountCoinsBalance</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Получение полного баланса Bybit (включая финансовый счет)
+/// </summary>
+public class RMarketMethod_Bybit_AccountCoinsBalance extends RMarketMethod
+{
+    protected str accountType;
+    protected str coin;
+    
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>new</Name>
+				<Source><![CDATA[
+    /// <summary> Конструктор класса </summary>
+    public void new()
+    {
+        apiClient = new RMarketApiClientBybit();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>setParameters</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Устанавливает параметры запроса
+    /// </summary>
+    /// <param name="_accountType">Тип аккаунта</param>
+    /// <param name="_coin">Криптовалюта (опционально)</param>
+    public void setParameters(str _accountType = 'UNIFIED', str _coin = '')
+    {
+        accountType = _accountType;
+        coin = _coin;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>prepare</Name>
+				<Source><![CDATA[
+    public void prepare()
+    {
+        //apiClient.setEndpoint('/v5/asset/transfer/query-account-coins-balance');
+        apiClient.addQueryParam('accountType', accountType);
+        
+        if (coin)
+        {
+            apiClient.addQueryParam('coin', coin);
+        }
+        
+        // Требуется аутентификация
+        if (apiClient.parmApiKey())
+        {
+            //int64 timestamp = DateTimeUtil::getSystemDateTime();
+            //apiClient.addHeader('X-BAPI-TIMESTAMP', int642Str(timestamp));
+            apiClient.addHeader('X-BAPI-API-KEY', apiClient.parmApiKey().ApiKey);
+            apiClient.addHeader('X-BAPI-RECV-WINDOW', '5000');
+            
+            // Подпись запроса
+            // client.signRequest(timestamp);
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>processResponse</Name>
+				<Source><![CDATA[
+    public void processResponse()
+    {
+        // Обработка полного баланса Bybit
+        // Особое внимание на поле 'transferBalance' - общий баланс
+        // ...
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

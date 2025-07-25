@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketIndicatorCalculator_SMA</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class RMarketIndicatorCalculator_SMA extends RMarketIndicatorCalculator
+{
+    List values;
+    int period;    
+    
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>getExtraPeriodsNeeded</Name>
+				<Source><![CDATA[
+    protected int getExtraPeriodsNeeded()
+    {
+        return real2int(indicatorSetup.Parameter);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>calc</Name>
+				<Source><![CDATA[
+    protected RMarketIndicatorTable calc(RMarketDim _marketDim, RMarketIndicatorSetupTable _indicatorSetup, RMarketCandleTable _candle, boolean _justCache = false)
+    {
+        RMarketIndicatorTable indicator;
+        real baseValue;
+
+        // Инициализация кэша и периода
+        if (!values)
+        {
+            values = new List(Types::Real);
+            period = real2int(_indicatorSetup.Parameter);
+        }
+
+        baseValue = _candle.getValue(_indicatorSetup.CalcBase);
+        values.addEnd(baseValue);
+
+        // Удаляем старые значения при превышении периода
+        if (values.elements() > period)
+        {
+            List newList = new List(Types::Real);
+            ListEnumerator valuesEnum = values.getEnumerator();
+            valuesEnum.moveNext();
+            while (valuesEnum.moveNext())
+            {
+                newList.addEnd(valuesEnum.current());
+            }
+            values = newList;
+        }
+        
+        
+        if (!_justCache && values.elements() >= period)
+        {
+            // Расчет SMA
+            real valueSum = 0;
+            ListEnumerator valuesEnum = values.getEnumerator();
+            while (valuesEnum.moveNext())
+            {
+                valueSum += valuesEnum.current();
+            }
+            real smaValue = valueSum / period;
+
+            // Формирование записи
+            indicator.clear();
+            indicator.DimRecId    = _marketDim.RecId;
+            indicator.IndicatorId = _indicatorSetup.IndicatorId;
+            indicator.Timestamp   = _candle.Timestamp;
+            indicator.Value       = smaValue;
+        }
+        return indicator;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxView xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketCandleGapsView</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class RMarketCandleGapsView extends common
+{
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>GapEndTimestamp</Name>
+				<Source><![CDATA[
+        public static server str GapEndTimestamp()
+    {
+        // ((select min(c.Timestamp) from RMarketCandleTable c 
+        //    where c.DimRecId = RMarketDim.RecId 
+        //      and c.Timestamp >= RMarketCandleView.NextTimestamp 
+        //      and c.Partition = RMarketDim.Partition 
+        //      and c.DataAreaId = RMarketDim.DataAreaId) - RMarketDim.Seconds)
+        //str expression = strfmt('((select min(c.%4) from %1 c where c.%2 = %3 and c.%4 >= %5 and c.%7 = %8 and c.%9 = %10) - %6)',
+        str expression = strfmt('(select min(c.%4) from %1 c where c.%2 = %3 and c.%4 >= %5 and c.%7 = %8 and c.%9 = %10)',
+            tablestr(RMarketCandleTable),
+            fieldstr(RMarketCandleTable, DimRecId),
+            SysComputedColumn::returnField(tablestr(RMarketCandleGapsView), identifierstr(RMarketDim), fieldstr(RMarketDim, RecId)),
+            fieldstr(RMarketCandleTable, Timestamp),
+            SysComputedColumn::returnField(tablestr(RMarketCandleGapsView), identifierstr(RMarketCandleView), fieldstr(RMarketCandleView, NextTimestamp)),
+            SysComputedColumn::returnField(tablestr(RMarketCandleGapsView), identifierstr(RMarketDim), fieldstr(RMarketDim, Seconds)),
+            fieldstr(RMarketCandleTable, Partition),
+            SysComputedColumn::returnField(tablestr(RMarketCandleGapsView), identifierstr(RMarketDim), fieldstr(RMarketDim, Partition)),
+            fieldstr(RMarketCandleTable, DataAreaId),
+            SysComputedColumn::returnField(tablestr(RMarketCandleGapsView), identifierstr(RMarketDim), fieldstr(RMarketDim, DataAreaId))
+            );
+
+        return expression;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>GapEndDateTime</Name>
+				<Source><![CDATA[
+    public static server str GapEndDateTime()
+    {
+        str GapEndTimestamp = RMarketCandleGapsView::GapEndTimestamp();
+
+        str expression = strfmt('(select t.%1 from %2 t where t.%3 = %4 and t.%5 = %6)',
+            fieldstr(RMarketTimestampTable, DateTime),
+            tablestr(RMarketTimestampTable),
+            fieldstr(RMarketTimestampTable, Timestamp),
+            GapEndTimestamp,
+            fieldstr(RMarketTimestampTable, Partition),
+            SysComputedColumn::returnField(tablestr(RMarketCandleGapsView), identifierstr(RMarketDim), fieldstr(RMarketDim, Partition))
+            );
+
+        return expression;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+	<SubscriberAccessLevel>
+		<Read>Allow</Read>
+	</SubscriberAccessLevel>
+	<Query>RMarketCandleGapsQuery</Query>
+	<FieldGroups>
+		<AxTableFieldGroup>
+			<Name>AutoReport</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoLookup</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoIdentification</Name>
+			<AutoPopulate>Yes</AutoPopulate>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoSummary</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoBrowse</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>Overview</Name>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>GapEndDateTime</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>MarketId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>SymbolId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Interval</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>DimRecId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>GapStartTimestamp</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>GapStartDateTime</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>GapEndTimestamp</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+	</FieldGroups>
+	<Fields>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>MarketId</Name>
+			<DataField>MarketId</DataField>
+			<DataSource>RMarketDim</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>SymbolId</Name>
+			<DataField>SymbolId</DataField>
+			<DataSource>RMarketDim</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>Interval</Name>
+			<DataField>Interval</DataField>
+			<DataSource>RMarketDim</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>DimRecId</Name>
+			<DataField>DimRecId</DataField>
+			<DataSource>RMarketCandleView</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>GapStartTimestamp</Name>
+			<DataField>NextTimestamp</DataField>
+			<DataSource>RMarketCandleView</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>GapStartDateTime</Name>
+			<DataField>DateTime</DataField>
+			<DataSource>RMarketTimestampTable</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldComputedInt64">
+			<Name>GapEndTimestamp</Name>
+			<ExtendedDataType>RMarketTimestamp</ExtendedDataType>
+			<ViewMethod>GapEndTimestamp</ViewMethod>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldComputedUtcDateTime">
+			<Name>GapEndDateTime</Name>
+			<ViewMethod>GapEndDateTime</ViewMethod>
+		</AxViewField>
+	</Fields>
+	<Indexes />
+	<Mappings />
+	<Relations />
+	<StateMachines />
+	<ViewMetadata>
+		<Name>Metadata</Name>
+		<SourceCode>
+			<Methods />
+		</SourceCode>
+		<DataSources />
+	</ViewMetadata>
+</AxView>

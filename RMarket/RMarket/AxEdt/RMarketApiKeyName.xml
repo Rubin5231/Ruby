@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxEdt xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns=""
+	i:type="AxEdtString">
+	<Name>RMarketApiKeyName</Name>
+	<HelpText>Identification of the key</HelpText>
+	<Label>API key name</Label>
+	<ReferenceTable>RMarketApiKey</ReferenceTable>
+	<ArrayElements />
+	<Relations />
+	<TableReferences>
+		<AxEdtTableReference>
+			<RelatedField>KeyName</RelatedField>
+			<Table>RMarketApiKey</Table>
+		</AxEdtTableReference>
+	</TableReferences>
+	<StringSize>30</StringSize>
+</AxEdt>

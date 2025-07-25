@@ -1,0 +1,496 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketIndicatorCalc</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class RMarketIndicatorCalc extends RunBaseBatch implements BatchRetryable
+{
+    protected RMarketDimRecId marketDimId;
+    //protected RMarketSymbolId symbolId;
+    //protected RMarketCandleInterval interval;
+    protected UtcDateTime dtFrom;
+    protected UtcDateTime dtTo;
+    //protected NoYes overwriteGaps;
+    protected RMarketIndicatorId indicatorId;
+
+    protected DialogField dialogMarketDimId;
+    //protected DialogField dialogSymbolId;
+    //protected DialogField dialogInterval;
+    protected DialogField dialogFrom;
+    protected DialogField dialogTo;
+    //protected DialogField dialogOverwrite;
+    protected DialogField dialogIndicatorId;
+
+    //protected DialogField dialogIndicatorType;
+    //protected DialogField dialogParameter;
+    //protected DialogField dialogCalcBase;
+
+    protected FormBuildInt64Control controlIndicatorSetup;
+    
+    QueryRun queryRun;
+
+    #DEFINE.CurrentVersion(1)
+    
+    #LOCALMACRO.CurrentList
+        marketDimId,
+        //symbolId,
+        //interval,
+        indicatorId,
+        dtFrom,
+        dtTo
+    #ENDMACRO
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>dialog</Name>
+				<Source><![CDATA[
+    public Object dialog()
+    {
+        Dialog dialog = super();
+
+        dialogMarketDimId = dialog.addFieldValue(extendedTypeStr(RMarketDimRecId), marketDimId, "Market dimension");
+        //dialogSymbolId = dialog.addFieldValue(extendedTypeStr(RMarketSymbolId), symbolId, "Symbol");
+        //dialogInterval = dialog.addFieldValue(enumStr(RMarketCandleInterval), interval, "Interval");
+        dialogIndicatorId = dialog.addFieldValue(extendedTypeStr(RMarketIndicatorId), indicatorId, "Indicator Id");
+        dialogFrom = dialog.addField(extendedTypeStr(RMarketCandleDateTime), "From");
+        dialogTo = dialog.addField(extendedTypeStr(RMarketCandleDateTime), "To");
+        //dialogOverwrite = dialog.addFieldValue(enumStr(NoYes), overwriteGaps, "Overwrite gaps");
+
+        //indicatorGroup = dialog.addGroup("Indicator");
+        // Добавляем новые нередактируемые поля
+        /*dialogIndicatorType = dialog.addFieldValue(enumStr(RMarketIndicatorType), RMarketIndicatorType::None, "Indicator type");
+        dialogParameter = dialog.addFieldValue(extendedTypeStr(RMarketIndicatorParameter), 0.0, "Parameter");
+        dialogCalcBase = dialog.addFieldValue(enumStr(RMarketIndicatorBaseEnum), RMarketIndicatorBaseEnum::None, "Calculation base");
+        
+        // Делаем поля только для чтения
+        dialogIndicatorType.enabled(false);
+        dialogParameter.enabled(false);
+        dialogCalcBase.enabled(false);
+        controlIndicatorSetup = dialogIndicatorSetup.control();
+        controlIndicatorSetup.registerOverrideMethod(methodstr(FormInt64Control, lookUp), methodstr(RMarketIndicatorCalc, indicatorSetupLookup), this);
+        controlIndicatorSetup.registerOverrideMethod(methodstr(FormInt64Control, modified), methodstr(RMarketIndicatorCalc, updateIndicatorFields), this);
+        */
+        return dialog;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getFromDialog</Name>
+				<Source><![CDATA[
+    /*private void indicatorSetupLookup(FormInt64Control _control)
+    {
+        RMarketIndicatorSetupTable::indicatorSetupLookup(_control);
+
+        // Обновляем поля после выбора значения
+        //this.updateIndicatorFields();
+    }
+
+    protected void updateIndicatorFields(FormInt64Control _control)
+    {
+        dialogIndicatorType.value(RMarketIndicatorType::None);
+        dialogParameter.value(0);
+        dialogCalcBase.value(RMarketIndicatorBaseEnum::None);
+
+        if (_control.value())
+        {
+            RMarketIndicatorSetupTable setupTable = RMarketIndicatorSetupTable::findRecId(_control.value());
+            
+            if (setupTable)
+            {
+                dialogIndicatorType.value(setupTable.IndicatorType);
+                dialogParameter.value(setupTable.Parameter);
+                dialogCalcBase.value(setupTable.CalcBase);
+            }
+        }
+    }*/
+
+    public boolean getFromDialog()
+    {
+        marketDimId = dialogMarketDimId.value();
+        //symbolId = dialogSymbolId.value();
+        //interval = dialogInterval.value();
+        dtFrom = dialogFrom.value();
+        dtTo = dialogTo.value();
+        //overwriteGaps = dialogOverwrite.value();
+
+        indicatorId = dialogIndicatorId.value();
+
+        return super();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>runsImpersonated</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Indicates that the class can be run on a server by using the credentials of the user who requested
+    /// the batch job.
+    /// </summary>
+    /// <returns>
+    /// Always returns true. The class can be run on a server by using the credentials of the user who requested the batch job.
+    /// </returns>
+    public boolean runsImpersonated()
+    {
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>isRetryable</Name>
+				<Source><![CDATA[
+    public boolean isRetryable()
+    {
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>canRunInNewSession</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Describes whether the class is designed for execution in a new session.
+    /// </summary>
+    /// <returns> Always returns true. </returns>
+    protected boolean canRunInNewSession()
+    {
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>queryRun</Name>
+				<Source><![CDATA[
+    public QueryRun queryRun(QueryRun _queryRun = queryRun)
+    {
+        queryRun = _queryRun;
+        return queryRun;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmMarketDimId</Name>
+				<Source><![CDATA[
+    public RMarketDimRecId parmMarketDimId(RMarketDimRecId _marketDimId = marketDimId)
+    {
+        marketDimId = _marketDimId;
+        return marketDimId;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmDtFrom</Name>
+				<Source><![CDATA[
+    //public RMarketSymbolId parmSymbolId(RMarketSymbolId _symbolId = symbolId)
+    //{
+    //    symbolId = _symbolId;
+    //    return symbolId;
+    //}
+
+    //public RMarketCandleInterval parmInterval(RMarketCandleInterval _interval = interval)
+    //{
+    //    interval = _interval;
+    //    return interval;
+    //}
+
+    public UtcDateTime parmDtFrom(UtcDateTime _dtFrom = dtFrom)
+    {
+        dtFrom = _dtFrom;
+        return dtFrom;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmDtTo</Name>
+				<Source><![CDATA[
+    public UtcDateTime parmDtTo(UtcDateTime _dtTo = dtTo)
+    {
+        dtTo = _dtTo;
+        return dtTo;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmIndicatorId</Name>
+				<Source><![CDATA[
+    public RMarketIndicatorId parmIndicatorId(RMarketIndicatorId _indicatorId = indicatorId)
+    {
+        indicatorId = _indicatorId;
+        return indicatorId;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>validate</Name>
+				<Source><![CDATA[
+    public boolean validate(Object calledFrom = null)
+    {
+        super();
+        
+        if (dtFrom > DateTimeUtil::utcNow())
+        {
+            throw error("@RMarket:InvalidDateRange");
+        }
+        
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>initQuery</Name>
+				<Source><![CDATA[
+    protected void initQuery()
+    {
+        Query query = new Query();
+
+        QueryBuildDataSource qbdsIndicatorSetup = query.addDataSource(tableNum(RMarketIndicatorSetupTable));
+        qbdsIndicatorSetup.addRange(fieldNum(RMarketIndicatorSetupTable, Active)).value(SysQuery::value(NoYes::Yes));
+
+        QueryBuildDataSource qbdsIndicatorLink = qbdsIndicatorSetup.addDataSource(tableNum(RMarketIndicatorLinkTable));
+        qbdsIndicatorLink.relations(true);
+        
+        QueryBuildDataSource qbdsMarketDim = qbdsIndicatorLink.addDataSource(tableNum(RMarketDim));
+        qbdsMarketDim.relations(true);
+        
+        QueryBuildDataSource qbdsSymbolIntervals = qbdsMarketDim.addDataSource(tableNum(RMarketSymbolIntervals));
+        qbdsSymbolIntervals.relations(true);
+        
+        QueryBuildDataSource qbdsInterval = qbdsSymbolIntervals.addDataSource(tableNum(RMarketIntervals));
+        qbdsInterval.addRange(fieldNum(RMarketIntervals, Support)).value(SysQuery::value(NoYes::Yes));
+        qbdsInterval.relations(true);
+
+        if (marketDimId)
+        {
+            qbdsMarketDim.addRange(fieldNum(RMarketDim, RecId)).value(SysQuery::value(marketDimId));
+            //RMarketDim marketDim = RMarketDim::findRecId(marketDimId);
+            //qbdsInterval.addRange(fieldNum(RMarketIntervals, MarketId)).value(SysQuery::value(marketDim.MarketId));
+            //qbdsSymbolIntervals.addRange(fieldNum(RMarketSymbolIntervals, SymbolId)).value(SysQuery::value(marketDim.SymbolId));
+            //qbdsInterval.addRange(fieldNum(RMarketIntervals, Interval)).value(SysQuery::value(marketDim.Interval));
+        }
+        
+        if (indicatorId)
+        {
+            qbdsIndicatorSetup.addRange(fieldNum(RMarketIndicatorSetupTable, IndicatorId)).value(SysQuery::value(indicatorId));
+        }
+        
+        queryRun = new QueryRun(query);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>adjustParameters</Name>
+				<Source><![CDATA[
+    protected void adjustParameters()
+    {
+        this.initQuery();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>calculateDateFrom</Name>
+				<Source><![CDATA[
+    private UtcDateTime calculateDateFrom(RMarketDim _marketDim, RMarketIndicatorSetupTable _indicatorSetupTable)
+    {
+        UtcDateTime defaultFrom;
+        RMarketIndicatorTable indicatorTable;
+        RMarketCandleTable candle;
+        RMarketTimestampTable tsTable;
+
+        select firstonly Timestamp from indicatorTable
+            order by Timestamp desc
+            where indicatorTable.DimRecId    == _marketDim.RecId
+                && indicatorTable.IndicatorId == _indicatorSetupTable.IndicatorId
+        join tsTable
+            where tsTable.Timestamp == indicatorTable.Timestamp;
+
+        if (tsTable)
+            defaultFrom = RMarketUtil::calculateCandleDateTime(tsTable.DateTime, _marketDim.Interval, 1);
+        else
+        {
+            select firstonly Timestamp from candle
+                order by Timestamp
+                where candle.DimRecId == _marketDim.RecId
+            join tsTable
+                where tsTable.Timestamp == candle.Timestamp;
+            defaultFrom = RMarketUtil::calculateCandleDateTime(tsTable.DateTime, _marketDim.Interval);
+        }
+
+        if (dtFrom)
+            defaultFrom = max(defaultFrom, RMarketUtil::normalizeDateTime2UTC(dtFrom));
+        
+        if (!defaultFrom)
+            defaultFrom = RMarketUtil::normalizeDateTime2UTC(DateTimeUtil::getSystemDateTime());
+        
+        return defaultFrom;
+
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>calculateDateTo</Name>
+				<Source><![CDATA[
+    private UtcDateTime calculateDateTo(RMarketDim _marketDim, RMarketIndicatorSetupTable _indicatorSetupTable)
+    {
+        UtcDateTime defaultTo;
+        RMarketCandleTable candle;
+        RMarketTimestampTable tsTable;
+
+        select firstonly Timestamp from candle
+            order by Timestamp desc
+            where candle.DimRecId == _marketDim.RecId
+        join tsTable
+            where tsTable.Timestamp == candle.Timestamp;
+
+        defaultTo = tsTable ? RMarketUtil::calculateCandleDateTime(tsTable.DateTime, _marketDim.Interval, 1) : defaultTo;
+
+        if (dtFrom)
+            defaultTo = min(defaultTo, RMarketUtil::normalizeDateTime2UTC(dtTo));
+
+        return defaultTo;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>run</Name>
+				<Source><![CDATA[
+    public void run()
+    {
+        if (this.validate())
+        {
+            this.adjustParameters();
+
+            this.doRun();
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>doRun</Name>
+				<Source><![CDATA[
+    protected void doRun()
+    {
+        RMarketIndicatorSetupTable indicatorSetupTable;
+        RMarketIndicatorLinkTable indicatorLinkTable;
+        RMarketIntervals intervals;
+        RMarketSymbolIntervals symbols;
+        RMarketDim  marketDim;
+        utcdatetime serverTime, dateFrom, dateTo;
+        int counter, total;
+        RMarketIndicatorCalculator calcRun;
+
+        // Создаем объект прогресса с двумя уровнями
+        total = SysQuery::countLoops(queryRun);
+        
+        while (queryRun.next())
+        {
+            // Get current task
+            indicatorSetupTable = queryRun.get(tableNum(RMarketIndicatorSetupTable));
+            indicatorLinkTable = queryRun.get(tableNum(RMarketIndicatorLinkTable));
+            intervals = queryRun.get(tableNum(RMarketIntervals));
+            symbols = queryRun.get(tableNum(RMarketSymbolIntervals));
+
+            marketDim = RMarketDim::findOrCreateDims(intervals.MarketId, symbols.SymbolId, intervals.Interval);
+            
+            str prefix = strFmt("%1 %2 %3 %4, %5%6(%7): ", serverTime, marketDim.MarketId, marketDim.SymbolId, enum2Str(marketDim.Interval),
+                enum2Str(indicatorSetupTable.IndicatorType),
+                indicatorSetupTable.Parameter,
+                enum2Str(indicatorSetupTable.CalcBase));
+            counter++;
+            
+            // Calculate dateFrom
+            dateFrom = this.calculateDateFrom(marketDim, indicatorSetupTable);
+
+            // Calculate dateTo based on candle interval
+            dateTo = this.calculateDateTo(marketDim, indicatorSetupTable);
+            
+            // Execute the calculating task
+            setPrefix(prefix);
+            calcRun = RMarketIndicatorCalculator::construct(indicatorSetupTable, marketDim);
+            calcRun.calcRow(RMarketUtil::dateTime2Timestamp(dateFrom), RMarketUtil::dateTime2Timestamp(dateTo));
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>pack</Name>
+				<Source><![CDATA[
+    public container pack()
+    {
+        return [#CurrentVersion, #CurrentList];
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>unpack</Name>
+				<Source><![CDATA[
+    public boolean unpack(container _packedClass)
+    {
+        boolean         ret;
+        Integer         version     = conPeek(_packedClass,1);
+
+        switch (version)
+        {
+            case #CurrentVersion:
+                [version, #CurrentList] = _packedClass;
+                ret = true;
+                break;
+
+            default:
+                ret = false;
+        }
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>main</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Class entry point. The system will call this method when a designated menu
+    /// is selected or when execution starts and this class is set as the startup class.
+    /// </summary>
+    /// <param name = "_args">The specified arguments.</param>
+    public static void main(Args _args)
+    {
+        RMarketIndicatorCalc operation = new RMarketIndicatorCalc();
+        if (operation.prompt())
+        {
+            operation.run();
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>description</Name>
+				<Source><![CDATA[
+    static ClassDescription description()
+    {
+        return "Indicators calculation";
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

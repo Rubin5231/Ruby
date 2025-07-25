@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketMethodInterface</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class RMarketMethodInterface
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>create_Time</Name>
+				<Source><![CDATA[
+            public static RMarketMethodInterface_Time create_Time(RMarketApiType _apiType)
+    {
+        switch (_apiType)
+        {
+            case RMarketApiType::Binance:
+                return new RMarketMethod_Binance_Time();
+            
+            case RMarketApiType::Bybit:
+                return new RMarketMethod_Bybit_Time();
+            
+            default:
+                throw error(strFmt("Unsupported api type: %1", enum2Str(_apiType)));
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>create_Klines</Name>
+				<Source><![CDATA[
+    public static RMarketMethodInterface_Klines create_Klines(RMarketApiType _apiType)
+    {
+        switch (_apiType)
+        {
+            case RMarketApiType::Binance:
+                return new RMarketMethod_Binance_Klines();
+            
+            case RMarketApiType::Bybit:
+                return new RMarketMethod_Bybit_Klines();
+            
+            default:
+                throw error(strFmt("Unsupported api type: %1", enum2Str(_apiType)));
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>create_GetAccountBalance</Name>
+				<Source><![CDATA[
+    public static RMarketMethodInterface_GetAccountBalance create_GetAccountBalance(RMarketApiType _apiType)
+    {
+        switch (_apiType)
+        {
+            case RMarketApiType::Binance:
+                return new RMarketMethod_Binance_AccountBalance();
+            
+            case RMarketApiType::Bybit:
+                return new RMarketMethod_Bybit_WalletBalance();
+            
+            default:
+                throw error(strFmt("Unsupported api type: %1", enum2Str(_apiType)));
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>create_GetTradeHistory</Name>
+				<Source><![CDATA[
+    public static RMarketMethodInterface_GetTradeHistory create_GetTradeHistory(RMarketApiType _apiType)
+    {
+        switch (_apiType)
+        {
+            case RMarketApiType::Binance:
+                return new RMarketMethod_Binance_MyTrades();
+            
+            case RMarketApiType::Bybit:
+                return new RMarketMethod_Bybit_ExecutionList();
+            
+            default:
+                throw error(strFmt("Unsupported api type: %1", enum2Str(_apiType)));
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

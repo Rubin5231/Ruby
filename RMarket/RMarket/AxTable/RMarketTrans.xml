@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxTable xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketTrans</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class RMarketTrans extends common
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>find</Name>
+				<Source><![CDATA[
+    public static RMarketTrans find(RMarketTransId  _transId,
+                                    boolean         _forUpdate = false)
+    {
+        RMarketTrans trans;
+        ;
+        if (_transId)
+        {
+            trans.selectForUpdate(_forUpdate);
+            
+            select firstonly trans
+                where trans.TransId  == _transId;
+        }
+        
+        return trans;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>newTransId</Name>
+				<Source><![CDATA[
+    private static RMarketTransId newTransId()
+    {
+        RMarketTransId transId;
+        NumberSequenceReference numberSequenceReference;
+
+        numberSequenceReference = NumberSeqReference::findReference(extendedTypeNum(RMarketTransId));
+        if (numberSequenceReference)
+            transId = NumberSeq::newGetNum(numberSequenceReference).num();
+
+        if (!transId)
+            throw error("Unable to create the new transaction number!");
+
+        return transId;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>postTrans</Name>
+				<Source><![CDATA[
+    public static boolean postTrans(
+        RMarketTransId      _transId,
+        RMarketTimestamp    _timestamp = 0,
+        utcdatetime         _datetime  = DateTimeUtil::minValue())
+    {
+        RMarketTrans trans;
+        //RMarketSum msum;
+
+        ttsbegin;
+        while select forupdate trans
+            where trans.TransId == _transId
+        {
+            trans.Timestamp     = _timestamp;
+            trans.DateTime      = _datetime;
+            trans.Status        = RMarketTransStatus::Posted;
+            if (trans.validateWrite())
+                trans.update();
+        }
+        ttscommit;
+
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>createTransAdjustment</Name>
+				<Source><![CDATA[
+    public static RMarketTransId createTransAdjustment( 
+        RMarketAccount         _account,
+        RMarketSubAccount      _subAccount,
+        RMarketTransOriginType _originType,
+        RMarketTransOriginId   _originId,
+        AmountCur              _amount,
+        RMarketCryptoCode      _currencyCode,
+        RMarketTimestamp       _timestamp = 0,
+        utcdatetime            _datetime  = DateTimeUtil::minValue()
+        )
+    {
+        RMarketTrans trans;
+        RMarketTransId transId = RMarketTrans::newTransId();
+
+        ttsbegin;
+        trans.clear();
+        trans.TransId       = transId;
+        trans.AccountId     = _account.AccountId;
+        trans.SubAccountId  = _subAccount.SubAccountId;
+        trans.OriginType    = _originType;
+        trans.OriginId      = _originId;
+        //trans.Timestamp     = _timestamp;
+        //trans.DateTime      = _datetime;
+        trans.Status        = RMarketTransStatus::Reserved;
+        trans.Amount        = _amount;
+        trans.CryptoCode    = _currencyCode;
+        if (trans.validateWrite())
+            trans.insert();
+        ttscommit;
+
+        if(!trans)
+            transId = "";
+
+        return transId;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>createTransOrder</Name>
+				<Source><![CDATA[
+    public static void createTransOrder()
+    {
+        RMarketTrans trans;
+        RMarketTransId transId = RMarketTrans::newTransId();
+
+        ttsbegin;
+        trans.clear();
+        //trans.TransId;
+        //trans.AccountId;
+        //trans.SubAccountId;
+        //trans.OriginType;
+        //trans.OriginId;
+        //trans.TransDateTime;
+        //trans.Status;
+        //trans.Amount;
+        //trans.CryptoCurrencyCode;
+        if (trans.validateWrite())
+            trans.insert();
+        ttscommit;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+	<Label>Market transactions</Label>
+	<TableGroup>Transaction</TableGroup>
+	<TitleField1>TransId</TitleField1>
+	<TitleField2>OriginId</TitleField2>
+	<CacheLookup>Found</CacheLookup>
+	<ClusteredIndex>TransIdIdx</ClusteredIndex>
+	<CreatedBy>Yes</CreatedBy>
+	<CreatedDateTime>Yes</CreatedDateTime>
+	<ModifiedBy>Yes</ModifiedBy>
+	<ModifiedDateTime>Yes</ModifiedDateTime>
+	<DeleteActions />
+	<FieldGroups>
+		<AxTableFieldGroup>
+			<Name>AutoReport</Name>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>TransId</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoLookup</Name>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoIdentification</Name>
+			<AutoPopulate>Yes</AutoPopulate>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoSummary</Name>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoBrowse</Name>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>Overview</Name>
+			<Label>Overview</Label>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>TransId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>AccountId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>SubAccountId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>OriginType</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>OriginId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Timestamp</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>DateTime</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Status</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Amount</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>CryptoCode</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+	</FieldGroups>
+	<Fields>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>TransId</Name>
+			<AllowEdit>No</AllowEdit>
+			<ExtendedDataType>RMarketTransId</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+			<Mandatory>Yes</Mandatory>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>AccountId</Name>
+			<ExtendedDataType>RMarketAccountId</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>SubAccountId</Name>
+			<ExtendedDataType>RMarketSubAccountId</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>OriginType</Name>
+			<EnumType>RMarketTransOriginType</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>OriginId</Name>
+			<ExtendedDataType>RMarketTransOriginId</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldInt64">
+			<Name>Timestamp</Name>
+			<ExtendedDataType>RMarketTimestamp</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldUtcDateTime">
+			<Name>DateTime</Name>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>Status</Name>
+			<EnumType>RMarketTransStatus</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldReal">
+			<Name>Amount</Name>
+			<ExtendedDataType>AmountCur</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>CryptoCode</Name>
+			<ExtendedDataType>RMarketCryptoCode</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+		</AxTableField>
+	</Fields>
+	<FullTextIndexes />
+	<Indexes>
+		<AxTableIndex>
+			<Name>TransIdIdx</Name>
+			<AllowDuplicates>Yes</AllowDuplicates>
+			<Fields>
+				<AxTableIndexField>
+					<DataField>TransId</DataField>
+				</AxTableIndexField>
+			</Fields>
+		</AxTableIndex>
+	</Indexes>
+	<Mappings />
+	<Relations>
+		<AxTableRelation>
+			<Name>RMarketPosition</Name>
+			<RelatedTable>RMarketPosition</RelatedTable>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>OriginId</Name>
+					<Field>OriginId</Field>
+					<RelatedField>PositionId</RelatedField>
+				</AxTableRelationConstraint>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintFixed">
+					<Name>OriginType</Name>
+					<Field>OriginType</Field>
+					<ValueStr>RMarketTransOriginType::Position</ValueStr>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+		<AxTableRelation>
+			<Name>RMarketSubAccount</Name>
+			<RelatedTable>RMarketSubAccount</RelatedTable>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>SubAccountId</Name>
+					<Field>SubAccountId</Field>
+					<RelatedField>SubAccountId</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+		<AxTableRelation xmlns=""
+			i:type="AxTableRelationForeignKey">
+			<Name>RMarketTimestampTable</Name>
+			<RelatedTable>RMarketTimestampTable</RelatedTable>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>Timestamp</Name>
+					<Field>Timestamp</Field>
+					<RelatedField>RecId</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+			<Index>RecId</Index>
+		</AxTableRelation>
+	</Relations>
+	<StateMachines />
+</AxTable>

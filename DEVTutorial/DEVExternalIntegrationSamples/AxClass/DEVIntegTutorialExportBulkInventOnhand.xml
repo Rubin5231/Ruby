@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>DEVIntegTutorialExportBulkInventOnhand</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+class DEVIntegTutorialExportBulkInventOnhand extends DEVIntegExportBulkBase
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>exportData</Name>
+				<Source><![CDATA[
+    public void exportData()
+    {
+        container  lineData;
+        InventSum  inventSum;
+
+        this.initCSVStream();
+
+        lineData = ['Company', 'ItemId', 'InventLocationId', 'LastUpdDatePhysical', 'AvailPhysical'];
+        this.writeHeaderLine(lineData);
+
+        while select crosscompany sum(AvailPhysical), maxof(LastUpdDatePhysical) from inventSum
+            group by ItemId, InventLocationId, DataAreaId
+            where inventSum.AvailPhysical 
+        {
+            lineData = [inventSum.DataAreaId, inventSum.ItemId, inventSum.InventLocationId, inventSum.LastUpdDatePhysical, inventSum.AvailPhysical];
+            this.writeDataLine(lineData);
+        }
+
+        this.sendFileToStorage();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getExportDescription</Name>
+				<Source><![CDATA[
+    public str getExportDescription()
+    {
+        return "Tutorial export Onhand to CSV";
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

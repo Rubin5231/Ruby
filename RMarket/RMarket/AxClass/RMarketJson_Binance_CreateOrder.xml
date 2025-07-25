@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketJson_Binance_CreateOrder</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[DataContract]
+public class RMarketJson_Binance_CreateOrder
+{
+    // POST /api/v3/order
+    // https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints
+    private str symbol;
+    private int64 orderId;
+    private int64 orderListId;
+    private str clientOrderId;
+    private int64 transactTime;
+    private str price;
+    private str origQty;
+    private str executedQty;
+    private str cummulativeQuoteQty;
+    private str status;
+    private str timeInForce;
+    private str type;
+    private str side;
+    private List fills;
+    private str selfTradePreventionMode;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmSymbol</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает символ инструмента </summary>
+    /// <param name="_symbol"> Торговый символ </param>
+    /// <returns> Торговый символ </returns>
+    [DataMember('symbol')]
+    public str parmSymbol(str _symbol = symbol)
+    {
+        symbol = _symbol;
+        return symbol;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmOrderId</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает ID ордера </summary>
+    /// <param name="_orderId"> Уникальный идентификатор ордера </param>
+    /// <returns> Уникальный идентификатор ордера </returns>
+    [DataMember('orderId')]
+    public int64 parmOrderId(int64 _orderId = orderId)
+    {
+        orderId = _orderId;
+        return orderId;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmOrderListId</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает ID OCO-ордера </summary>
+    /// <param name="_orderListId"> Идентификатор списка ордеров (OCO) </param>
+    /// <returns> Идентификатор списка ордеров (OCO) </returns>
+    [DataMember('orderListId')]
+    public int64 parmOrderListId(int64 _orderListId = orderListId)
+    {
+        orderListId = _orderListId;
+        return orderListId;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmClientOrderId</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает клиентский ID ордера </summary>
+    /// <param name="_clientOrderId"> Пользовательский идентификатор ордера </param>
+    /// <returns> Пользовательский идентификатор ордера </returns>
+    [DataMember('clientOrderId')]
+    public str parmClientOrderId(str _clientOrderId = clientOrderId)
+    {
+        clientOrderId = _clientOrderId;
+        return clientOrderId;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmTransactTime</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает время исполнения </summary>
+    /// <param name="_transactTime"> Временная метка исполнения </param>
+    /// <returns> Временная метка исполнения </returns>
+    [DataMember('transactTime')]
+    public int64 parmTransactTime(int64 _transactTime = transactTime)
+    {
+        transactTime = _transactTime;
+        return transactTime;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmPrice</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает цену ордера </summary>
+    /// <param name="_price"> Цена выставления ордера </param>
+    /// <returns> Цена выставления ордера </returns>
+    [DataMember('price')]
+    public str parmPrice(str _price = price)
+    {
+        price = _price;
+        return price;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmOrigQty</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает исходное количество </summary>
+    /// <param name="_origQty"> Исходное количество ордера </param>
+    /// <returns> Исходное количество ордера </returns>
+    [DataMember('origQty')]
+    public str parmOrigQty(str _origQty = origQty)
+    {
+        origQty = _origQty;
+        return origQty;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmExecutedQty</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает исполненное количество </summary>
+    /// <param name="_executedQty"> Исполненное количество </param>
+    /// <returns> Исполненное количество </returns>
+    [DataMember('executedQty')]
+    public str parmExecutedQty(str _executedQty = executedQty)
+    {
+        executedQty = _executedQty;
+        return executedQty;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmCummulativeQuoteQty</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает совокупную стоимость котировки </summary>
+    /// <param name="_cummulativeQuoteQty"> Суммарная стоимость исполненных котировок </param>
+    /// <returns> Суммарная стоимость исполненных котировок </returns>
+    [DataMember('cummulativeQuoteQty')]
+    public str parmCummulativeQuoteQty(str _cummulativeQuoteQty = cummulativeQuoteQty)
+    {
+        cummulativeQuoteQty = _cummulativeQuoteQty;
+        return cummulativeQuoteQty;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmStatus</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает статус ордера ["NEW", "PARTIALLY_FILLED", "FILLED", "CANCELED", "PENDING_CANCEL", "REJECTED", "EXPIRED"] </summary>
+    /// <param name="_status"> Текущий статус ордера </param>
+    /// <returns> Текущий статус ордера </returns>
+    [DataMember('status')]
+    public str parmStatus(str _status = status)
+    {
+        status = _status;
+        return status;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmTimeInForce</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает условие времени действия ["GTC", "IOC", "FOK"] </summary>
+    /// <param name="_timeInForce"> Условие времени действия ордера </param>
+    /// <returns> Условие времени действия ордера </returns>
+    [DataMember('timeInForce')]
+    public str parmTimeInForce(str _timeInForce = timeInForce)
+    {
+        timeInForce = _timeInForce;
+        return timeInForce;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmType</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает тип ордера ["LIMIT", "MARKET", "STOP_LOSS", "STOP_LOSS_LIMIT", "TAKE_PROFIT", "TAKE_PROFIT_LIMIT", "LIMIT_MAKER"] </summary>
+    /// <param name="_type"> Тип ордера </param>
+    /// <returns> Тип ордера </returns>
+    [DataMember('type')]
+    public str parmType(str _type = type)
+    {
+        type = _type;
+        return type;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmSide</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает направление ордера ["BUY", "SELL"] </summary>
+    /// <param name="_side"> Направление сделки </param>
+    /// <returns> Направление сделки </returns>
+    [DataMember('side')]
+    public str parmSide(str _side = side)
+    {
+        side = _side;
+        return side;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmFills</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает список исполнений </summary>
+    /// <param name="_fills"> Список частичных исполнений ордера </param>
+    /// <returns> Список частичных исполнений ордера </returns>
+    [DataMember('fills'), DataCollectionAttribute(Types::Class, classStr(RMarketJson_Binance_CreateOrder_Fill))]
+    public List parmFills(List _fills = fills)
+    {
+        fills = _fills;
+        return fills;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmSelfTradePreventionMode</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает режим предотвращения самоторговли ["EXPIRE_TAKER", "EXPIRE_MAKER", "EXPIRE_BOTH", "NONE"] </summary>
+    /// <param name="_selfTradePreventionMode"> Режим предотвращения самоторговли </param>
+    /// <returns> Режим предотвращения самоторговли </returns>
+    [DataMember('selfTradePreventionMode')]
+    public str parmSelfTradePreventionMode(str _selfTradePreventionMode = selfTradePreventionMode)
+    {
+        selfTradePreventionMode = _selfTradePreventionMode;
+        return selfTradePreventionMode;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

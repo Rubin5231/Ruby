@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketJson_Binance_TradeList_Item</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[DataContract]
+public class RMarketJson_Binance_TradeList_Item
+{
+    private str symbol;
+    private int64 id;
+    private int64 orderId;
+    private int64 orderListId;
+    private str price;
+    private str qty;
+    private str quoteQty;
+    private str commission;
+    private str commissionAsset;
+    private int64 time;
+    private boolean isBuyer;
+    private boolean isMaker;
+    private boolean isBestMatch;
+
+    }
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmSymbol</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает символ инструмента </summary>
+    /// <param name="_symbol"> Торговый символ </param>
+    /// <returns> Торговый символ </returns>
+    [DataMember('symbol')]
+    public str parmSymbol(str _symbol = symbol)
+    {
+        symbol = _symbol;
+        return symbol;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmId</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает ID сделки </summary>
+    /// <param name="_id"> Уникальный идентификатор сделки </param>
+    /// <returns> Уникальный идентификатор сделки </returns>
+    [DataMember('id')]
+    public int64 parmId(int64 _id = id)
+    {
+        id = _id;
+        return id;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmOrderId</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает ID ордера </summary>
+    /// <param name="_orderId"> Идентификатор ордера </param>
+    /// <returns> Идентификатор ордера </returns>
+    [DataMember('orderId')]
+    public int64 parmOrderId(int64 _orderId = orderId)
+    {
+        orderId = _orderId;
+        return orderId;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmOrderListId</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает ID OCO-ордера </summary>
+    /// <param name="_orderListId"> Идентификатор списка ордеров (OCO) </param>
+    /// <returns> Идентификатор списка ордеров (OCO) </returns>
+    [DataMember('orderListId')]
+    public int64 parmOrderListId(int64 _orderListId = orderListId)
+    {
+        orderListId = _orderListId;
+        return orderListId;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmPrice</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает цену сделки </summary>
+    /// <param name="_price"> Цена актива </param>
+    /// <returns> Цена актива </returns>
+    [DataMember('price')]
+    public str parmPrice(str _price = price)
+    {
+        price = _price;
+        return price;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmQty</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает количество актива </summary>
+    /// <param name="_qty"> Объем сделки в базовом активе </param>
+    /// <returns> Объем сделки в базовом активе </returns>
+    [DataMember('qty')]
+    public str parmQty(str _qty = qty)
+    {
+        qty = _qty;
+        return qty;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmQuoteQty</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает стоимость сделки </summary>
+    /// <param name="_quoteQty"> Объем сделки в котируемом активе </param>
+    /// <returns> Объем сделки в котируемом активе </returns>
+    [DataMember('quoteQty')]
+    public str parmQuoteQty(str _quoteQty = quoteQty)
+    {
+        quoteQty = _quoteQty;
+        return quoteQty;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmCommission</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает комиссию </summary>
+    /// <param name="_commission"> Сумма комиссии </param>
+    /// <returns> Сумма комиссии </returns>
+    [DataMember('commission')]
+    public str parmCommission(str _commission = commission)
+    {
+        commission = _commission;
+        return commission;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmCommissionAsset</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает актив комиссии </summary>
+    /// <param name="_commissionAsset"> Актив, в котором взимается комиссия </param>
+    /// <returns> Актив, в котором взимается комиссия </returns>
+    [DataMember('commissionAsset')]
+    public str parmCommissionAsset(str _commissionAsset = commissionAsset)
+    {
+        commissionAsset = _commissionAsset;
+        return commissionAsset;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmTime</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает время сделки </summary>
+    /// <param name="_time"> Временная метка исполнения </param>
+    /// <returns> Временная метка исполнения </returns>
+    [DataMember('time')]
+    public int64 parmTime(int64 _time = time)
+    {
+        time = _time;
+        return time;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmIsBuyer</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает флаг покупателя </summary>
+    /// <param name="_isBuyer"> Является ли инициатором покупки </param>
+    /// <returns> Является ли инициатором покупки </returns>
+    [DataMember('isBuyer')]
+    public boolean parmIsBuyer(boolean _isBuyer = isBuyer)
+    {
+        isBuyer = _isBuyer;
+        return isBuyer;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmIsMaker</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает флаг маркетмейкера </summary>
+    /// <param name="_isMaker"> Является ли маркетмейкером </param>
+    /// <returns> Является ли маркетмейкером </returns>
+    [DataMember('isMaker')]
+    public boolean parmIsMaker(boolean _isMaker = isMaker)
+    {
+        isMaker = _isMaker;
+        return isMaker;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmIsBestMatch</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает флаг лучшего соответствия </summary>
+    /// <param name="_isBestMatch"> Является ли лучшим соответствием </param>
+    /// <returns> Является ли лучшим соответствием </returns>
+    [DataMember('isBestMatch')]
+    public boolean parmIsBestMatch(boolean _isBestMatch = isBestMatch)
+    {
+        isBestMatch = _isBestMatch;
+        return isBestMatch;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

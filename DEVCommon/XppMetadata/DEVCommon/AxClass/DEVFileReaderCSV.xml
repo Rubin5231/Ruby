@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<z:anyType xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns=""
+	i:type="AxCompilerMetadata" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/">
+	<Extends>DEVFileReaderBase</Extends>
+	<IsPublic>true</IsPublic>
+	<Methods>
+		<Method>
+			<Name>readCSVFile</Name>
+			<Visibility>Public</Visibility>
+			<Parameters>
+				<AxMethodParameter>
+					<Type>ClrType</Type>
+					<TypeName>System.IO.Stream</TypeName>
+					<Name>_stream</Name>
+				</AxMethodParameter>
+				<AxMethodParameter>
+					<Type>String</Type>
+					<TypeName></TypeName>
+					<DefaultValue>','</DefaultValue>
+					<Name>_inFieldDelimiter</Name>
+				</AxMethodParameter>
+			</Parameters>
+			<ReturnType>
+				<TypeName></TypeName>
+			</ReturnType>
+		</Method>
+		<Method>
+			<Name>openFile</Name>
+			<Visibility>Public</Visibility>
+			<Parameters>
+				<AxMethodParameter>
+					<Type>ClrType</Type>
+					<TypeName>System.IO.Stream</TypeName>
+					<Name>_stream</Name>
+				</AxMethodParameter>
+			</Parameters>
+			<ReturnType>
+				<TypeName></TypeName>
+			</ReturnType>
+		</Method>
+	</Methods>
+</z:anyType>

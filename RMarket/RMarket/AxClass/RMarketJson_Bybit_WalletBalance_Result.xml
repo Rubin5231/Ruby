@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketJson_Bybit_WalletBalance_Result</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[DataContract]
+public class RMarketJson_Bybit_WalletBalance_Result
+{
+    private List list;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmList</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает список аккаунтов </summary>
+    /// <param name="_list"> Список объектов с балансами аккаунтов </param>
+    /// <returns> Список аккаунтов </returns>
+    [DataMember('list'), DataCollectionAttribute(Types::Class, classStr(RMarketJson_Bybit_WalletBalance_Account))]
+    public List parmList(List _list = list)
+    {
+        list = _list;
+        return list;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

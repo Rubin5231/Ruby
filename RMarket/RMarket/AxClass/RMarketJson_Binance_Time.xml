@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketJson_Binance_Time</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[DataContract]
+public class RMarketJson_Binance_Time
+{
+    private int64 serverTime;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmServerTime</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает серверное время </summary>
+    /// <param name="_serverTime"> Время сервера в миллисекундах </param>
+    /// <returns> Время сервера в миллисекундах </returns>
+    [DataMember('serverTime')]
+    public int64 parmServerTime(int64 _serverTime = serverTime)
+    {
+        serverTime = _serverTime;
+        return serverTime;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

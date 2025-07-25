@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketMethodInterface_Time</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+interface RMarketMethodInterface_Time
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>setBaseUrl</Name>
+				<Source><![CDATA[
+    void setBaseUrl(str _baseUrl)
+    {}
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>execute</Name>
+				<Source><![CDATA[
+    void execute()
+    {}
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>second</Name>
+				<Source><![CDATA[
+    RMarketTimestamp second()
+    {}
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>miliSecond</Name>
+				<Source><![CDATA[
+    int64 miliSecond()
+    {}
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

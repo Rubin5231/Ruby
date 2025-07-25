@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketIndicatorCalculator_ATR</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class RMarketIndicatorCalculator_ATR extends RMarketIndicatorCalculator
+{
+    List trList;
+    int period;
+    
+    real previousATR;
+    real prevClose;
+    int counter;
+    boolean isInitialized;
+    
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>getExtraPeriodsNeeded</Name>
+				<Source><![CDATA[
+    protected int getExtraPeriodsNeeded()
+    {
+        return real2int(indicatorSetup.Parameter) + 1;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getStartLoopTS</Name>
+				<Source><![CDATA[
+    protected RMarketTimestamp getStartLoopTS(RMarketDim _marketDim, RMarketIndicatorSetupTable _indicatorSetup, RMarketTimestamp _startCalcTS = 0)
+    {
+        RMarketTimestamp ret;
+        RMarketIndicatorTable indicatorPrev =
+            RMarketIndicatorTable::find(_indicatorSetup.IndicatorId, _marketDim.RecId, _startCalcTS - _marketDim.Seconds);
+
+        if (indicatorPrev)
+        {
+            previousATR = indicatorPrev.Value;
+            prevClose = RMarketCandleTable::find(indicatorPrev.DimRecId, indicatorPrev.Timestamp).Close;
+            ret = _startCalcTS;
+        }
+        else
+        {
+            ret = super(_marketDim, _indicatorSetup, _startCalcTS);
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>calc</Name>
+				<Source><![CDATA[
+    protected RMarketIndicatorTable calc(RMarketDim _marketDim, RMarketIndicatorSetupTable _indicatorSetup, RMarketCandleTable _candle, boolean _justCache = false)
+    {
+        RMarketIndicatorTable indicator;
+        real baseValue = _candle.getValue(_indicatorSetup.CalcBase);
+        real tr, ATR;
+
+        // Инициализация кэша и периода
+        if (!trList)
+        {
+            if (previousATR)
+                isInitialized = true;
+            else
+            {
+                isInitialized = false;
+                trList = new List(Types::Real);
+            }
+        }
+        period = real2int(_indicatorSetup.Parameter);
+
+        if (!isInitialized)
+        {
+            if (!prevClose)
+            {
+                prevClose = _candle.Close;
+            }
+            else
+            {
+                tr = max(max( abs(_candle.High - _candle.Low), 
+                              abs(_candle.High - prevClose)),
+                              abs(_candle.Low  - prevClose));
+                trList.addEnd(tr);
+                if (trList.elements() >= period)
+                {
+                    real valueSum = 0;
+                    ListEnumerator trEnum = trList.getEnumerator();
+                    while (trEnum.moveNext())
+                    {
+                        valueSum += trEnum.current();
+                    }
+                    ATR = valueSum / period;
+
+                    isInitialized = true;
+                }
+            }
+        }
+        else
+        {
+            tr = max(max( abs(_candle.High - _candle.Low),
+                              abs(_candle.High - prevClose)),
+                              abs(_candle.Low  - prevClose));
+            ATR = (previousATR * (period - 1) + tr) / period;
+        }
+
+        if (!_justCache && isInitialized)
+        {
+            indicator.clear();
+            indicator.DimRecId    = _marketDim.RecId;
+            indicator.IndicatorId = _indicatorSetup.IndicatorId;
+            indicator.Timestamp   = _candle.Timestamp;
+            indicator.Value       = ATR;
+        }
+
+        previousATR = ATR;
+        prevClose = _candle.Close;
+
+        return indicator;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

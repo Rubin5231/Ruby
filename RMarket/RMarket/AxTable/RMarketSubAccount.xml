@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxTable xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketSubAccount</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class RMarketSubAccount extends common
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>find</Name>
+				<Source><![CDATA[
+    public static RMarketSubAccount find(RMarketSubAccountId  _subAccountId,
+                                         boolean              _forUpdate = false)
+    {
+        RMarketSubAccount subAccount;
+        ;
+        if (_subAccountId)
+        {
+            subAccount.selectForUpdate(_forUpdate);
+            
+            select firstonly subAccount
+                where subAccount.SubAccountId  == _subAccountId;
+        }
+        
+        return subAccount;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>initValue</Name>
+				<Source><![CDATA[
+    /// <summary>
+    ///
+    /// </summary>
+    public void initValue()
+    {
+        RMarketSubAccountId subAccountId;
+        NumberSequenceReference numberSequenceReference;
+
+        super();
+
+        numberSequenceReference = NumberSeqReference::findReference(extendedTypeNum(RMarketSubAccountId));
+        if (numberSequenceReference)
+        {
+            this.SubAccountId = NumberSeq::newGetNum(numberSequenceReference).num();
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>initFromAccount</Name>
+				<Source><![CDATA[
+    public void initFromAccount(RMarketAccount _account)
+    {
+        this.AccountId = _account.AccountId;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>RMarketAccount</Name>
+				<Source><![CDATA[
+    public RMarketAccount RMarketAccount(boolean _forUpdate = false)
+    {
+        return RMarketAccount::find(this.AccountId, _forUpdate);
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+	<Label>Subaccounts</Label>
+	<TableGroup>Group</TableGroup>
+	<TitleField1>SubAccountId</TitleField1>
+	<CacheLookup>Found</CacheLookup>
+	<ClusteredIndex>SubAccountIdIdx</ClusteredIndex>
+	<CreatedBy>Yes</CreatedBy>
+	<CreatedDateTime>Yes</CreatedDateTime>
+	<ModifiedBy>Yes</ModifiedBy>
+	<ModifiedDateTime>Yes</ModifiedDateTime>
+	<PrimaryIndex>SubAccountIdIdx</PrimaryIndex>
+	<ReplacementKey>SubAccountIdIdx</ReplacementKey>
+	<DeleteActions />
+	<FieldGroups>
+		<AxTableFieldGroup>
+			<Name>AutoReport</Name>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>SubAccountId</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoLookup</Name>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoIdentification</Name>
+			<AutoPopulate>Yes</AutoPopulate>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoSummary</Name>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoBrowse</Name>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>Overview</Name>
+			<Label>Overview</Label>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>SubAccountId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Description</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>StrategyId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>SymbolId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Active</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>Footer</Name>
+			<Fields />
+		</AxTableFieldGroup>
+	</FieldGroups>
+	<Fields>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>SubAccountId</Name>
+			<AllowEdit>No</AllowEdit>
+			<ExtendedDataType>RMarketSubAccountId</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+			<Mandatory>Yes</Mandatory>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>Description</Name>
+			<ExtendedDataType>Description</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>AccountId</Name>
+			<ExtendedDataType>RMarketAccountId</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>StrategyId</Name>
+			<ExtendedDataType>RMarketStrategyId</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>SymbolId</Name>
+			<ExtendedDataType>RMarketSymbolId</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>Active</Name>
+			<Label>Active</Label>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+	</Fields>
+	<FullTextIndexes />
+	<Indexes>
+		<AxTableIndex>
+			<Name>SubAccountIdIdx</Name>
+			<AlternateKey>Yes</AlternateKey>
+			<Fields>
+				<AxTableIndexField>
+					<DataField>SubAccountId</DataField>
+				</AxTableIndexField>
+			</Fields>
+		</AxTableIndex>
+	</Indexes>
+	<Mappings />
+	<Relations>
+		<AxTableRelation>
+			<Name>RMarketAccount</Name>
+			<OnDelete>Restricted</OnDelete>
+			<RelatedTable>RMarketAccount</RelatedTable>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>AccountId</Name>
+					<Field>AccountId</Field>
+					<RelatedField>AccountId</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+		<AxTableRelation>
+			<Name>RMarketStrategy</Name>
+			<OnDelete>Restricted</OnDelete>
+			<RelatedTable>RMarketStrategy</RelatedTable>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>StrategyId</Name>
+					<Field>StrategyId</Field>
+					<RelatedField>StrategyId</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+		<AxTableRelation>
+			<Name>RMarketSymbolTable</Name>
+			<RelatedTable>RMarketSymbolTable</RelatedTable>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>SymbolId</Name>
+					<Field>SymbolId</Field>
+					<RelatedField>SymbolId</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+	</Relations>
+	<StateMachines />
+</AxTable>

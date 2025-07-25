@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketMethod_Bybit_Time</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Получение времени сервера Bybit
+/// Usage:
+/// RMarketMethod_Bybit_Time apiMethod = new RMarketMethod_Bybit_Time();
+/// apiMethod.parmBaseUrl('https://api.bybit.com');
+/// apiMethod.execute();
+/// RMarketTimestamp second = apiMethod.second();
+/// int64 miliSecond = apiMethod.miliSecond();
+/// </summary>
+public class RMarketMethod_Bybit_Time extends RMarketMethod implements RMarketMethodInterface_Time
+{
+    protected RMarketJson_Bybit_Time responseContract;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>new</Name>
+				<Source><![CDATA[
+    /// <summary> Конструктор класса </summary>
+    public void new()
+    {
+        apiClient = new RMarketApiClientBybit();
+        apiClient.parmHttpMethod(RMarketAPIHttpMethod::GET);
+        apiClient.parmMethodUrl('/v5/market/time');
+
+        // Do this before execute()
+        //apiClient.parmBaseUrl('');
+        //apiClient.parmApiKey();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>prepare</Name>
+				<Source><![CDATA[
+    public void prepare()
+    {
+        // Add your code here...
+
+        super();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>checkApiKey</Name>
+				<Source><![CDATA[
+    public boolean checkApiKey()
+    {
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>processResponse</Name>
+				<Source><![CDATA[
+    public void processResponse()
+    {
+        super();
+
+        // Ответ: 
+        //{
+        //  "retCode": 0,
+        //  "retMsg": "OK",
+        //  "result": {
+        //    "timeSecond": "1670000000",
+        //    "timeNano": "1670000000000000000"
+        //  },
+        //  "retExtInfo": {},
+        //  "time": 1670000000000
+        //}
+                str responseStr = apiClient.getResponseBody();
+
+        if (apiClient.getHttpStatus() != System.Net.HttpStatusCode::OK)
+            throw Error(strfmt("Request returns error!"));
+        
+        responseContract = RMarketJsonSerializer::deserializeObject(
+            classNum(RMarketJson_Bybit_Time),
+            responseStr) as RMarketJson_Bybit_Time;
+
+        if (!responseContract.isSuccess())
+        {
+            throw error(responseContract.getErrorDetails());
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>second</Name>
+				<Source><![CDATA[
+    public RMarketTimestamp second()
+    {
+        return responseContract.parmResult().parmTimeSecond();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>miliSecond</Name>
+				<Source><![CDATA[
+    public int64 miliSecond()
+    {
+        return responseContract.parmResult().parmTimeNano() div 1000000;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

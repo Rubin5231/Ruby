@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketAutoTradeMulti</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class RMarketAutoTradeMulti extends RunBaseBatch implements BatchRetryable
+{
+    RMarketAccountType  accountType;
+    RMarketAccountId    accountId;
+    RMarketId           marketId;
+    
+    DialogField         dlgAccountType;
+    DialogField         dlgAccountId;
+    DialogField         dlgMarketId;
+    
+    QueryRun       queryRun;
+    
+    #define.CurrentVersion(1)
+    #localmacro.CurrentList
+        accountType,
+        accountId,
+        marketId
+    #endmacro
+    
+    
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>dialog</Name>
+				<Source><![CDATA[
+    public Object dialog()
+    {
+        DialogRunbase       dialog = super();
+        ;
+        dlgAccountType = dialog.addFieldValue(enumStr(RMarketAccountType), accountType, "Type of account", "Help text");
+        dlgAccountId   = dialog.addFieldValue(extendedtypestr(RMarketAccountId), accountId);
+        dlgMarketId    = dialog.addFieldValue(extendedtypestr(RMarketId), marketId);
+        
+        return dialog;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getFromDialog</Name>
+				<Source><![CDATA[
+    public boolean getFromDialog()
+    {
+        ;
+        accountType = dlgAccountType.value();
+        accountId   = dlgaccountId.value();
+        marketId    = dlgMarketId.value();
+        
+        return super();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmAccountType</Name>
+				<Source><![CDATA[
+    public RMarketAccountType parmAccountType(RMarketAccountType _accountType = accountType)
+    {
+        accountType = _accountType;
+        return accountType;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmAccountId</Name>
+				<Source><![CDATA[
+    public RMarketAccountId parmAccountId(RMarketAccountId _accountId = accountId)
+    {
+        accountId = _accountId;
+        return accountId;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmMarketId</Name>
+				<Source><![CDATA[
+    public RMarketId parmMarketId(RMarketId _marketId = marketId)
+    {
+        marketId = _marketId;
+        return marketId;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>showQueryValues</Name>
+				<Source><![CDATA[
+    public boolean showQueryValues()
+    {
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>canRunInNewSession</Name>
+				<Source><![CDATA[
+    public boolean canRunInNewSession()
+    {
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>canGoBatch</Name>
+				<Source><![CDATA[
+    public boolean canGoBatch()
+    {
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>isRetryable</Name>
+				<Source><![CDATA[
+    public boolean isRetryable()
+    {
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>initParmDefault</Name>
+				<Source><![CDATA[
+    public void initParmDefault()
+    {
+        this.initQuery();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>validate</Name>
+				<Source><![CDATA[
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name = "calledFrom"></param>
+    /// <returns></returns>
+    public boolean validate(Object calledFrom = null)
+    {
+        boolean ret;
+    
+        ret = super(calledFrom);
+
+        if (accountType == RMarketAccountType::Test && !accountId)
+            ret = ret && checkFailed('For test accounts you have to set up the AccountId');
+    
+        if (marketId && accountId && RMarketAccount::find(accountId).MarketId != marketId)
+            ret = ret && checkFailed(strFmt("The given account '%1' and market '%2' do not correspond to each other", accountId, marketId));
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>initQuery</Name>
+				<Source><![CDATA[
+    public void initQuery()
+    {
+        Query                   query = new Query();
+        QueryBuildDataSource    qbdsAccount;
+        QueryBuildRange         qbr;
+        ;
+        
+        qbdsAccount = query.addDataSource(tablenum(RMarketAccount));
+        qbdsAccount.addRange(fieldNum(RMarketAccount, AccountType)).value(SysQuery::value(accountType));
+
+        if (accountId)
+            qbdsAccount.addRange(fieldNum(RMarketAccount, AccountId)).value(SysQuery::value(accountId));
+        if (marketId)
+            qbdsAccount.addRange(fieldNum(RMarketAccount, MarketId)).value(SysQuery::value(marketId));
+        //qbr = SysQuery::findOrCreateRange(qbds, fieldnum(RMarketAccount, RecId));
+        //qbr.status(RangeStatus::HIDDEN);
+        
+        queryRun = new QueryRun(query);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>pack</Name>
+				<Source><![CDATA[
+    public container pack()
+    {
+        return [#CurrentVersion, #CurrentList, queryRun.pack()];
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>unpack</Name>
+				<Source><![CDATA[
+    public boolean unpack(container _packedClass)
+    {
+        Version    version = RunBase::getVersion(_packedClass);
+        container  queryCon;
+        switch (version)
+        {
+            case #CurrentVersion:
+                [version, #CurrentList, queryCon] = _packedClass;
+                if (SysQuery::isPackedOk(queryCon))
+                {
+                    queryRun = new QueryRun(queryCon);
+                }
+                else
+                {
+                    this.initQuery();
+                }
+                break;
+            default:
+                accountType = RMarketAccountType::Test;
+                return false;
+        }
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>queryRun</Name>
+				<Source><![CDATA[
+    public QueryRun queryRun()
+    {
+        return queryRun;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>run</Name>
+				<Source><![CDATA[
+    public void run()
+    {
+        //info(strFmt("AccountType=%1", accountType));
+        //info(strFmt("marketAccountId=%1", accountId));
+        int                     processedCounter;
+        //QueryBuildDataSource    qbds;
+        RMarketAccount          account;
+        RMarketAutoTrade autoTrader;
+        
+        //qbds = queryRun.query().dataSourceTable(tableNum(RMarketAccount));
+        //SysQuery::findOrCreateRange(qbds, fieldnum(RMarketAccount, RecId)).value(queryValue(""));
+        
+        this.progressInit(RunBase::getDescription(classIdGet(this)),
+                          SysQuery::countTotal(queryRun),
+                          #AviSearch);
+        
+        while (queryRun.next())
+        {
+            account = queryRun.get(tablenum(RMarketAccount));
+
+            setPrefix(strFmt("'%1 account '%2' on market '%3'", enum2Str(account.AccountType), account.AccountId, account.MarketId));
+
+            autoTrader = RMarketAutoTrade::construct(account.AccountId);
+            autoTrader.run();
+            
+            processedCounter++;
+            progress.incCount();
+        }
+        info(strfmt("%1 record(s) processed", processedCounter));
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>construct</Name>
+				<Source><![CDATA[
+    public static RMarketAutoTradeMulti construct()
+    {
+        return new RMarketAutoTradeMulti();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>description</Name>
+				<Source><![CDATA[
+    static ClassDescription description()
+    {
+        return "Auto trade";
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>main</Name>
+				<Source><![CDATA[
+    public static void main(Args _args)
+    {
+        RMarketAutoTradeMulti    runObject = RMarketAutoTradeMulti::construct();
+        ;
+
+
+        if (runObject.prompt())
+        {
+            runObject.runOperation();
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

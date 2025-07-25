@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketIndicatorCalculator_RSI</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class RMarketIndicatorCalculator_RSI extends RMarketIndicatorCalculator
+{
+    List gainList, lossList;
+    int period;
+    
+    real previousRSI;
+    real previousAvgGain; // ValueAux1
+    real previousAvgLoss; // ValueAux2
+    real prevValue;
+    int counter;
+    boolean isInitialized;
+    
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>getExtraPeriodsNeeded</Name>
+				<Source><![CDATA[
+    protected int getExtraPeriodsNeeded()
+    {
+        return real2int(indicatorSetup.Parameter) + 1;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getStartLoopTS</Name>
+				<Source><![CDATA[
+    protected RMarketTimestamp getStartLoopTS(RMarketDim _marketDim, RMarketIndicatorSetupTable _indicatorSetup, RMarketTimestamp _startCalcTS = 0)
+    {
+        RMarketTimestamp ret;
+        RMarketIndicatorTable indicatorPrev =
+            RMarketIndicatorTable::find(_indicatorSetup.IndicatorId, _marketDim.RecId, _startCalcTS - _marketDim.Seconds);
+
+        if (indicatorPrev)
+        {
+            previousRSI = indicatorPrev.Value;
+            previousAvgGain = indicatorPrev.ValueAux1;
+            previousAvgLoss = indicatorPrev.ValueAux2;
+            prevValue = RMarketCandleTable::find(indicatorPrev.DimRecId, indicatorPrev.Timestamp).getValue(_indicatorSetup.CalcBase);
+            ret = _startCalcTS;
+        }
+        else
+        {
+            ret = super(_marketDim, _indicatorSetup, _startCalcTS);
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>calc</Name>
+				<Source><![CDATA[
+    protected RMarketIndicatorTable calc(RMarketDim _marketDim, RMarketIndicatorSetupTable _indicatorSetup, RMarketCandleTable _candle, boolean _justCache = false)
+    {
+        RMarketIndicatorTable indicator;
+        real baseValue = _candle.getValue(_indicatorSetup.CalcBase);
+        real delta, gain, loss, avgGain, avgLoss, RSI;
+
+        // Инициализация кэша и периода
+        if (!gainList)
+        {
+            if (previousRSI)
+                isInitialized = true;
+            else
+            {
+                isInitialized = false;
+                gainList = new List(Types::Real);
+                lossList = new List(Types::Real);
+            }
+        }
+        period = real2int(_indicatorSetup.Parameter);
+
+        if (!isInitialized)
+        {
+            if (!prevValue)
+            {
+                prevValue = baseValue;
+            }
+            else
+            {
+                delta = baseValue - prevValue;
+                gain = (delta >= 0) ? delta : 0;
+                loss = (delta >= 0) ?     0 : -delta;
+                gainList.addEnd(gain);
+                lossList.addEnd(loss);
+                if (gainList.elements() >= period)
+                {
+                    real valueSum = 0;
+                    ListEnumerator gainEnum = gainList.getEnumerator();
+                    while (gainEnum.moveNext())
+                    {
+                        valueSum += gainEnum.current();
+                    }
+                    avgGain = valueSum / period;
+
+                    valueSum = 0;
+                    ListEnumerator lossEnum = lossList.getEnumerator();
+                    while (lossEnum.moveNext())
+                    {
+                        valueSum += lossEnum.current();
+                    }
+                    avgLoss = valueSum / period;
+
+                    isInitialized = true;
+                }
+            }
+        }
+        else
+        {
+            delta = baseValue - prevValue;
+            gain = (delta >= 0) ? delta : 0;
+            loss = (delta >= 0) ?     0 : -delta;
+
+            avgGain = (previousAvgGain * (period - 1.0) + gain) / period;
+            avgLoss = (previousAvgLoss * (period - 1.0) + loss) / period;
+        }
+
+        RSI = (!avgLoss) ? 
+            100.0 : 
+            100.0 - 100.0 / (1.0 + avgGain / avgLoss);
+
+        if (!_justCache && isInitialized)
+        {
+            indicator.clear();
+            indicator.DimRecId    = _marketDim.RecId;
+            indicator.IndicatorId = _indicatorSetup.IndicatorId;
+            indicator.Timestamp   = _candle.Timestamp;
+            indicator.Value       = RSI;
+            indicator.ValueAux1   = avgGain;
+            indicator.ValueAux2   = avgLoss;
+        }
+
+        previousRSI = RSI;
+        previousAvgGain = avgGain; // ValueAux1
+        previousAvgLoss = avgLoss; // ValueAux2
+        prevValue = baseValue;
+
+        return indicator;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

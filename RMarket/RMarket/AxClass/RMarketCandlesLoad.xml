@@ -1,0 +1,583 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketCandlesLoad</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class RMarketCandlesLoad extends RunBaseBatch implements BatchRetryable
+{
+    protected RMarketId marketId;
+    protected DialogField dialogMarketId;
+
+    protected RMarketSymbolId symbolId;
+    protected RMarketCandleInterval interval;
+    protected UtcDateTime dtFrom;
+    protected UtcDateTime dtTo;
+
+    protected Map mapServerTime;
+    
+    protected DialogField dialogSymbolId, dialogInterval, dialogFrom, dialogTo, dialogOverwrite;
+    
+    QueryRun queryRun;
+
+    #DEFINE.CurrentVersion(1)
+    
+    #LOCALMACRO.CurrentList
+        marketId,
+        symbolId,
+        interval,
+        dtFrom,
+        dtTo
+    #ENDMACRO
+        
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>dialog</Name>
+				<Source><![CDATA[
+    public Object dialog()
+    {
+        DialogRunbase dialogRunbase = super();
+        dialogMarketId = dialogRunbase.addFieldValue(extendedTypeStr(RMarketId), marketId, "Market");
+        dialogSymbolId = dialogRunbase.addFieldValue(extendedTypeStr(RMarketSymbolId), symbolId, "Symbol");
+        dialogInterval = dialogRunbase.addFieldValue(enumStr(RMarketCandleInterval), interval, "Interval");
+        dialogFrom = dialogRunbase.addField(extendedTypeStr(RMarketCandleDateTime), "From");
+        dialogTo = dialogRunbase.addField(extendedTypeStr(RMarketCandleDateTime), "To");
+        return dialogRunbase;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getFromDialog</Name>
+				<Source><![CDATA[
+    public boolean getFromDialog()
+    {
+        boolean ret = super();
+        marketId = dialogMarketId.value();
+        symbolId = dialogSymbolId.value();
+        interval = dialogInterval.value();
+        dtFrom = dialogFrom.value();
+        dtTo = dialogTo.value();
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>isRetryable</Name>
+				<Source><![CDATA[
+    public boolean isRetryable()
+    {
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>canRunInNewSession</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Describes whether the class is designed for execution in a new session.
+    /// </summary>
+    /// <returns> Always returns true. </returns>
+    protected boolean canRunInNewSession()
+    {
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>showQueryValues</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Indicates that query information is shown on the general tab of the dialog.
+    /// </summary>
+    /// <returns>
+    /// Always returns false. Query information isn't shown on the general tab of the dialog.
+    /// </returns>
+    public boolean showQueryValues()
+    {
+        return false;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>queryRun</Name>
+				<Source><![CDATA[
+    public QueryRun queryRun(QueryRun _queryRun = queryRun)
+    {
+        queryRun = _queryRun;
+        return queryRun;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmMarketId</Name>
+				<Source><![CDATA[
+    public RMarketId parmMarketId(RMarketId _marketId = marketId)
+    {
+        marketId = _marketId;
+        return marketId;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmSymbolId</Name>
+				<Source><![CDATA[
+    public RMarketSymbolId parmSymbolId(RMarketSymbolId _symbolId = symbolId)
+    {
+        symbolId = _symbolId;
+        return symbolId;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmInterval</Name>
+				<Source><![CDATA[
+    public RMarketCandleInterval parmInterval(RMarketCandleInterval _interval = interval)
+    {
+        interval = _interval;
+        return interval;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmDtFrom</Name>
+				<Source><![CDATA[
+    public UtcDateTime parmDtFrom(UtcDateTime _dtFrom = dtFrom)
+    {
+        dtFrom = _dtFrom;
+        return dtFrom;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmDtTo</Name>
+				<Source><![CDATA[
+    public UtcDateTime parmDtTo(UtcDateTime _dtTo = dtTo)
+    {
+        dtTo = _dtTo;
+        return dtTo;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>validate</Name>
+				<Source><![CDATA[
+    public boolean validate(Object calledFrom = null)
+    {
+        super();
+        
+        if (dtFrom > DateTimeUtil::utcNow())
+        {
+            throw error("@RMarket:InvalidDateRange");
+        }
+        
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>initQuery</Name>
+				<Source><![CDATA[
+    protected void initQuery()
+    {
+        Query query = new Query();
+        QueryBuildDataSource qbdsInterval = query.addDataSource(tableNum(RMarketIntervals));
+        qbdsInterval.addRange(fieldNum(RMarketIntervals, Support)).value(SysQuery::value(NoYes::Yes));
+        qbdsInterval.addSortField(fieldNum(RMarketIntervals, MarketId));
+
+        QueryBuildDataSource qbdsSymbolIntervals = qbdsInterval.addDataSource(tableNum(RMarketSymbolIntervals));
+        qbdsSymbolIntervals.relations(true);
+        
+        if (marketId)
+        {
+            qbdsInterval.addRange(fieldNum(RMarketIntervals, MarketId)).value(SysQuery::value(marketId));
+        }
+
+        if (symbolId)
+        {
+            qbdsSymbolIntervals.addRange(fieldNum(RMarketSymbolIntervals, SymbolId)).value(SysQuery::value(symbolId));
+        }
+        
+        if (interval != RMarketCandleInterval::None && interval != 255)
+        {
+            qbdsInterval.addRange(fieldNum(RMarketIntervals, Interval)).value(SysQuery::value(interval));
+        }
+        
+        queryRun = new QueryRun(query);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>adjustParameters</Name>
+				<Source><![CDATA[
+    protected void adjustParameters()
+    {
+        // Приводим все даты к UTC формату
+        //dtTo = RMarketUtil::normalizeDateTime2UTC(dtTo);
+        //dtFrom = RMarketUtil::normalizeDateTime2UTC(dtFrom);
+    
+        this.initQuery();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getServerTime</Name>
+				<Source><![CDATA[
+    private UtcDateTime getServerTime(RMarketDim _marketDim)
+    {
+        RMarketMethodInterface_Time apiMethod;
+        RMarketTimestamp seconds;
+        UtcDateTime ret;
+
+        try
+        {
+            apiMethod = RMarketMethodInterface::create_Time(_marketDim.RMarketTable().ApiType);
+            apiMethod.setBaseUrl(_marketDim.RMarketTable().ApiURL);
+            apiMethod.execute();
+            seconds = apiMethod.second();
+            ret = RMarketUtil::timestamp2dateTimeUTC(seconds);// DateTimeUtil::addSeconds(DateTimeUtil::newDateTime(01\01\1970, 0, Timezone::GMT_COORDINATEDUNIVERSALTIME), seconds);
+        }
+        catch (Exception::Error)
+        {
+            // Fallback: создаем текущее GMT время
+            warning(strFmt("Не удалось получить время сервера %1. Создается текущее GMT время.", _marketDim.MarketId));
+            ret = RMarketUtil::normalizeDateTime2UTC(DateTimeUtil::getSystemDateTime()); //DateTimeUtil::applyTimeZoneOffset(DateTimeUtil::getSystemDateTime(), Timezone::GMT_COORDINATEDUNIVERSALTIME);
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>pack</Name>
+				<Source><![CDATA[
+    public container pack()
+    {
+        return [#CurrentVersion, #CurrentList];
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>unpack</Name>
+				<Source><![CDATA[
+    public boolean unpack(container _packedClass)
+    {
+        boolean         ret;
+        Integer         version     = conPeek(_packedClass,1);
+
+        switch (version)
+        {
+            case #CurrentVersion:
+                [version, #CurrentList] = _packedClass;
+                ret = true;
+                break;
+
+            default:
+                interval = RMarketCandleInterval::None;
+                ret = false;
+        }
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>main</Name>
+				<Source><![CDATA[
+    public static void main(Args _args)
+    {
+        RMarketCandlesLoad runClass = new RMarketCandlesLoad();
+        if (runClass.prompt())
+        {
+            runClass.run();
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>description</Name>
+				<Source><![CDATA[
+    static ClassDescription description()
+    {
+        return "Load candles";
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>run</Name>
+				<Source><![CDATA[
+    public void run()
+    {
+        if (this.validate())
+        {
+            this.adjustParameters();
+
+            this.doRun();
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>doRun</Name>
+				<Source><![CDATA[
+    protected void doRun()
+    {
+        RMarketIntervals intervals;
+        RMarketSymbolIntervals symbols;
+        RMarketDim  marketDim;
+        utcdatetime serverTime, dateFrom, dateTo;
+        
+
+        while (queryRun.next())
+        {
+            // Get current task
+            intervals = queryRun.get(tableNum(RMarketIntervals));
+            symbols = queryRun.get(tableNum(RMarketSymbolIntervals));
+
+            marketDim = RMarketDim::findOrCreateDims(intervals.MarketId, symbols.SymbolId, intervals.Interval);
+            
+            // Get server time with caching
+            serverTime = this.getCachedServerTime(marketDim);
+            
+            // Calculate dateFrom
+            dateFrom = this.calculateDateFrom(marketDim);
+
+            // Calculate dateTo based on candle interval
+            dateTo = this.calculateDateTo(serverTime, marketDim.Interval);
+            
+            // Execute the loading task
+            setPrefix(strFmt("%1 %2 %3 %4: ", serverTime, marketDim.MarketId, marketDim.SymbolId, enum2Str(marketDim.Interval)));
+            this.doTask(marketDim, dateFrom, dateTo);
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>doTask</Name>
+				<Source><![CDATA[
+    protected void doTask(RMarketDim _marketDim, utcdatetime _dateFrom, utcdatetime _dateTo)
+    {
+        RMarketCandleTable tempCandle;
+        tempCandle.setTmp();
+
+        RMarketMethodInterface_Klines apiMethod = RMarketMethodInterface::create_Klines(_marketDim.RMarketTable().ApiType);
+        apiMethod.setBaseUrl(_marketDim.RMarketTable().ApiURL);
+        apiMethod.initParameters(
+            _marketDim.SymbolId,                        // Торговый символ
+            _marketDim.RMarketIntervals().IntervalStr/*,  // Интервал
+            'spot',
+            1000*/);                                      // Лимит
+
+        int loadedCount = 0;
+        int checkCount = 0;
+
+        if (_dateFrom < _dateTo)
+        {
+            RMarketTimestamp currentStart = RMarketUtil::dateTime2Timestamp(_dateFrom);
+            RMarketTimestamp currentEnd;
+            RMarketTimestamp step = apiMethod.getLimit() * RMarketUtil::interval2Seconds(_marketDim.Interval);
+            RMarketTimestamp endTimestamp = RMarketUtil::dateTime2Timestamp(_dateTo);
+
+            while (currentStart < endTimestamp)
+            {
+                currentEnd = (step) ? (currentStart + step - 1) : endTimestamp;
+                if (currentEnd > endTimestamp)
+                    currentEnd = endTimestamp;
+
+                checkCount = real2int((currentEnd + 1 - currentStart) / RMarketUtil::interval2Seconds(_marketDim.Interval));
+
+                apiMethod.initPeriod(currentStart * 1000, currentEnd * 1000);
+                apiMethod.execute();
+                List klineList = apiMethod.getKlineList();
+
+                ListEnumerator klineListEnum = klineList.getEnumerator();
+
+                ttsbegin;
+                
+                while (klineListEnum.moveNext())
+                {
+                    container itemCon = klineListEnum.current();
+                    this.saveCandle2Temp(_marketDim, itemCon, tempCandle);
+
+                    loadedCount++;
+                }
+
+                // check, if loaded packet is broken, then set actual currentEnd
+                /*select firstonly Timestamp from tempCandle
+                    order by Timestamp desc;
+                RMarketTimestamp check = tempCandle.Timestamp;
+                if (check && (currentEnd - check > RMarketUtil::interval2Seconds(_interval)))
+                    currentEnd = RMarketUtil::calculateCandleTimestamp(check, _interval, 1) - 1;
+                */
+                //this.handleDuplicates(tempCandle);
+                this.flushCandles(tempCandle);
+
+                ttscommit;
+
+                currentStart = currentEnd + 1;
+            }
+
+        }
+        
+        info(strFmt("Loaded %1 candles", loadedCount));
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getCachedServerTime</Name>
+				<Source><![CDATA[
+    private UtcDateTime getCachedServerTime(RMarketDim _marketDim)
+    {
+        UtcDateTime serverTime;
+
+        if (!mapServerTime)
+            mapServerTime = new Map(Types::String, Types::UtcDateTime);
+    
+        if (mapServerTime.exists(_marketDim.MarketId))
+        {
+            serverTime = mapServerTime.lookup(_marketDim.MarketId);
+        }
+        else
+        {
+            serverTime = this.getServerTime(_marketDim);
+            mapServerTime.add(_marketDim.MarketId, serverTime);
+        }
+    
+        return serverTime;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>calculateDateFrom</Name>
+				<Source><![CDATA[
+    private UtcDateTime calculateDateFrom(RMarketDim _marketDim)
+    {
+        RMarketCandleTable candle;
+        RMarketTimestampTable tsTable;
+        UtcDateTime defaultFrom;
+
+        // Устанавливаем dtFrom согласно бизнес-правилам в UTC
+        if (dtFrom)
+            defaultFrom = RMarketUtil::normalizeDateTime2UTC(dtFrom);
+        
+        if (!defaultFrom)
+        {
+            // Ищем последнюю свечу
+            select firstonly Timestamp from candle
+                order by Timestamp desc
+                where candle.DimRecId == _marketDim.RecId
+            join tsTable
+                where tsTable.Timestamp == candle.Timestamp;
+            defaultFrom = tsTable ? RMarketUtil::calculateCandleDateTime(tsTable.DateTime, _marketDim.Interval, 1) : defaultFrom;
+        }
+        
+        if (!defaultFrom)
+            defaultFrom = DateTimeUtil::newDateTime(01\04\2023, 0, Timezone::GMT_COORDINATEDUNIVERSALTIME); // 1 апреля 2023 //TODO Parametrize
+        
+        return defaultFrom;
+
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>calculateDateTo</Name>
+				<Source><![CDATA[
+    private UtcDateTime calculateDateTo(UtcDateTime _serverTime, RMarketCandleInterval _interval)
+    {
+        UtcDateTime defaultTo = _serverTime;
+        
+        if (dtTo)
+            defaultTo = min(dtTo, defaultTo);
+        
+        defaultTo = RMarketUtil::calculateCandleDateTime(defaultTo, _interval);
+        defaultTo = DateTimeUtil::addSeconds(defaultTo, -1);
+        return defaultTo;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>saveCandle2Temp</Name>
+				<Source><![CDATA[
+    private void saveCandle2Temp(RMarketDim _marketDim, Container _item, RMarketCandleTable _tempTable)
+    {
+        _tempTable.skipDataMethods(true);
+        _tempTable.skipEvents(true);
+        _tempTable.skipDatabaseLog(true);
+
+        _tempTable.clear();
+        _tempTable.initValue();
+            
+        _tempTable.DimRecId = _marketDim.RecId;
+        _tempTable.initFromKlineContainer(_item);
+
+        _tempTable.doInsert();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>flushCandles</Name>
+				<Source><![CDATA[
+    private void flushCandles(RMarketCandleTable _tempTable)
+    {
+        RMarketCandleTable candle;
+        RMarketTimestampTable tsTable, tsNew;
+        RecordInsertList tsList = new RecordInsertList(tableNum(RMarketTimestampTable));
+
+        tsNew.skipDataMethods(true);
+        tsNew.skipEvents(true);
+        tsNew.skipDatabaseLog(true);
+        while select Timestamp from _tempTable
+            notexists join tsTable
+            where tsTable.Timestamp == _tempTable.Timestamp
+        {
+            tsNew.clear();
+            tsNew.Timestamp = _tempTable.Timestamp;
+            tsNew.DateTime = RMarketUtil::timestamp2dateTimeUTC(tsNew.Timestamp);
+            tsList.add(tsNew);
+        }
+        tsList.insertDatabase();
+
+        candle.skipDataMethods(true);
+        candle.skipEvents(true);
+        candle.skipDatabaseLog(true);
+        insert_recordset candle
+            (DimRecId,Timestamp, Open, High, Low, Close, Volume, Turnover)
+        select DimRecId,Timestamp, Open, High, Low, Close, Volume, Turnover
+            from _tempTable;
+        
+        _tempTable.skipDataMethods(true);
+        _tempTable.skipEvents(true);
+        _tempTable.skipDatabaseLog(true);
+        delete_from _tempTable;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

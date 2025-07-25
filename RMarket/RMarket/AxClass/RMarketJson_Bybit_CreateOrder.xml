@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketJson_Bybit_CreateOrder</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[DataContractAttribute]
+public class RMarketJson_Bybit_CreateOrder extends RMarketJson_Bybit_Response
+{
+    private RMarketJson_Bybit_CreateOrder_Result result;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmResult</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает результат запроса </summary>
+    /// <param name="_result"> Результат создания ордера </param>
+    /// <returns> Результат создания ордера </returns>
+    [DataMemberAttribute('result')]
+    public RMarketJson_Bybit_CreateOrder_Result parmResult(
+        RMarketJson_Bybit_CreateOrder_Result _result = result
+        )
+    {
+        result = _result;
+        return result;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

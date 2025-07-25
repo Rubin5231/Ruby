@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketMethodInterface_Klines</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Implement <c>BatchRetryable</c> to control whether batch task should retry in case of transient errors.
+/// </summary>
+interface RMarketMethodInterface_Klines
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>setBaseUrl</Name>
+				<Source><![CDATA[
+    void setBaseUrl(str _baseUrl)
+    {}
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>initParameters</Name>
+				<Source><![CDATA[
+    void initParameters(str _symbol, str _interval, str _category = 'spot', int _limit = 1000)
+    {}
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>initPeriod</Name>
+				<Source><![CDATA[
+    void initPeriod(RMarketTimestamp _fromTSms, RMarketTimestamp _toTSms)
+    {}
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getLimit</Name>
+				<Source><![CDATA[
+    public int getLimit()
+    {}
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>execute</Name>
+				<Source><![CDATA[
+    void execute()
+    {}
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getKlineList</Name>
+				<Source><![CDATA[
+    List getKlineList()
+    {}
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

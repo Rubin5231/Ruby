@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketMethod_Bybit_ExecutionList</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Получение торгового баланса Bybit
+/// https://bybit-exchange.github.io/docs/v5/account/wallet-balance
+/// Usage:
+/// RMarketMethod_Bybit_ExecutionList apiMethod = new RMarketMethod_Bybit_ExecutionList();
+/// or
+/// RMarketMethodInterface_GetAccountTransaction apiMethod =
+///     RMarketMethodInterface::create_GetTradeHistory(_marketDim.RMarketTable().ApiType);
+/// apiMethod.setBaseUrl('https://api.bybit.com');
+///     apiMethod.initParameters();
+/// apiMethod.execute();
+///     List listCon = apiMethod.getKlineList();
+/// </summary>
+public class RMarketMethod_Bybit_ExecutionList extends RMarketMethod implements RMarketMethodInterface_GetTradeHistory
+{
+    protected RMarketJson_Bybit_ExecutionList responseContract;
+    
+    protected str accountType;
+    
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>new</Name>
+				<Source><![CDATA[
+    /// <summary> Конструктор класса </summary>
+    public void new()
+    {
+        apiClient = new RMarketApiClientBybit();
+        apiClient.parmHttpMethod(RMarketAPIHttpMethod::GET);
+        apiClient.parmMethodUrl('/v5/execution/list');
+
+        // Do this before execute()
+        //apiClient.setBaseUrl(URL _baseUrl);
+        //apiClient.setApiKey(RMarketApiKey _apiKey)
+
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>initParameters</Name>
+				<Source><![CDATA[
+    void initParameters()
+    {
+        //category	true	string	Product type
+        //                            UTA2.0, UTA1.0: linear, inverse, spot, option
+        //                            classic account: linear, inverse, spot
+        //symbol	    false	string	Symbol name, like BTCUSDT, uppercase only
+        //orderId	    false	string	Order ID
+        //orderLinkId	false	string	User customised order ID. Classic account does not support this param
+        //baseCoin	false	string	Base coin, uppercase only
+        //                            UTA1.0(category=inverse) and classic account are not supported
+        //startTime	false	integer	The start timestamp (ms)
+        //                            startTime and endTime are not passed, return 7 days by default;
+        //                            Only startTime is passed, return range between startTime and startTime+7 days
+        //                            Only endTime is passed, return range between endTime-7 days and endTime
+        //                            If both are passed, the rule is endTime - startTime <= 7 days
+        //endTime	    false	integer	The end timestamp (ms)
+        //execType	false	string	Execution type. Classic spot is not supported
+        //limit	    false	integer	Limit for data size per page. [1, 100]. Default: 50
+        //cursor	    false	string	Cursor. Use the nextPageCursor token from the response to retrieve the next page of the result set
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>prepare</Name>
+				<Source><![CDATA[
+    public void prepare()
+    {
+        apiClient.addQueryParam('category', 'spot');  //Hardcode
+    
+        super();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>processResponse</Name>
+				<Source><![CDATA[
+    public void processResponse()
+    {
+        super();
+
+        str responseStr = apiClient.getResponseBody();
+
+        if (apiClient.getHttpStatus() != System.Net.HttpStatusCode::OK)
+            throw Error(strfmt("Request returns error!"));
+    
+        responseContract = RMarketJsonSerializer::deserializeObject(
+            classNum(RMarketJson_Bybit_ExecutionList),
+            responseStr) as RMarketJson_Bybit_ExecutionList;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getResultList</Name>
+				<Source><![CDATA[
+    public List getResultList()
+    {
+        List retList;
+        ListEnumerator enum;
+
+        //if (responseContract && responseContract.parmResult())
+        //{
+        //    List accountList = responseContract.parmResult().parmList();
+        //    if (accountList && accountList.elements() > 0)
+        //    {
+        //        enum = accountList.getEnumerator();
+        //        enum.moveNext();
+        //        RMarketJson_Bybit_WalletBalance_Account account = enum.current();
+        //        if (account)
+        //        {
+        //            List coinList = account.parmCoin();
+        //            if (coinList && coinList.elements() > 0)
+        //            {
+        //                enum = coinList.getEnumerator();
+        //                enum.moveNext();
+        //                RMarketJson_Bybit_WalletBalance_Coin coin = enum.current();
+        //                if (coin)
+        //                {
+        //                    //
+        //                }
+        //            }
+
+        //        }
+        //    }
+        //}
+
+        //return retList;
+        return responseContract.parmResult().parmList();
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketJson_Binance_Account_Balance</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[DataContract]
+public class RMarketJson_Binance_Account_Balance
+{
+    private CurrencyCode asset;
+    private real free;
+    private real locked;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmAsset</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает код актива (валюты) </summary>
+    /// <param name="_asset"> Код актива (например, BTC, USDT) </param>
+    /// <returns> Код актива </returns>
+    [DataMember('asset')]
+    public CurrencyCode parmAsset(CurrencyCode _asset = asset)
+    {
+        asset = _asset;
+        return asset;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmFree</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает доступный баланс </summary>
+    /// <param name="_free"> Сумма, доступная для торговли </param>
+    /// <returns> Доступный баланс </returns>
+    [DataMember('free')]
+    public real parmFree(real _free = free)
+    {
+        free = _free;
+        return free;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmLocked</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает заблокированный баланс </summary>
+    /// <param name="_locked"> Сумма, заблокированная в активных ордерах </param>
+    /// <returns> Заблокированный баланс </returns>
+    [DataMember('locked')]
+    public real parmLocked(real _locked = locked)
+    {
+        locked = _locked;
+        return locked;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

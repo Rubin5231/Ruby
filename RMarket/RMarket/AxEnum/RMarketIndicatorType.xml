@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxEnum xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketIndicatorType</Name>
+	<EnumValues>
+		<AxEnumValue>
+			<Name>None</Name>
+			<Value>3</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>ATR</Name>
+			<Label>ATR</Label>
+			<Value>4</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>EMA</Name>
+			<Label>EMA</Label>
+			<Value>1</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>RSI</Name>
+			<Label>RSI</Label>
+			<Value>2</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>SMA</Name>
+			<Label>SMA</Label>
+		</AxEnumValue>
+	</EnumValues>
+</AxEnum>

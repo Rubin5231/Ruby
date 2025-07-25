@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxTable xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketAccount</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class RMarketAccount extends common
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>find</Name>
+				<Source><![CDATA[
+    public static RMarketAccount find(RMarketAccountId  _accountId,
+                                      boolean           _forUpdate = false)
+    {
+        RMarketAccount account;
+        ;
+        if (_accountId)
+        {
+            account.selectForUpdate(_forUpdate);
+            
+            select firstonly account
+                where account.accountId  == _accountId;
+        }
+        
+        return account;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>RMarketTable</Name>
+				<Source><![CDATA[
+    public RMarketTable RMarketTable(boolean _forUpdate = false)
+    {
+        return RMarketTable::find(this.MarketId, _forUpdate);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>RMarketApiKey</Name>
+				<Source><![CDATA[
+    public RMarketApiKey RMarketApiKey(boolean _forUpdate = false)
+    {
+        return RMarketApiKey::find(this.ApiKey, _forUpdate);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>initValue</Name>
+				<Source><![CDATA[
+    /// <summary>
+    ///
+    /// </summary>
+    public void initValue()
+    {
+        RMarketAccountId accountId;
+        NumberSequenceReference numberSequenceReference;
+        
+        super();
+
+        numberSequenceReference = NumberSeqReference::findReference(extendedTypeNum(RMarketAccountId));
+        if (numberSequenceReference)
+        {
+            accountId = NumberSeq::newGetNum(numberSequenceReference).num();
+            this.AccountId = accountId;
+        }
+        this.AccountType     = RMarketAccountType::Test;
+        this.MainAccountId   = this.AccountId;
+        this.AccountTestType = RMarketAccountTestType::Common;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getShadow</Name>
+				<Source><![CDATA[
+    public RMarketAccount getShadow(RMarketAccountTestType _testType, boolean _forUpdate = false)
+    {
+        RMarketAccount ret;
+        RMarketAccountId mainAccountId;
+
+        if (this.AccountType == RMarketAccountType::Real)
+            ret = this;
+        else
+        {
+            if (this.AccountTestType == RMarketAccountTestType::Common)
+                mainAccountId = this.AccountId;
+            else
+                mainAccountId = this.MainAccountId;
+
+            if (_testType == RMarketAccountTestType::Common)
+                ret = RMarketAccount::find(mainAccountId, _forUpdate);
+            else
+                select firstonly ret
+                    where ret.MainAccountId   == mainAccountId
+                       && ret.AccountTestType == _testType;
+        }
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+	<Label>Market accounts</Label>
+	<TableGroup>Group</TableGroup>
+	<TitleField1>AccountId</TitleField1>
+	<CacheLookup>Found</CacheLookup>
+	<ClusteredIndex>AccountIdIdx</ClusteredIndex>
+	<CreatedBy>Yes</CreatedBy>
+	<CreatedDateTime>Yes</CreatedDateTime>
+	<ModifiedBy>Yes</ModifiedBy>
+	<ModifiedDateTime>Yes</ModifiedDateTime>
+	<PrimaryIndex>AccountIdIdx</PrimaryIndex>
+	<ReplacementKey>AccountIdIdx</ReplacementKey>
+	<DeleteActions />
+	<FieldGroups>
+		<AxTableFieldGroup>
+			<Name>AutoReport</Name>
+			<IsManuallyUpdated>Yes</IsManuallyUpdated>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>AccountId</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoLookup</Name>
+			<IsManuallyUpdated>Yes</IsManuallyUpdated>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>AccountId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>MarketId</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoIdentification</Name>
+			<AutoPopulate>Yes</AutoPopulate>
+			<IsManuallyUpdated>Yes</IsManuallyUpdated>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>AccountId</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoSummary</Name>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoBrowse</Name>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>Overview</Name>
+			<Label>Overview</Label>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>AccountId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Description</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>AccountType</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>MarketId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>CryptoCode</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>ApiKey</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Active</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>NextActionDateTime</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>Footer</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>TestDetails</Name>
+			<Label>Test details</Label>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>MainAccountId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>AccountTestType</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>CryptoCode</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>TestStartDeposit</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+	</FieldGroups>
+	<Fields>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>AccountId</Name>
+			<AllowEdit>No</AllowEdit>
+			<ExtendedDataType>RMarketAccountId</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+			<Mandatory>Yes</Mandatory>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>Description</Name>
+			<ExtendedDataType>Description</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>MarketId</Name>
+			<ExtendedDataType>RMarketId</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>AccountType</Name>
+			<Label>Account type</Label>
+			<EnumType>RMarketAccountType</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>CryptoCode</Name>
+			<ExtendedDataType>RMarketCryptoCode</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>ApiKey</Name>
+			<ExtendedDataType>RMarketApiKeyName</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>Active</Name>
+			<Label>Active</Label>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldUtcDateTime">
+			<Name>NextActionDateTime</Name>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldReal">
+			<Name>TestStartDeposit</Name>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>MainAccountId</Name>
+			<ExtendedDataType>RMarketAccountId</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>AccountTestType</Name>
+			<EnumType>RMarketAccountTestType</EnumType>
+		</AxTableField>
+	</Fields>
+	<FullTextIndexes />
+	<Indexes>
+		<AxTableIndex>
+			<Name>AccountIdIdx</Name>
+			<AlternateKey>Yes</AlternateKey>
+			<Fields>
+				<AxTableIndexField>
+					<DataField>AccountId</DataField>
+				</AxTableIndexField>
+			</Fields>
+		</AxTableIndex>
+	</Indexes>
+	<Mappings />
+	<Relations>
+		<AxTableRelation>
+			<Name>RMarketTable</Name>
+			<OnDelete>Restricted</OnDelete>
+			<RelatedTable>RMarketTable</RelatedTable>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>MarketId</Name>
+					<Field>MarketId</Field>
+					<RelatedField>MarketId</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+		<AxTableRelation>
+			<Name>RMarketApiKey</Name>
+			<RelatedTable>RMarketApiKey</RelatedTable>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>ApiKey</Name>
+					<Field>ApiKey</Field>
+					<RelatedField>KeyName</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+		<AxTableRelation xmlns=""
+			i:type="AxTableRelationForeignKey">
+			<Name>RMarketCrypto</Name>
+			<Cardinality>ZeroMore</Cardinality>
+			<OnDelete>Restricted</OnDelete>
+			<RelatedTable>RMarketCrypto</RelatedTable>
+			<RelatedTableCardinality>ZeroOne</RelatedTableCardinality>
+			<RelationshipType>Association</RelationshipType>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>CryptoCode</Name>
+					<SourceEDT>RMarketCryptoCode</SourceEDT>
+					<Field>CryptoCode</Field>
+					<RelatedField>CryptoCode</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+	</Relations>
+	<StateMachines />
+</AxTable>

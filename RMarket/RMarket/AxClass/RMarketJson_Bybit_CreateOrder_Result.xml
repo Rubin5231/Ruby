@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketJson_Bybit_CreateOrder_Result</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[DataContractAttribute]
+public class RMarketJson_Bybit_CreateOrder_Result
+{
+    private str orderId;
+    private str orderLinkId;
+    private str symbol;
+    private str category;
+    private str side;
+    private str orderType;
+    private str price;
+    private str qty;
+    private str reduceOnly;
+    private str timeInForce;
+    private str createType;
+    private str rejectReason;
+    private str avgPrice;
+    private str leavesQty;
+    private str leavesValue;
+    private str cumExecQty;
+    private str cumExecValue;
+    private str cumExecFee;
+    private str takeProfit;
+    private str stopLoss;
+    private str tpTriggerBy;
+    private str slTriggerBy;
+    private str triggerDirection;
+    private str triggerPrice;
+    private str triggerBy;
+    private str positionIdx;
+    private str orderStatus;
+    private str createdTime;
+    private str updatedTime;
+
+    }
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmOrderId</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает ID ордера </summary>
+    /// <param name="_orderId"> Уникальный идентификатор ордера </param>
+    /// <returns> Уникальный идентификатор ордера </returns>
+    [DataMember('orderId')]
+    public str parmOrderId(str _orderId = orderId)
+    {
+        orderId = _orderId;
+        return orderId;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmOrderLinkId</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает пользовательский ID ордера </summary>
+    /// <param name="_orderLinkId"> Пользовательский идентификатор (макс. 36 символов) </param>
+    /// <returns> Пользовательский идентификатор </returns>
+    [DataMember('orderLinkId')]
+    public str parmOrderLinkId(str _orderLinkId = orderLinkId)
+    {
+        orderLinkId = _orderLinkId;
+        return orderLinkId;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmSymbol</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает символ инструмента </summary>
+    /// <param name="_symbol"> Название символа (например, BTCUSDT) </param>
+    /// <returns> Название символа </returns>
+    [DataMember('symbol')]
+    public str parmSymbol(str _symbol = symbol)
+    {
+        symbol = _symbol;
+        return symbol;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmCategory</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает категорию продукта ["spot", "linear", "inverse", "option"] </summary>
+    /// <param name="_category"> Тип продукта </param>
+    /// <returns> Тип продукта </returns>
+    [DataMember('category')]
+    public str parmCategory(str _category = category)
+    {
+        category = _category;
+        return category;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmSide</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает направление ордера ["Buy", "Sell"] </summary>
+    /// <param name="_side"> Направление сделки </param>
+    /// <returns> Направление сделки </returns>
+    [DataMember('side')]
+    public str parmSide(str _side = side)
+    {
+        side = _side;
+        return side;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmOrderType</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает тип ордера ["Market", "Limit"] </summary>
+    /// <param name="_orderType"> Тип ордера </param>
+    /// <returns> Тип ордера </returns>
+    [DataMember('orderType')]
+    public str parmOrderType(str _orderType = orderType)
+    {
+        orderType = _orderType;
+        return orderType;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmPrice</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает цену ордера </summary>
+    /// <param name="_price"> Цена выставления (для Limit) </param>
+    /// <returns> Цена выставления </returns>
+    [DataMember('price')]
+    public str parmPrice(str _price = price)
+    {
+        price = _price;
+        return price;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmQty</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает количество ордера </summary>
+    /// <param name="_qty"> Объем ордера </param>
+    /// <returns> Объем ордера </returns>
+    [DataMember('qty')]
+    public str parmQty(str _qty = qty)
+    {
+        qty = _qty;
+        return qty;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmReduceOnly</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает флаг reduce-only </summary>
+    /// <param name="_reduceOnly"> Разрешает только уменьшение позиции </param>
+    /// <returns> Флаг reduce-only </returns>
+    [DataMember('reduceOnly')]
+    public str parmReduceOnly(str _reduceOnly = reduceOnly)
+    {
+        reduceOnly = _reduceOnly;
+        return reduceOnly;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmTimeInForce</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает стратегию времени действия ["GTC", "IOC", "FOK", "PostOnly"] </summary>
+    /// <param name="_timeInForce"> Стратегия исполнения </param>
+    /// <returns> Стратегия исполнения </returns>
+    [DataMember('timeInForce')]
+    public str parmTimeInForce(str _timeInForce = timeInForce)
+    {
+        timeInForce = _timeInForce;
+        return timeInForce;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmCreateType</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает тип создания ордера </summary>
+    /// <param name="_createType"> Источник создания </param>
+    /// <returns> Источник создания </returns>
+    [DataMember('createType')]
+    public str parmCreateType(str _createType = createType)
+    {
+        createType = _createType;
+        return createType;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmRejectReason</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает причину отклонения </summary>
+    /// <param name="_rejectReason"> Описание ошибки </param>
+    /// <returns> Описание ошибки </returns>
+    [DataMember('rejectReason')]
+    public str parmRejectReason(str _rejectReason = rejectReason)
+    {
+        rejectReason = _rejectReason;
+        return rejectReason;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmAvgPrice</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает среднюю цену исполнения </summary>
+    /// <param name="_avgPrice"> Средняя цена </param>
+    /// <returns> Средняя цена </returns>
+    [DataMember('avgPrice')]
+    public str parmAvgPrice(str _avgPrice = avgPrice)
+    {
+        avgPrice = _avgPrice;
+        return avgPrice;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmLeavesQty</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает оставшееся количество </summary>
+    /// <param name="_leavesQty"> Неисполненный объем </param>
+    /// <returns> Неисполненный объем </returns>
+    [DataMember('leavesQty')]
+    public str parmLeavesQty(str _leavesQty = leavesQty)
+    {
+        leavesQty = _leavesQty;
+        return leavesQty;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmLeavesValue</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает оставшуюся стоимость </summary>
+    /// <param name="_leavesValue"> Неисполненная стоимость </param>
+    /// <returns> Неисполненная стоимость </returns>
+    [DataMember('leavesValue')]
+    public str parmLeavesValue(str _leavesValue = leavesValue)
+    {
+        leavesValue = _leavesValue;
+        return leavesValue;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmCumExecQty</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает совокупное исполненное количество </summary>
+    /// <param name="_cumExecQty"> Суммарный исполненный объем </param>
+    /// <returns> Суммарный исполненный объем </returns>
+    [DataMember('cumExecQty')]
+    public str parmCumExecQty(str _cumExecQty = cumExecQty)
+    {
+        cumExecQty = _cumExecQty;
+        return cumExecQty;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmCumExecValue</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает совокупную исполненную стоимость </summary>
+    /// <param name="_cumExecValue"> Суммарная исполненная стоимость </param>
+    /// <returns> Суммарная исполненная стоимость </returns>
+    [DataMember('cumExecValue')]
+    public str parmCumExecValue(str _cumExecValue = cumExecValue)
+    {
+        cumExecValue = _cumExecValue;
+        return cumExecValue;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmCumExecFee</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает совокупную комиссию </summary>
+    /// <param name="_cumExecFee"> Суммарная комиссия </param>
+    /// <returns> Суммарная комиссия </returns>
+    [DataMember('cumExecFee')]
+    public str parmCumExecFee(str _cumExecFee = cumExecFee)
+    {
+        cumExecFee = _cumExecFee;
+        return cumExecFee;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmTakeProfit</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает цену Take Profit </summary>
+    /// <param name="_takeProfit"> Цена TP </param>
+    /// <returns> Цена TP </returns>
+    [DataMember('takeProfit')]
+    public str parmTakeProfit(str _takeProfit = takeProfit)
+    {
+        takeProfit = _takeProfit;
+        return takeProfit;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmStopLoss</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает цену Stop Loss </summary>
+    /// <param name="_stopLoss"> Цена SL </param>
+    /// <returns> Цена SL </returns>
+    [DataMember('stopLoss')]
+    public str parmStopLoss(str _stopLoss = stopLoss)
+    {
+        stopLoss = _stopLoss;
+        return stopLoss;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmTpTriggerBy</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает триггер Take Profit ["MarkPrice", "IndexPrice", "LastPrice"] </summary>
+    /// <param name="_tpTriggerBy"> Тип цены для TP </param>
+    /// <returns> Тип цены для TP </returns>
+    [DataMember('tpTriggerBy')]
+    public str parmTpTriggerBy(str _tpTriggerBy = tpTriggerBy)
+    {
+        tpTriggerBy = _tpTriggerBy;
+        return tpTriggerBy;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmSlTriggerBy</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает триггер Stop Loss ["MarkPrice", "IndexPrice", "LastPrice"] </summary>
+    /// <param name="_slTriggerBy"> Тип цены для SL </param>
+    /// <returns> Тип цены для SL </returns>
+    [DataMember('slTriggerBy')]
+    public str parmSlTriggerBy(str _slTriggerBy = slTriggerBy)
+    {
+        slTriggerBy = _slTriggerBy;
+        return slTriggerBy;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmTriggerDirection</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает направление триггера [1 (цена растет), 2 (цена падает)] </summary>
+    /// <param name="_triggerDirection"> Направление активации </param>
+    /// <returns> Направление активации </returns>
+    [DataMember('triggerDirection')]
+    public str parmTriggerDirection(str _triggerDirection = triggerDirection)
+    {
+        triggerDirection = _triggerDirection;
+        return triggerDirection;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmTriggerPrice</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает цену триггера </summary>
+    /// <param name="_triggerPrice"> Цена активации условного ордера </param>
+    /// <returns> Цена активации </returns>
+    [DataMember('triggerPrice')]
+    public str parmTriggerPrice(str _triggerPrice = triggerPrice)
+    {
+        triggerPrice = _triggerPrice;
+        return triggerPrice;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmTriggerBy</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает тип цены триггера ["MarkPrice", "IndexPrice", "LastPrice"] </summary>
+    /// <param name="_triggerBy"> Источник цены для активации </param>
+    /// <returns> Источник цены </returns>
+    [DataMember('triggerBy')]
+    public str parmTriggerBy(str _triggerBy = triggerBy)
+    {
+        triggerBy = _triggerBy;
+        return triggerBy;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmPositionIdx</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает индекс позиции [0 (односторонняя), 1 (лонг в хедж-режиме), 2 (шорт в хедж-режиме)] </summary>
+    /// <param name="_positionIdx"> Идентификатор позиции </param>
+    /// <returns> Идентификатор позиции </returns>
+    [DataMember('positionIdx')]
+    public str parmPositionIdx(str _positionIdx = positionIdx)
+    {
+        positionIdx = _positionIdx;
+        return positionIdx;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmOrderStatus</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает статус ордера </summary>
+    /// <param name="_orderStatus"> Текущий статус </param>
+    /// <returns> Текущий статус </returns>
+    [DataMember('orderStatus')]
+    public str parmOrderStatus(str _orderStatus = orderStatus)
+    {
+        orderStatus = _orderStatus;
+        return orderStatus;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmCreatedTime</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает время создания </summary>
+    /// <param name="_createdTime"> Временная метка создания </param>
+    /// <returns> Временная метка создания </returns>
+    [DataMember('createdTime')]
+    public str parmCreatedTime(str _createdTime = createdTime)
+    {
+        createdTime = _createdTime;
+        return createdTime;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmUpdatedTime</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает время обновления </summary>
+    /// <param name="_updatedTime"> Временная метка обновления </param>
+    /// <returns> Временная метка обновления </returns>
+    [DataMember('updatedTime')]
+    public str parmUpdatedTime(str _updatedTime = updatedTime)
+    {
+        updatedTime = _updatedTime;
+        return updatedTime;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

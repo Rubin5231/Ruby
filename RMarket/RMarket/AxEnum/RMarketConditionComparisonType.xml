@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxEnum xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketConditionComparisonType</Name>
+	<UseEnumValue>No</UseEnumValue>
+	<EnumValues>
+		<AxEnumValue>
+			<Name>Less</Name>
+			<Label>&lt;</Label>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>LessOrEqual</Name>
+			<Label>&lt;=</Label>
+			<Value>1</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>Equal</Name>
+			<Label>=</Label>
+			<Value>2</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>MoreOrEqual</Name>
+			<Label>&gt;=</Label>
+			<Value>3</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>More</Name>
+			<Label>&gt;</Label>
+			<Value>4</Value>
+		</AxEnumValue>
+	</EnumValues>
+	<IsExtensible>true</IsExtensible>
+</AxEnum>

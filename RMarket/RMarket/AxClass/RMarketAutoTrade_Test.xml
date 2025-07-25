@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketAutoTrade_Test</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class RMarketAutoTrade_Test extends RMarketAutoTrade
+{
+    RMarketAccountId accountIdPos, accountIdNeg;
+    //Set accountIdSet;
+    
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>run</Name>
+				<Source><![CDATA[
+    public void run()
+    {
+        RMarketAccount account    = RMarketAccount::find(accountId);
+        // STEP 1 - Prepare test shadow accounts, make start deposit
+        accountIdPos = account.getShadow(RMarketAccountTestType::Optimistic).AccountId;
+        accountIdNeg = account.getShadow(RMarketAccountTestType::Pessimistic).AccountId;
+        //accountIdSet = new Set(Types::String);
+        //accountIdSet.add(accountId);
+        //accountIdSet.add(accountIdPos);
+        //accountIdSet.add(accountIdNeg);
+        ttsbegin;
+
+        this.prepareAccount(account);
+
+        ttscommit;
+
+        // Loop by candles history and triple of accounts
+        RMarketDim dim;
+        //RMarketAccount account;
+        RMarketSubAccount subAccount;
+        RMarketStrategy strategy;
+        RMarketCandleTable candle;
+        RMarketTimestampTable tsTable;
+
+        while select Timestamp, DateTime from tsTable
+            group by Timestamp, DateTime
+            exists join candle
+                where tsTable.Timestamp == candle.Timestamp
+                   && tsTable.DateTime  >= account.NextActionDateTime
+            exists join dim
+                where dim.RecId == candle.DimRecId
+            exists join account
+                where account.MarketId == dim.MarketId
+            exists join subAccount
+                where subAccount.AccountId == account.AccountId
+                   && subAccount.SymbolId  == dim.SymbolId
+            exists join strategy
+                where strategy.StrategyId == subAccount.StrategyId
+                   && strategy.Interval   == dim.Interval
+        {
+            dtCursor = tsTable.DateTime;
+            tsCursor = tsTable.Timestamp;
+
+            while select account
+                where account.MainAccountId == accountId
+            {
+                ttsbegin;
+
+                // STEP 2 - Синхронизировать тестовый счет просчетом ордеров
+                this.synchronizeAccount(account);
+
+                // STEP 3 - Обработать действия стратегий по каждому субсчету
+                this.makeAccountActions(account);
+
+                ttscommit;
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>prepareAccount</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// STEP 1 - Prepare test shadow accounts, make start deposit
+    /// </summary>
+    protected void prepareAccount(RMarketAccount _account)
+    {
+        // STEP 1.1 - delete previous test data
+        this.deletePreviousRecords(_account);
+        // STEP 1.2 - make shadow test accounts
+        this.makeVariantCopies(_account);
+        // STEP 1.3 - make start deposit
+        this.makeStartDeposit(_account);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>deletePreviousRecords</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// STEP 1.1 - delete previous test data
+    /// </summary>
+    protected void deletePreviousRecords(RMarketAccount _account)
+    {
+        RMarketTrans trans;
+        RMarketOrder orders;
+        RMarketPosition position;
+        RMarketSubAccount subaccount;
+        RMarketAccount account;
+
+        delete_from trans
+            exists join account
+                where account.AccountId     == trans.AccountId
+                   && account.MainAccountId == accountId;
+        
+        delete_from orders
+            exists join position
+                where position.PositionId == orders.PositionId
+            exists join subaccount
+                where subaccount.SubAccountId == position.SubAccountId
+            exists join account
+                where account.AccountId     == subaccount.AccountId
+                   && account.MainAccountId == accountId;
+        
+        delete_from position
+            exists join subaccount
+                where subaccount.SubAccountId == position.SubAccountId
+            exists join account
+                where account.AccountId     == subaccount.AccountId
+                   && account.MainAccountId == accountId;
+        
+        delete_from subaccount
+            exists join account
+                where account.AccountId       == subaccount.AccountId
+                   && account.MainAccountId   == accountId
+                   && account.AccountTestType != RMarketAccountTestType::Common;
+        
+        delete_from account
+            where account.AccountId       == subaccount.AccountId
+               && account.MainAccountId   == accountId
+               && account.AccountTestType != RMarketAccountTestType::Common;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>makeVariantCopies</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// STEP 1.2 - make shadow test accounts
+    /// </summary>
+    protected void makeVariantCopies(RMarketAccount _account)
+    {
+        //RMarketAccount account    = RMarketAccount::find(accountId);
+        RMarketAccount accountPos, accountNeg;
+
+        RMarketSubAccount subAccount, subAccountPos, subAccountNeg;
+
+        ttsbegin;
+
+        accountPos.clear();
+        accountPos.data(_account);
+        accountPos.initValue();
+        accountPos.MainAccountId   = _account.AccountId;
+        accountPos.AccountTestType = RMarketAccountTestType::Optimistic;
+        if (accountPos.validateWrite())
+            accountPos.insert();
+        else
+            throw error("Unable to create shadow account!");
+        accountIdPos = accountPos.AccountId;
+        
+        accountNeg.clear();
+        accountNeg.data(_account);
+        accountPos.initValue();
+        accountPos.MainAccountId   = _account.AccountId;
+        accountPos.AccountTestType = RMarketAccountTestType::Pessimistic;
+        if (accountNeg.validateWrite())
+            accountNeg.insert();
+        else
+            throw error("Unable to create shadow account!");
+        accountIdNeg = accountNeg.AccountId;
+        
+        while select subAccount
+            where subAccount.AccountId == _account.AccountId
+        {
+            subAccountPos.clear();
+            subAccountPos.data(subAccount);
+            subAccountPos.initValue();
+            subAccountPos.initFromAccount(accountPos);
+            if (subAccountPos.validateWrite())
+                subAccountPos.insert();
+            else
+                throw error("Unable to create shadow subaccount!");
+        
+            subAccountNeg.clear();
+            subAccountNeg.data(subAccount);
+            subAccountNeg.initValue();
+            subAccountNeg.initFromAccount(accountNeg);
+            if (subAccountNeg.validateWrite())
+                subAccountNeg.insert();
+            else
+                throw error("Unable to create shadow subaccount!");
+        }
+
+        ttscommit;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>makeStartDeposit</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// STEP 1.3 - make start deposit
+    /// </summary>
+    protected void makeStartDeposit(RMarketAccount _account)
+    {
+        this.createStartTrans(_account);
+        this.createStartTrans(_account.getShadow(RMarketAccountTestType::Optimistic));
+        this.createStartTrans(_account.getShadow(RMarketAccountTestType::Pessimistic));
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>createStartTrans</Name>
+				<Source><![CDATA[
+    protected void createStartTrans(RMarketAccount _account)
+    {
+        RMarketTransId transId;
+
+        transId = RMarketTrans::createTransAdjustment(
+            _account,
+            null,
+            RMarketTransOriginType::Account,
+            _account.accountId,                                             //RMarketTransOriginId   _originId,
+            _account.TestStartDeposit,                                      //AmountCur              _amount,
+            _account.CryptoCode                                             //CurrencyCode           _currencyCode,
+        );
+
+        RMarketTrans::postTrans(transId,
+            RMarketUtil::dateTime2Timestamp(_account.NextActionDateTime) * 1000, //RMarketTimestamp       _timestamp = 0,
+            _account.NextActionDateTime);                                        //utcdatetime            _datetime  = DateTimeUtil::minValue()
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>synchronizeAccount</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// STEP 2 - Синхронизировать тестовый счет просчетом ордеров
+    /// </summary>
+    protected void synchronizeAccount(RMarketAccount _account)
+    {
+        //Loop subAccounts of main and shadows accounts
+            //loop minute candles
+                // test subaccount orders
+                    // if order is shoot
+                        // record order's (position's) changes
+                        // record related transaction
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>makeAccountActions</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// STEP 3 - Обработать действия стратегий по каждому субсчету
+    /// </summary>
+    protected void makeAccountActions(RMarketAccount _account)
+    {
+            //Loop by Subaccounts of main and shadows accounts //+
+            // Loop actions of related strategy
+            // Loop and calculate conditions
+            // If calculation bring signal
+            // Make actions                    //+-
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

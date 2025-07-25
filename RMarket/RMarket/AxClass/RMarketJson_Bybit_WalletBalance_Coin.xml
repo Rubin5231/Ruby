@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketJson_Bybit_WalletBalance_Coin</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[DataContract]
+public class RMarketJson_Bybit_WalletBalance_Coin
+{
+    private CurrencyCode coin;
+    private real equity;
+    private real usdValue;
+    private real walletBalance;
+    private real availableToWithdraw;
+    private real availableToBorrow;
+    private real borrowAmount;
+    private real accruedInterest;
+    private real totalOrderIM;
+    private real totalPositionIM;
+    private real totalPositionMM;
+    private real unrealisedPnl;
+    private real cumRealisedPnl;
+    private real bonus;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmCoin</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Получает или устанавливает код валюты (например, BTC, ETH)
+    /// </summary>
+    /// <param name="_coin"> Код валюты </param>
+    /// <returns> Код валюты </returns>
+    [DataMember('coin')]
+    public CurrencyCode parmCoin(CurrencyCode _coin = coin)
+    {
+        coin = _coin;
+        return coin;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmEquity</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Получает или устанавливает эквити валюты
+    /// </summary>
+    /// <param name="_equity"> Общая стоимость актива в валюте котировки </param>
+    /// <returns> Значение эквити </returns>
+    [DataMember('equity')]
+    public real parmEquity(real _equity = equity)
+    {
+        equity = _equity;
+        return equity;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmUsdValue</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Получает или устанавливает стоимость в USD
+    /// </summary>
+    /// <param name="_usdValue"> Общая стоимость актива в USD </param>
+    /// <returns> Значение в USD </returns>
+    [DataMember('usdValue')]
+    public real parmUsdValue(real _usdValue = usdValue)
+    {
+        usdValue = _usdValue;
+        return usdValue;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmWalletBalance</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Получает или устанавливает баланс кошелька
+    /// </summary>
+    /// <param name="_walletBalance">
+    /// Общий баланс кошелька
+    /// </param>
+    /// <returns>
+    /// Значение баланса
+    /// </returns>
+    [DataMember('walletBalance')]
+    public real parmWalletBalance(real _walletBalance = walletBalance)
+    {
+        walletBalance = _walletBalance;
+        return walletBalance;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmAvailableToWithdraw</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Получает или устанавливает сумму доступную для вывода
+    /// </summary>
+    /// <param name="_availableToWithdraw">
+    /// Сумма доступная для вывода
+    /// </param>
+    /// <returns>
+    /// Доступная для вывода сумма
+    /// </returns>
+    [DataMember('availableToWithdraw')]
+    public real parmAvailableToWithdraw(real _availableToWithdraw = availableToWithdraw)
+    {
+        availableToWithdraw = _availableToWithdraw;
+        return availableToWithdraw;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmAvailableToBorrow</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Получает или устанавливает сумму доступную для займа
+    /// </summary>
+    /// <param name="_availableToBorrow">
+    /// Сумма доступная для займа
+    /// </param>
+    /// <returns>
+    /// Доступная для займа сумма
+    /// </returns>
+    [DataMember('availableToBorrow')]
+    public real parmAvailableToBorrow(real _availableToBorrow = availableToBorrow)
+    {
+        availableToBorrow = _availableToBorrow;
+        return availableToBorrow;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmBorrowAmount</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Получает или устанавливает сумму текущего займа
+    /// </summary>
+    /// <param name="_borrowAmount">
+    /// Сумма текущего займа
+    /// </param>
+    /// <returns>
+    /// Сумма займа
+    /// </returns>
+    [DataMember('borrowAmount')]
+    public real parmBorrowAmount(real _borrowAmount = borrowAmount)
+    {
+        borrowAmount = _borrowAmount;
+        return borrowAmount;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmAccruedInterest</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Получает или устанавливает начисленные проценты
+    /// </summary>
+    /// <param name="_accruedInterest">
+    /// Сумма начисленных процентов
+    /// </param>
+    /// <returns>
+    /// Сумма процентов
+    /// </returns>
+    [DataMember('accruedInterest')]
+    public real parmAccruedInterest(real _accruedInterest = accruedInterest)
+    {
+        accruedInterest = _accruedInterest;
+        return accruedInterest;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmTotalOrderIM</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Получает или устанавливает общую маржу ордеров
+    /// </summary>
+    /// <param name="_totalOrderIM">
+    /// Суммарная начальная маржа для всех ордеров
+    /// </param>
+    /// <returns>
+    /// Сумма маржи ордеров
+    /// </returns>
+    [DataMember('totalOrderIM')]
+    public real parmTotalOrderIM(real _totalOrderIM = totalOrderIM)
+    {
+        totalOrderIM = _totalOrderIM;
+        return totalOrderIM;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmTotalPositionIM</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Получает или устанавливает общую позиционную начальную маржу
+    /// </summary>
+    /// <param name="_totalPositionIM">
+    /// Суммарная начальная маржа для всех позиций
+    /// </param>
+    /// <returns>
+    /// Сумма позиционной начальной маржи
+    /// </returns>
+    [DataMember('totalPositionIM')]
+    public real parmTotalPositionIM(real _totalPositionIM = totalPositionIM)
+    {
+        totalPositionIM = _totalPositionIM;
+        return totalPositionIM;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmTotalPositionMM</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Получает или устанавливает общую позиционную маржу поддержания
+    /// </summary>
+    /// <param name="_totalPositionMM">
+    /// Суммарная маржа поддержания для всех позиций
+    /// </param>
+    /// <returns>
+    /// Сумма позиционной маржи поддержания
+    /// </returns>
+    [DataMember('totalPositionMM')]
+    public real parmTotalPositionMM(real _totalPositionMM = totalPositionMM)
+    {
+        totalPositionMM = _totalPositionMM;
+        return totalPositionMM;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmUnrealisedPnl</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Получает или устанавливает нереализованную прибыль/убыток
+    /// </summary>
+    /// <param name="_unrealisedPnl">
+    /// Нереализованный PnL
+    /// </param>
+    /// <returns>
+    /// Значение нереализованного PnL
+    /// </returns>
+    [DataMember('unrealisedPnl')]
+    public real parmUnrealisedPnl(real _unrealisedPnl = unrealisedPnl)
+    {
+        unrealisedPnl = _unrealisedPnl;
+        return unrealisedPnl;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmCumRealisedPnl</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Получает или устанавливает кумулятивный реализованный PnL
+    /// </summary>
+    /// <param name="_cumRealisedPnl">
+    /// Накопленный реализованный PnL
+    /// </param>
+    /// <returns>
+    /// Значение кумулятивного реализованного PnL
+    /// </returns>
+    [DataMember('cumRealisedPnl')]
+    public real parmCumRealisedPnl(real _cumRealisedPnl = cumRealisedPnl)
+    {
+        cumRealisedPnl = _cumRealisedPnl;
+        return cumRealisedPnl;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmBonus</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Получает или устанавливает сумму бонуса
+    /// </summary>
+    /// <param name="_bonus">
+    /// Сумма бонусных средств
+    /// </param>
+    /// <returns>
+    /// Значение бонуса
+    /// </returns>
+    [DataMember('bonus')]
+    public real parmBonus(real _bonus = bonus)
+    {
+        bonus = _bonus;
+        return bonus;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

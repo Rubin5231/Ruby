@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Diagnostics
+  GenerationTime="2025-07-24T23:00:00.5524965+03:00">
+  <Items>
+    <Diagnostic>
+      <DiagnosticType>ExternalReference</DiagnosticType>
+      <Severity>Warning</Severity>
+      <Path>dynamics://Reference/Microsoft.Commerce.Flighting.Common</Path>
+      <Moniker>AssemblyFileNotFound</Moniker>
+      <Message>Assembly 'Microsoft.Xbox.Experimentation.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d91bba2b903dc20f' failed to load because it was not found.</Message>
+    </Diagnostic>
+    <Diagnostic>
+      <DiagnosticType>ExternalReference</DiagnosticType>
+      <Severity>Warning</Severity>
+      <Path>dynamics://Reference/Microsoft.Dynamics___vices.PricingEngine</Path>
+      <Moniker>AssemblyFileNotFound</Moniker>
+      <Message>Assembly 'Microsoft.Dynamics.Commerce.Runtime.Entities.AttributeBasedPricing, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' failed to load because it was not found.</Message>
+    </Diagnostic>
+    <Diagnostic>
+      <DiagnosticType>ExternalReference</DiagnosticType>
+      <Severity>Warning</Severity>
+      <Path>dynamics://Reference/Azure.Core</Path>
+      <Moniker>AssemblyFileNotFound</Moniker>
+      <Message>Assembly 'System.Memory.Data, Version=1.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51' failed to load because it was not found.</Message>
+    </Diagnostic>
+    <Diagnostic>
+      <DiagnosticType>Compile</DiagnosticType>
+      <Severity>Warning</Severity>
+      <Path>dynamics://Class/RMarketAutoTrade_Test/Method/run</Path>
+      <ElementType>Class Method</ElementType>
+      <Moniker>TableReferenceBeforeJoin</Moniker>
+      <Line>34</Line>
+      <Column>44</Column>
+      <EndLine>34</EndLine>
+      <EndColumn>51</EndColumn>
+      <Message>The table 'account' is  referenced before being joined. Move this reference after the table has been joined in the statement.</Message>
+    </Diagnostic>
+  </Items>
+  <Aliases />
+</Diagnostics>

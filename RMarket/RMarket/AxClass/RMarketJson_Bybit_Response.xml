@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketJson_Bybit_Response</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[DataContractAttribute]
+public class RMarketJson_Bybit_Response
+{
+    private int retCode;
+    private str retMsg;
+    private Map retExtInfo;
+    private int64 time;
+    
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmRetCode</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает код ответа </summary>
+    /// <param name="_retCode"> Код статуса ответа </param>
+    /// <returns> Код статуса ответа </returns>
+    [DataMemberAttribute('retCode')]
+    public int parmRetCode(int _retCode = retCode)
+    {
+        if (!prmIsDefault(_retCode))
+        {
+            retCode = _retCode;
+        }
+        return retCode;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmRetMsg</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает сообщение ответа </summary>
+    /// <param name="_retMsg"> Текст сообщения </param>
+    /// <returns> Текст сообщения </returns>
+    [DataMemberAttribute('retMsg')]
+    public str parmRetMsg(str _retMsg = retMsg)
+    {
+        retMsg = _retMsg;
+        return retMsg;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmRetExtInfo</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает расширенную информацию </summary>
+    /// <param name="_retExtInfo"> Дополнительные данные ответа </param>
+    /// <returns> Дополнительные данные ответа </returns>
+    [DataMemberAttribute('retExtInfo')]
+    public Map parmRetExtInfo(Map _retExtInfo = retExtInfo)
+    {
+        retExtInfo = _retExtInfo;
+        return retExtInfo;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmTime</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает время ответа </summary>
+    /// <param name="_time"> Временная метка ответа </param>
+    /// <returns> Временная метка ответа </returns>
+    [DataMemberAttribute('time')]
+    public int64 parmTime(int64 _time = time)
+    {
+        time = _time;
+        return time;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>isSuccess</Name>
+				<Source><![CDATA[
+    public boolean isSuccess()
+    {
+        return (retCode == 0);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getErrorDetails</Name>
+				<Source><![CDATA[
+    public str getErrorDetails()
+    {
+        return strFmt("Code: %1, Message: %2", retCode, retMsg);
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

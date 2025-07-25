@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Diagnostics
+  GenerationTime="2025-05-05T20:46:49.9956843+00:00">
+  <Items>
+    <Diagnostic>
+      <DiagnosticType>Metadata</DiagnosticType>
+      <Severity>Error</Severity>
+      <Path>AxForm/DEVIntegMessageTypeTableOutbound/Design/Controls/DetailsTabCopy1/Controls/ParametersTabPage/Controls/ExportParameters/Controls/ExportParameters_IsIncludeHeader/DataField</Path>
+      <Moniker>DataSourceFieldDoesNotExist</Moniker>
+      <Message>Field 'IsIncludeHeader' does not exist on data source 'DEVIntegMessageTypeTableOutbound'.</Message>
+    </Diagnostic>
+  </Items>
+  <Aliases />
+</Diagnostics>

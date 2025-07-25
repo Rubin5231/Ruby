@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxTable xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketTimestampTable</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class RMarketTimestampTable extends common
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>find</Name>
+				<Source><![CDATA[
+    public static RMarketTimestampTable find(RMarketTimestamp   _timestamp,
+                                             boolean            _forUpdate = false)
+    {
+        RMarketTimestampTable marketTimestampTable;
+        ;
+        if (true)
+        {
+            marketTimestampTable.selectForUpdate(_forUpdate);
+            
+            select firstonly marketTimestampTable
+                where marketTimestampTable.Timestamp    == _timestamp;
+        }
+        
+        return marketTimestampTable;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>findByDateTime</Name>
+				<Source><![CDATA[
+    public static RMarketTimestampTable findByDateTime(RMarketCandleDateTime _dt,
+                                                       boolean               _forUpdate = false)
+    {
+        RMarketTimestampTable marketTimestampTable;
+        ;
+        if (true)
+        {
+            marketTimestampTable.selectForUpdate(_forUpdate);
+            
+            select firstonly marketTimestampTable
+                where marketTimestampTable.DateTime    == _dt;
+        }
+        
+        return marketTimestampTable;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+	<SubscriberAccessLevel>
+		<Read>Allow</Read>
+	</SubscriberAccessLevel>
+	<CacheLookup>Found</CacheLookup>
+	<ClusteredIndex>TimestampIdx</ClusteredIndex>
+	<DisableDatabaseLogging>Yes</DisableDatabaseLogging>
+	<PrimaryIndex>TimestampIdx</PrimaryIndex>
+	<ReplacementKey>TimestampIdx</ReplacementKey>
+	<SaveDataPerCompany>No</SaveDataPerCompany>
+	<DeleteActions />
+	<FieldGroups>
+		<AxTableFieldGroup>
+			<Name>AutoReport</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoLookup</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoIdentification</Name>
+			<AutoPopulate>Yes</AutoPopulate>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>Timestamp</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoSummary</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoBrowse</Name>
+			<Fields />
+		</AxTableFieldGroup>
+	</FieldGroups>
+	<Fields>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldInt64">
+			<Name>Timestamp</Name>
+			<ExtendedDataType>RMarketTimestamp</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldUtcDateTime">
+			<Name>DateTime</Name>
+			<ExtendedDataType>RMarketCandleDateTime</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+		</AxTableField>
+	</Fields>
+	<FullTextIndexes />
+	<Indexes>
+		<AxTableIndex>
+			<Name>TimestampIdx</Name>
+			<AlternateKey>Yes</AlternateKey>
+			<Fields>
+				<AxTableIndexField>
+					<DataField>Timestamp</DataField>
+				</AxTableIndexField>
+			</Fields>
+		</AxTableIndex>
+		<AxTableIndex>
+			<Name>DateTimeIdx</Name>
+			<AllowDuplicates>Yes</AllowDuplicates>
+			<Fields>
+				<AxTableIndexField>
+					<DataField>DateTime</DataField>
+				</AxTableIndexField>
+			</Fields>
+		</AxTableIndex>
+	</Indexes>
+	<Mappings />
+	<Relations />
+	<StateMachines />
+</AxTable>

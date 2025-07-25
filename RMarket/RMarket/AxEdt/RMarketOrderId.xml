@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxEdt xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns=""
+	i:type="AxEdtString">
+	<Name>RMarketOrderId</Name>
+	<HelpText>Identification of the market order</HelpText>
+	<Label>Market order</Label>
+	<ReferenceTable>RMarketOrder</ReferenceTable>
+	<ArrayElements />
+	<Relations />
+	<TableReferences>
+		<AxEdtTableReference>
+			<RelatedField>OrderId</RelatedField>
+			<Table>RMarketOrder</Table>
+		</AxEdtTableReference>
+	</TableReferences>
+	<StringSize>20</StringSize>
+</AxEdt>

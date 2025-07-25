@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketApiClientBybit</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Клиент API для биржи Bybit
+/// </summary>
+public class RMarketApiClientBybit extends RMarketApiClient
+{
+    protected int64 bybitTimestamp;
+    
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>new</Name>
+				<Source><![CDATA[
+    public void new()
+    {
+        super();
+        //baseUrl = 'https://api.bybit.com';
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getServerTimeMS</Name>
+				<Source><![CDATA[
+    protected int64 getServerTimeMS()
+    {
+        RMarketMethod_Bybit_Time apiMethod = new RMarketMethod_Bybit_Time();
+        apiMethod.setBaseUrl(this.parmBaseUrl());
+        apiMethod.execute();
+        int64 miliSecond = apiMethod.miliSecond();
+
+        return miliSecond;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>buildAuth</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Построение аутентификации для Bybit
+    /// </summary>
+    protected void buildAuth()
+    {
+        if (!apiKey || !apiKey.ApiKey || !apiKey.Secret) return;
+        
+        // Для Bybit требуется временная метка сервера
+        bybitTimestamp  = this.getServerTimeMS();
+        this.addHeader('X-BAPI-API-KEY', apiKey.ApiKey);
+        this.addHeader('X-BAPI-TIMESTAMP', int642Str(bybitTimestamp));
+        this.addHeader('X-BAPI-RECV-WINDOW', '5000');
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>buildSignature</Name>
+				<Source><![CDATA[
+    protected void buildSignature()
+    {
+        if (!apiKey || !apiKey.ApiKey || !apiKey.Secret) return;
+            
+        str signString = int642Str(bybitTimestamp) + apiKey.ApiKey + "5000";
+        switch(httpMethod )
+        {
+            case RMarketAPIHttpMethod::GET:
+            case RMarketAPIHttpMethod::DELETE:
+                signString += methodQuery;
+                break;
+            case RMarketAPIHttpMethod::POST:
+            case RMarketAPIHttpMethod::PUT:
+                signString += requestBody;
+                break;
+        }
+
+        // Генерация подписи
+        str signature = this.signHMACSHA256(signString, apiKey.Secret);
+        this.addHeader('X-BAPI-SIGN', signature);
+        this.addHeader('X-BAPI-SIGN-TYPE', '2');
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

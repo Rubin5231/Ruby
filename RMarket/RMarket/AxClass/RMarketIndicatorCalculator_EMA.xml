@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketIndicatorCalculator_EMA</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class RMarketIndicatorCalculator_EMA extends RMarketIndicatorCalculator
+{
+    List values;
+    int period;
+    
+    real previousEMA;
+    int counter;
+    boolean isInitialized;
+    
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>getExtraPeriodsNeeded</Name>
+				<Source><![CDATA[
+    protected int getExtraPeriodsNeeded()
+    {
+        return real2int(indicatorSetup.Parameter);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getStartLoopTS</Name>
+				<Source><![CDATA[
+    protected RMarketTimestamp getStartLoopTS(RMarketDim _marketDim, RMarketIndicatorSetupTable _indicatorSetup, RMarketTimestamp _startCalcTS = 0)
+    {
+        RMarketTimestamp ret;
+        RMarketIndicatorTable indicatorPrev = 
+            RMarketIndicatorTable::find(_indicatorSetup.IndicatorId, _marketDim.RecId, _startCalcTS - _marketDim.Seconds);
+
+        if (indicatorPrev)
+        {
+            previousEMA = indicatorPrev.Value;
+            ret = _startCalcTS;
+        }
+        else
+        {
+            ret = super(_marketDim, _indicatorSetup, _startCalcTS);
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>calc</Name>
+				<Source><![CDATA[
+    // EMA_today = (Price_today × k) + (EMA_yesterday × (1 - k))
+    // где k = 2 / (N + 1)
+    protected RMarketIndicatorTable calc(RMarketDim _marketDim, RMarketIndicatorSetupTable _indicatorSetup, RMarketCandleTable _candle, boolean _justCache = false)
+    {
+        RMarketIndicatorTable indicator;
+        real baseValue = _candle.getValue(_indicatorSetup.CalcBase);
+        real EMA;
+
+        // Инициализация кэша и периода
+        if (!values)
+        {
+            if (previousEMA)
+                isInitialized = true;
+            else
+            {
+                isInitialized = false;
+                values = new List(Types::Real);
+            }
+        }
+        period = real2int(_indicatorSetup.Parameter);
+
+        if (!isInitialized)
+        {
+            values.addEnd(baseValue);
+            if (values.elements() >= period)
+            {
+                // Расчет SMA
+                real valueSum = 0;
+                ListEnumerator valuesEnum = values.getEnumerator();
+                while (valuesEnum.moveNext())
+                {
+                    valueSum += valuesEnum.current();
+                }
+                EMA = valueSum / period;
+                isInitialized = true;
+            }
+        }
+        else
+        {
+            real k = 2.0 / (period + 1.0);
+            EMA = (baseValue * k) + (previousEMA * (1.0 - k));
+        }
+
+        if (!_justCache && isInitialized)
+        {
+            indicator.clear();
+            indicator.DimRecId    = _marketDim.RecId;
+            indicator.IndicatorId = _indicatorSetup.IndicatorId;
+            indicator.Timestamp   = _candle.Timestamp;
+            indicator.Value       = EMA;
+        }
+
+        previousEMA = EMA;
+        return indicator;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

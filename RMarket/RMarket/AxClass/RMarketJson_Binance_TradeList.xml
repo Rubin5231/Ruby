@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketJson_Binance_TradeList</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[DataContract]
+public class RMarketJson_Binance_TradeList
+{
+    private List list;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmList</Name>
+				<Source><![CDATA[
+    /// <summary> Получает или устанавливает список сделок </summary>
+    /// <param name="_list"> Список торговых операций </param>
+    /// <returns> Список торговых операций </returns>
+    [DataMember('list'), DataCollectionAttribute(Types::Class, classStr(RMarketJson_Binance_TradeList_Item))]
+    public List parmList(List _list = list)
+    {
+        list = _list;
+        return list;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

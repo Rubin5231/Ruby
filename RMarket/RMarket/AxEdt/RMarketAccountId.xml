@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxEdt xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns=""
+	i:type="AxEdtString">
+	<Name>RMarketAccountId</Name>
+	<HelpText>Identification of the market account Id</HelpText>
+	<Label>Account Id</Label>
+	<ReferenceTable>RMarketAccount</ReferenceTable>
+	<ArrayElements />
+	<Relations />
+	<TableReferences>
+		<AxEdtTableReference>
+			<RelatedField>accountId</RelatedField>
+			<Table>RMarketAccount</Table>
+		</AxEdtTableReference>
+	</TableReferences>
+	<StringSize>15</StringSize>
+</AxEdt>

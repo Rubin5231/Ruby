@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketMethodInterface_GetTradeHistory</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+interface RMarketMethodInterface_GetTradeHistory
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>setBaseUrl</Name>
+				<Source><![CDATA[
+    // From RMarketMethod
+    public void setBaseUrl(str _baseUrl)
+    {
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>setApiKey</Name>
+				<Source><![CDATA[
+    // From RMarketMethod
+    public void setApiKey(RMarketApiKey _apiKey)
+    {
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>execute</Name>
+				<Source><![CDATA[
+    // From RMarketMethod
+    public void execute()
+    {
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>initParameters</Name>
+				<Source><![CDATA[
+    public void initParameters()
+    {
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getResultList</Name>
+				<Source><![CDATA[
+    //public int getLimit()
+    //{}
+
+    public List getResultList()
+    {
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

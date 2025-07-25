@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketAutoTrade</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class RMarketAutoTrade extends RunBaseBatch implements BatchRetryable
+{
+    protected RMarketAccountId accountId;
+    protected utcdatetime dtCursor;
+    protected RMarketTimestamp tsCursor;
+
+    DialogField         dlgAccountId;
+
+    #define.CurrentVersion(1)
+    #localmacro.CurrentList
+        accountId
+    #endmacro
+    
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>dialog</Name>
+				<Source><![CDATA[
+    public Object dialog()
+    {
+        DialogRunbase       dialog = super();
+        ;
+        dlgAccountId   = dialog.addFieldValue(extendedtypestr(RMarketAccountId), accountId);
+        
+        return dialog;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getFromDialog</Name>
+				<Source><![CDATA[
+    public boolean getFromDialog()
+    {
+        accountId   = dlgaccountId.value();
+        
+        return super();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmAccountId</Name>
+				<Source><![CDATA[
+    public RMarketAccountId parmAccountId(RMarketAccountId _accountId = accountId)
+    {
+        accountId = _accountId;
+        return accountId;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>showQueryValues</Name>
+				<Source><![CDATA[
+    public boolean showQueryValues()
+    {
+        return false;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>canRunInNewSession</Name>
+				<Source><![CDATA[
+    public boolean canRunInNewSession()
+    {
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>canGoBatch</Name>
+				<Source><![CDATA[
+    public boolean canGoBatch()
+    {
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>isRetryable</Name>
+				<Source><![CDATA[
+    public boolean isRetryable()
+    {
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>initParmDefault</Name>
+				<Source><![CDATA[
+    public void initParmDefault()
+    {
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>validate</Name>
+				<Source><![CDATA[
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name = "calledFrom"></param>
+    /// <returns></returns>
+    public boolean validate(Object calledFrom = null)
+    {
+        boolean ret;
+    
+        ret = super(calledFrom);
+
+        if (!accountId)
+            ret = ret && checkFailed(strFmt("Account Id have to be stted up!"));
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>pack</Name>
+				<Source><![CDATA[
+    public container pack()
+    {
+        return [#CurrentVersion, #CurrentList];
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>unpack</Name>
+				<Source><![CDATA[
+    public boolean unpack(container _packedClass)
+    {
+        Version    version = RunBase::getVersion(_packedClass);
+        switch (version)
+        {
+            case #CurrentVersion:
+                [version, #CurrentList] = _packedClass;
+                break;
+            default:
+                return false;
+        }
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>construct</Name>
+				<Source><![CDATA[
+    public static RMarketAutoTrade construct(RMarketAccountId _accountId)
+    {
+        RMarketAutoTrade autoTrader;
+        RMarketAccount account = RMarketAccount::find(_accountId);
+
+        switch (account.AccountType)
+        {
+            case RMarketAccountType::Test:
+                autoTrader = new RMarketAutoTrade_Test();
+                break;
+            case RMarketAccountType::Real:
+                autoTrader = new RMarketAutoTrade();
+                break;
+            default:
+                throw error(strFmt("Not implemented for account type '%1'", enum2Str(account.AccountType)));
+        }
+        autoTrader.parmAccountId(_accountId);
+        return autoTrader;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>main</Name>
+				<Source><![CDATA[
+    public static void main(Args _args)
+    {
+        RMarketAutoTrade    runObject;
+        ;
+
+        if (_args.dataset() != tableNum(RMarketAccount))
+            throw error("Wrong use of function!");
+
+        RMarketAccount account = _args.record();
+        runObject = RMarketAutoTrade::construct(account.AccountId);
+
+        if (runObject.prompt())
+        {
+            runObject.runOperation();
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>run</Name>
+				<Source><![CDATA[
+    public void run()
+    {
+        RMarketAccount account    = RMarketAccount::find(accountId);
+
+        ttsbegin;
+
+        // STEP 1 - Prepare test shadow accounts, make start deposit
+        this.prepareAccount(account);
+
+        // STEP 2 - Синхронизировать тестовый счет просчетом ордеров
+        // Синхронизировать счет:
+        //   реальный - запросами API
+        //   тестовый - просчетом ордеров
+        this.synchronizeAccount(account);
+
+        // STEP 3 - Обработать действия стратегий по каждому субсчету
+        this.makeAccountActions(account);
+
+        // STEP 2 - Синхронизировать тестовый счет просчетом ордеров, repeat for real account
+        this.synchronizeAccount(account);
+
+        ttscommit;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>prepareAccount</Name>
+				<Source><![CDATA[
+    protected void prepareAccount(RMarketAccount _account)
+    {
+        dtCursor = DateTimeUtil::utcNow();
+        tsCursor = RMarketUtil::dateTime2Timestamp(dtCursor);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>synchronizeAccount</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// STEP 2 - Синхронизировать тестовый счет просчетом ордеров
+    /// </summary>
+    protected void synchronizeAccount(RMarketAccount _account)
+    {
+        int attemptsNum;
+
+        //Request balance
+        do
+        {
+            //Request trades
+            //Request balance
+            //Compare balances
+        }
+        while (true || attemptsNum >= 3);
+        
+        if (true) // Balances are not equel
+            throw error('');
+
+        //Loop subAccount
+            //take symbol
+            //loop trades for symbol by ascend order
+            //find related order (opened position)
+            // record order's (position's) changes
+            // record related transaction
+
+        // compare balance and marketSum
+        // if not equal
+            // record adjustment transaction
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>makeAccountActions</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// STEP 3 - Обработать действия стратегий по каждому субсчету
+    /// </summary>
+    protected void makeAccountActions(RMarketAccount _account)
+    {
+        RMarketSubAccount subAccount;
+        RMarketStrategy strategy;
+        RMarketStrategyAction action;
+        RMarketConditionTable condition;
+        boolean signal;
+
+        //Loop by Subaccounts of main account
+        while select subAccount
+            where subAccount.AccountId == _account.AccountId
+               && subAccount.Active    == NoYes::Yes
+        {
+            // Loop actions of related strategy
+            while select action
+                where action.Active    == NoYes::Yes
+                join strategy
+                    where strategy.StrategyId == action.StrategyId
+                       && strategy.StrategyId == subAccount.StrategyId
+            {
+                // calculate signal for action
+                signal = action.calcSignal(subAccount, tsCursor);
+
+                // If signal exists then execute action
+                if (signal)
+                {
+                    RMarketEventLog::putRecord(subAccount.AccountId, subAccount.SubaccountId, 
+                        RMarketLogLevel::Info, RMarketEventType::SignalDetected,
+                        strFmt("%1: %2 #%3", dtCursor, enum2Str(action.Type), action.Num));
+                    
+                    this.executeAction(subAccount, action);
+                }
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>executeAction</Name>
+				<Source><![CDATA[
+    protected void executeAction(RMarketSubAccount _subAccount, RMarketStrategyAction _action)
+    {
+        switch (_action.type)
+        {
+            case RMarketStrategyActionType::StopTrade:
+                ttsbegin;
+                _subAccount.Active = NoYes::No;
+                _subAccount.update();
+                ttscommit;
+                RMarketEventLog::putRecord(_subAccount.AccountId, _subAccount.SubaccountId,
+                    RMarketLogLevel::Warning, RMarketEventType::StrategyDisabled,
+                        strFmt("Trade is stopped!"));
+                break;
+
+            case RMarketStrategyActionType::CloseLong:
+            case RMarketStrategyActionType::CloseShort:
+            case RMarketStrategyActionType::OpenLong:
+            case RMarketStrategyActionType::OpenShort:
+            case RMarketStrategyActionType::TrailOrder:
+            default:
+                throw error(strFmt("Action type %1 isn't implemented yet!", enum2Str(_action.type)));
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

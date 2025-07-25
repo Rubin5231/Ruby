@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>MyWorkflowTypeSubmitManager</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// The MyWorkflowTypeSubmitManager menu item action event handler.
+/// </summary>
+public class MyWorkflowTypeSubmitManager
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>main</Name>
+				<Source><![CDATA[
+    public static void main(Args args)
+    {
+        //  TODO:  Write code to execute once a work item is submitted.
+
+        MyWorkflowTable         myWorkflowTable;
+
+        WorkflowComment         note = "";
+        WorkflowSubmitDialog    workflowSubmitDialog;
+        WorkflowCorrelationId   workflowCorrelationId;
+        WorkflowTypeName        workflowTypeName = workFlowTypeStr('MyWorkflowType');
+
+        // Use WorkflowSubmitDialog to create a dialog.
+
+        workflowSubmitDialog =    WorkflowSubmitDialog::construct(args.caller().getActiveWorkflowConfiguration());
+        workflowSubmitDialog.run();
+
+        if (workflowSubmitDialog.parmIsClosedOK())
+        {
+            myWorkflowTable = args.record();
+
+            note = workflowSubmitDialog.parmWorkflowComment();
+
+            try
+            {
+                ttsbegin;
+
+                workflowCorrelationId = Workflow::activateFromWorkflowType(workflowTypeName, myWorkflowTable.RecId, note, NoYes::No);
+
+                myWorkflowTable.MyWorkflowStatus = MyWorkflowStatus::Submit;
+                myWorkflowTable.update();
+
+                ttscommit;
+
+                info("Workflow submitted.");
+            }
+
+            catch (Exception::Error)
+            {
+                error("Workflow error.");
+            }
+        }
+
+        args.caller().updateWorkFlowControls();
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

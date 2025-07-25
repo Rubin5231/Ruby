@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketJob</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+internal final class RMarketJob
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>main</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Class entry point. The system will call this method when a designated menu 
+    /// is selected or when execution starts and this class is set as the startup class.
+    /// </summary>
+    /// <param name = "_args">The specified arguments.</param>
+    public static void main(Args _args)
+    {
+    /*
+        // Инициализация биржи
+        RMarketTable marketTable = RMarketTable::find('BinanceMain');
+
+        // Получение времени сервера
+        RMarketApiBnn_ServerTime serverTime = new RMarketApiBnn_ServerTime(marketTable, 'ServerTime');
+        int64 binanceTime = serverTime.getServerTime();
+
+        // Получение баланса
+        RMarketApiKey apiKey = RMarketApiKey::find('MyBinanceKey');
+        RMarketApiBnn_Balance balance = new RMarketApiBnn_Balance(marketTable, 'AccountBalance');
+        balance.parmApiKey(apiKey);
+        Map balanceData = balance.getBalance();
+        */
+
+
+
+        /*
+        // Создание клиента для Bybit
+        RMarketApiClientBybit client = new RMarketApiClientBybit();
+        client.setApiKey(apiKey); // apiKey - запись из таблицы ключей
+
+        // Получение времени сервера
+        RMarketMethod_Bybit_ServerTime serverTimeMethod = new RMarketMethod_Bybit_ServerTime(client);
+        serverTimeMethod.execute();
+        Map result = serverTimeMethod.getResult();
+        int64 serverTime = result.get('serverTime');
+
+        // Получение торгового баланса
+        RMarketMethod_Bybit_WalletBalance walletBalance = new RMarketMethod_Bybit_WalletBalance(client);
+        walletBalance.setAccountType('UNIFIED');
+        walletBalance.execute();
+        Map balanceResult = walletBalance.getResult();
+
+        // Получение полного баланса
+        RMarketMethod_Bybit_AllCoinsBalance allCoinsBalance = new RMarketMethod_Bybit_AllCoinsBalance(client);
+        allCoinsBalance.setParameters('UNIFIED', 'USDT');
+        allCoinsBalance.execute();
+        Map fullBalanceResult = allCoinsBalance.getResult();
+    }
+
+    public static RMarketApiClient newClient(RMarketApiType _apiType)
+    {
+        RMarketApiClient ret;
+
+        switch (_apiType)
+        {
+            case RMarketApiType::Binance:
+                ret = new RMarketApiClientBinance();
+                break;
+            case RMarketApiType::Bybit:
+                ret = new RMarketApiClientBybit();
+                break;
+        }
+        return ret;
+    }
+
+    // Получение времени
+    public static UtcDateTime getServerTime(RMarketId _marketId)
+    {
+        RMarketAPIEng_Time apiClient;
+        RMarketTimestamp seconds;
+        UtcDateTime ret;
+
+        try
+        {
+            apiClient = RMarketAPIEng::construct(RMarketTable::find(_marketId), RMarketAPIMethodEnum::GetServerTime);
+            apiClient.init();
+            seconds = apiClient.fetchData();
+            ret = RMarketUtil::timestamp2dateTimeUTC(seconds);// DateTimeUtil::addSeconds(DateTimeUtil::newDateTime(01\01\1970, 0, Timezone::GMT_COORDINATEDUNIVERSALTIME), seconds);
+        }*/
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

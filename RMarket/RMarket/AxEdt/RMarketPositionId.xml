@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxEdt xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns=""
+	i:type="AxEdtString">
+	<Name>RMarketPositionId</Name>
+	<HelpText>Identification of the market position</HelpText>
+	<Label>Position</Label>
+	<ReferenceTable>RMarketPosition</ReferenceTable>
+	<ArrayElements />
+	<Relations />
+	<TableReferences>
+		<AxEdtTableReference>
+			<RelatedField>PositionId</RelatedField>
+			<Table>RMarketPosition</Table>
+		</AxEdtTableReference>
+	</TableReferences>
+	<StringSize>20</StringSize>
+</AxEdt>

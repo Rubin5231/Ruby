@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<z:anyType xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns=""
+	i:type="AxCompilerMetadata" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/">
+	<Extends>RMarketMethod</Extends>
+	<IsPublic>true</IsPublic>
+	<Implements xmlns:d2p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+		<d2p1:string>RMarketMethodInterface_DeleteOrder</d2p1:string>
+	</Implements>
+	<Methods>
+		<Method>
+			<Name>deleteOrder</Name>
+			<Visibility>Public</Visibility>
+			<Parameters>
+				<AxMethodParameter>
+					<Tags></Tags>
+					<Type>String</Type>
+					<TypeName></TypeName>
+					<Name>_symbol</Name>
+				</AxMethodParameter>
+				<AxMethodParameter>
+					<Tags></Tags>
+					<Type>String</Type>
+					<TypeName></TypeName>
+					<DefaultValue>''</DefaultValue>
+					<Name>_orderId</Name>
+				</AxMethodParameter>
+				<AxMethodParameter>
+					<Tags></Tags>
+					<Type>String</Type>
+					<TypeName></TypeName>
+					<DefaultValue>''</DefaultValue>
+					<Name>_clientOrderId</Name>
+				</AxMethodParameter>
+			</Parameters>
+			<ReturnType>
+				<Tags></Tags>
+				<Type>ExtendedDataType</Type>
+				<TypeName>RMarketJson_Base</TypeName>
+			</ReturnType>
+		</Method>
+	</Methods>
+</z:anyType>

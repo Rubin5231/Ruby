@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketMethod_Bybit_CreateOrder</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Метод создания ордера для Bybit
+/// </summary>
+public class RMarketMethod_Bybit_CreateOrder extends RMarketMethod implements RMarketMethodInterface_CreateOrder
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>createOrder</Name>
+				<Source><![CDATA[
+    /// <summary> Создать ордер на Bybit </summary>
+    /// <param name="_symbol"> Торговый символ </param>
+    /// <param name="_side"> Направление (BUY/SELL) </param>
+    /// <param name="_orderType"> Тип ордера </param>
+    /// <param name="_quantity"> Количество </param>
+    /// <param name="_price"> Цена </param>
+    /// <param name="_clientOrderId"> Клиентский ID ордера </param>
+    /// <returns> Результат создания ордера </returns>
+    public RMarketJson_Base createOrder(
+        str _symbol,
+        str _side,
+        str _orderType,
+        real _quantity,
+        real _price,
+        str _clientOrderId = '')
+    {
+        RMarketApiClientBybit apiClient = this.getApiClient();
+        str url = apiClient.parmBaseUrl() + '/v5/order/create';
+        
+        Map params = new Map(Types::String, Types::String);
+        params.insert('category', 'spot');
+        params.insert('symbol', _symbol);
+        params.insert('side', _side);
+        params.insert('orderType', _orderType);
+        params.insert('qty', num2str(_quantity, 0, 8, 0, 0));
+        
+        if (_orderType == 'LIMIT')
+        {
+            params.insert('price', num2str(_price, 0, 8, 0, 0));
+        }
+        
+        if (_clientOrderId)
+        {
+            params.insert('orderLinkId', _clientOrderId);
+        }
+        
+        str response = apiClient.post(url, params);
+        return apiClient.deserialize(response, classStr(RMarketJson_Bybit_OrderResponse));
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

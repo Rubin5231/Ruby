@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketMethod_Binance_CreateOrder</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Метод создания ордера для Binance
+/// </summary>
+public class RMarketMethod_Binance_CreateOrder extends RMarketMethod implements RMarketMethodInterface_CreateOrder
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>createOrder</Name>
+				<Source><![CDATA[
+    /// <summary> Создать ордер на Binance </summary>
+    /// <param name="_symbol"> Торговый символ </param>
+    /// <param name="_side"> Направление (BUY/SELL) </param>
+    /// <param name="_orderType"> Тип ордера </param>
+    /// <param name="_quantity"> Количество </param>
+    /// <param name="_price"> Цена </param>
+    /// <param name="_clientOrderId"> Клиентский ID ордера </param>
+    /// <returns> Результат создания ордера </returns>
+    public RMarketJson_Base createOrder(
+    str _symbol,
+    str _side,
+    str _orderType,
+    real _quantity,
+    real _price,
+    str _clientOrderId = '')
+    {
+        RMarketApiClientBinance apiClient = this.getApiClient();
+        str url = apiClient.parmBaseUrl() + '/api/v3/order';
+        
+        Map params = new Map(Types::String, Types::String);
+        params.insert('symbol', _symbol);
+        params.insert('side', _side);
+        params.insert('type', _orderType);
+        params.insert('quantity', num2str(_quantity, 0, 8, 0, 0));
+        
+        if (_orderType == 'LIMIT')
+        {
+            params.insert('price', num2str(_price, 0, 8, 0, 0));
+            params.insert('timeInForce', 'GTC');
+        }
+        
+        if (_clientOrderId)
+        {
+            params.insert('newClientOrderId', _clientOrderId);
+        }
+        
+        str response = apiClient.post(url, params);
+        return apiClient.deserialize(response, classStr(RMarketJson_Binance_CreateOrder));
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

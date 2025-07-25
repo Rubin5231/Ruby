@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketMethodInterface_CancelOrder</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Интерфейс метода удаления ордера
+/// </summary>
+interface RMarketMethodInterface_CancelOrder
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>deleteOrder</Name>
+				<Source><![CDATA[
+    /// <summary> Удалить существующий ордер </summary>
+    /// <param name="_symbol"> Торговый символ (например, BTCUSDT) </param>
+    /// <param name="_orderId"> Идентификатор ордера на бирже </param>
+    /// <param name="_clientOrderId"> Клиентский идентификатор ордера </param>
+    /// <returns> Результат удаления ордера </returns>
+    public RMarketJson_Base deleteOrder(
+        str _symbol,
+        str _orderId = '',
+        str _clientOrderId = '')
+    {}
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

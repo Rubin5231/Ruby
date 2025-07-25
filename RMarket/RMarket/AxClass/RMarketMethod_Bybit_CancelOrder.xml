@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketMethod_Bybit_CancelOrder</Name>
+	<SourceCode>
+		<Methods />
+		<UnparsableSource><![CDATA[
+internal final class RMarketMethod_Bybit_CancelOrder
+{
+}
+/// <summary>
+/// Метод отмены ордера для Bybit
+/// </summary>
+public class RMarketMethod_Bybit_CancelOrder extends RMarketMethod implements RMarketMethodInterface_CancelOrder
+{
+    /// <summary> Отменить ордер на Bybit </summary>
+    /// <param name="_symbol"> Торговый символ </param>
+    /// <param name="_orderId"> ID ордера </param>
+    /// <param name="_clientOrderId"> Клиентский ID ордера </param>
+    /// <returns> Результат отмены ордера </returns>
+    public RMarketJson_Base cancelOrder(
+        str _symbol,
+        str _orderId = '',
+        str _clientOrderId = '')
+    {
+        RMarketApiClientBybit apiClient = this.getApiClient();
+        str url = apiClient.parmBaseUrl() + '/v5/order/cancel';
+        
+        Map params = new Map(Types::String, Types::String);
+        params.insert('category', 'spot');
+        params.insert('symbol', _symbol);
+        
+        if (_clientOrderId)
+        {
+            params.insert('orderLinkId', _clientOrderId);
+        }
+        else
+        {
+            params.insert('orderId', _orderId);
+        }
+        
+        str response = apiClient.post(url, params);
+        return apiClient.deserialize(response, classStr(RMarketJson_Bybit_OrderResponse));
+    }
+}
+]]></UnparsableSource>
+	</SourceCode>
+</AxClass>

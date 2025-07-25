@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketMethodInterface_CreateOrder</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Интерфейс метода создания ордера
+/// </summary>
+interface RMarketMethodInterface_CreateOrder
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>createOrder</Name>
+				<Source><![CDATA[
+    /// <summary> Создать новый ордер </summary>
+    /// <param name="_symbol"> Торговый символ (например, BTCUSDT) </param>
+    /// <param name="_side"> Направление ордера (BUY/SELL) </param>
+    /// <param name="_orderType"> Тип ордера (MARKET, LIMIT и т.д.) </param>
+    /// <param name="_quantity"> Количество актива </param>
+    /// <param name="_price"> Цена актива (для лимитных ордеров) </param>
+    /// <param name="_clientOrderId"> Клиентский идентификатор ордера </param>
+    /// <returns> Результат создания ордера </returns>
+    public RMarketJson_Base createOrder(
+        str _symbol,
+        str _side,
+        str _orderType,
+        real _quantity,
+        real _price,
+        str _clientOrderId = '')
+    {}
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

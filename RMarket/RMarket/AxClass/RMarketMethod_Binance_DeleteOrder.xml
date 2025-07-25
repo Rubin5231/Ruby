@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketMethod_Binance_DeleteOrder</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Метод удаления ордера для Binance
+/// </summary>
+public class RMarketMethod_Binance_DeleteOrder extends RMarketMethod implements RMarketMethodInterface_DeleteOrder
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>deleteOrder</Name>
+				<Source><![CDATA[
+    /// <summary> Удалить ордер на Binance </summary>
+    /// <param name="_symbol"> Торговый символ </param>
+    /// <param name="_orderId"> ID ордера </param>
+    /// <param name="_clientOrderId"> Клиентский ID ордера </param>
+    /// <returns> Результат удаления ордера </returns>
+    public RMarketJson_Base deleteOrder(
+        str _symbol,
+        str _orderId = '',
+        str _clientOrderId = '')
+    {
+        RMarketApiClientBinance apiClient = this.getApiClient();
+        str url = apiClient.parmBaseUrl() + '/api/v3/order';
+        
+        Map params = new Map(Types::String, Types::String);
+        params.insert('symbol', _symbol);
+        
+        if (_clientOrderId)
+        {
+            params.insert('origClientOrderId', _clientOrderId);
+        }
+        else
+        {
+            params.insert('orderId', _orderId);
+        }
+        
+        str response = apiClient.delete(url, params);
+        return apiClient.deserialize(response, classStr(RMarketJson_Binance_DeleteOrder));
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

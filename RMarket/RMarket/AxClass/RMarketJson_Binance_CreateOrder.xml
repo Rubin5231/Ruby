@@ -3,26 +3,39 @@
 	<Name>RMarketJson_Binance_CreateOrder</Name>
 	<SourceCode>
 		<Declaration><![CDATA[
-[DataContract]
+[DataContractAttribute]
 public class RMarketJson_Binance_CreateOrder
 {
     // POST /api/v3/order
     // https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints
-    private str symbol;
-    private int64 orderId;
-    private int64 orderListId;
-    private str clientOrderId;
-    private int64 transactTime;
-    private str price;
-    private str origQty;
-    private str executedQty;
-    private str cummulativeQuoteQty;
-    private str status;
-    private str timeInForce;
-    private str type;
-    private str side;
-    private List fills;
-    private str selfTradePreventionMode;
+    [DataMember('symbol')]
+    public str symbol;
+    [DataMember('orderId')]
+    public int64 orderId;
+    [DataMember('orderListId')]
+    public int64 orderListId;
+    [DataMember('clientOrderId')]
+    public str clientOrderId;
+    [DataMember('transactTime')]
+    public int64 transactTime;
+    [DataMember('price')]
+    public str price;
+    [DataMember('origQty')]
+    public str origQty;
+    [DataMember('executedQty')]
+    public str executedQty;
+    [DataMember('cummulativeQuoteQty')]
+    public str cummulativeQuoteQty;
+    [DataMember('status')]
+    public str status;
+    [DataMember('timeInForce')]
+    public str timeInForce;
+    [DataMember('type')]
+    public str type;
+    [DataMember('side')]
+    public str side;
+    [DataMember('fills'), DataCollectionAttribute(Types::Class, classStr(RMarketJson_Binance_CreateOrder_Fill))]
+    public List fills;
 
 }
 ]]></Declaration>
@@ -30,10 +43,9 @@ public class RMarketJson_Binance_CreateOrder
 			<Method>
 				<Name>parmSymbol</Name>
 				<Source><![CDATA[
-    /// <summary> Получает или устанавливает символ инструмента </summary>
-    /// <param name="_symbol"> Торговый символ </param>
-    /// <returns> Торговый символ </returns>
-    [DataMember('symbol')]
+    /// <summary> Получает или устанавливает символ торговой пары </summary>
+    /// <param name="_symbol"> Символ торговой пары </param>
+    /// <returns> Символ торговой пары </returns>
     public str parmSymbol(str _symbol = symbol)
     {
         symbol = _symbol;
@@ -48,7 +60,6 @@ public class RMarketJson_Binance_CreateOrder
     /// <summary> Получает или устанавливает ID ордера </summary>
     /// <param name="_orderId"> Уникальный идентификатор ордера </param>
     /// <returns> Уникальный идентификатор ордера </returns>
-    [DataMember('orderId')]
     public int64 parmOrderId(int64 _orderId = orderId)
     {
         orderId = _orderId;
@@ -60,10 +71,9 @@ public class RMarketJson_Binance_CreateOrder
 			<Method>
 				<Name>parmOrderListId</Name>
 				<Source><![CDATA[
-    /// <summary> Получает или устанавливает ID OCO-ордера </summary>
+    /// <summary> Получает или устанавливает ID списка ордеров </summary>
     /// <param name="_orderListId"> Идентификатор списка ордеров (OCO) </param>
-    /// <returns> Идентификатор списка ордеров (OCO) </returns>
-    [DataMember('orderListId')]
+    /// <returns> Идентификатор списка ордеров </returns>
     public int64 parmOrderListId(int64 _orderListId = orderListId)
     {
         orderListId = _orderListId;
@@ -78,7 +88,6 @@ public class RMarketJson_Binance_CreateOrder
     /// <summary> Получает или устанавливает клиентский ID ордера </summary>
     /// <param name="_clientOrderId"> Пользовательский идентификатор ордера </param>
     /// <returns> Пользовательский идентификатор ордера </returns>
-    [DataMember('clientOrderId')]
     public str parmClientOrderId(str _clientOrderId = clientOrderId)
     {
         clientOrderId = _clientOrderId;
@@ -90,10 +99,9 @@ public class RMarketJson_Binance_CreateOrder
 			<Method>
 				<Name>parmTransactTime</Name>
 				<Source><![CDATA[
-    /// <summary> Получает или устанавливает время исполнения </summary>
-    /// <param name="_transactTime"> Временная метка исполнения </param>
-    /// <returns> Временная метка исполнения </returns>
-    [DataMember('transactTime')]
+    /// <summary> Получает или устанавливает время транзакции </summary>
+    /// <param name="_transactTime"> Время исполнения ордера в мс </param>
+    /// <returns> Время исполнения ордера в мс </returns>
     public int64 parmTransactTime(int64 _transactTime = transactTime)
     {
         transactTime = _transactTime;
@@ -106,9 +114,8 @@ public class RMarketJson_Binance_CreateOrder
 				<Name>parmPrice</Name>
 				<Source><![CDATA[
     /// <summary> Получает или устанавливает цену ордера </summary>
-    /// <param name="_price"> Цена выставления ордера </param>
-    /// <returns> Цена выставления ордера </returns>
-    [DataMember('price')]
+    /// <param name="_price"> Цена за единицу актива </param>
+    /// <returns> Цена за единицу актива </returns>
     public str parmPrice(str _price = price)
     {
         price = _price;
@@ -121,9 +128,8 @@ public class RMarketJson_Binance_CreateOrder
 				<Name>parmOrigQty</Name>
 				<Source><![CDATA[
     /// <summary> Получает или устанавливает исходное количество </summary>
-    /// <param name="_origQty"> Исходное количество ордера </param>
-    /// <returns> Исходное количество ордера </returns>
-    [DataMember('origQty')]
+    /// <param name="_origQty"> Исходное количество актива </param>
+    /// <returns> Исходное количество актива </returns>
     public str parmOrigQty(str _origQty = origQty)
     {
         origQty = _origQty;
@@ -136,9 +142,8 @@ public class RMarketJson_Binance_CreateOrder
 				<Name>parmExecutedQty</Name>
 				<Source><![CDATA[
     /// <summary> Получает или устанавливает исполненное количество </summary>
-    /// <param name="_executedQty"> Исполненное количество </param>
-    /// <returns> Исполненное количество </returns>
-    [DataMember('executedQty')]
+    /// <param name="_executedQty"> Исполненное количество актива </param>
+    /// <returns> Исполненное количество актива </returns>
     public str parmExecutedQty(str _executedQty = executedQty)
     {
         executedQty = _executedQty;
@@ -150,10 +155,9 @@ public class RMarketJson_Binance_CreateOrder
 			<Method>
 				<Name>parmCummulativeQuoteQty</Name>
 				<Source><![CDATA[
-    /// <summary> Получает или устанавливает совокупную стоимость котировки </summary>
-    /// <param name="_cummulativeQuoteQty"> Суммарная стоимость исполненных котировок </param>
-    /// <returns> Суммарная стоимость исполненных котировок </returns>
-    [DataMember('cummulativeQuoteQty')]
+    /// <summary> Получает или устанавливает суммарную стоимость </summary>
+    /// <param name="_cummulativeQuoteQty"> Суммарная стоимость исполненных ордеров </param>
+    /// <returns> Суммарная стоимость исполненных ордеров </returns>
     public str parmCummulativeQuoteQty(str _cummulativeQuoteQty = cummulativeQuoteQty)
     {
         cummulativeQuoteQty = _cummulativeQuoteQty;
@@ -165,10 +169,9 @@ public class RMarketJson_Binance_CreateOrder
 			<Method>
 				<Name>parmStatus</Name>
 				<Source><![CDATA[
-    /// <summary> Получает или устанавливает статус ордера ["NEW", "PARTIALLY_FILLED", "FILLED", "CANCELED", "PENDING_CANCEL", "REJECTED", "EXPIRED"] </summary>
+    /// <summary> Получает или устанавливает статус ордера </summary>
     /// <param name="_status"> Текущий статус ордера </param>
     /// <returns> Текущий статус ордера </returns>
-    [DataMember('status')]
     public str parmStatus(str _status = status)
     {
         status = _status;
@@ -180,10 +183,9 @@ public class RMarketJson_Binance_CreateOrder
 			<Method>
 				<Name>parmTimeInForce</Name>
 				<Source><![CDATA[
-    /// <summary> Получает или устанавливает условие времени действия ["GTC", "IOC", "FOK"] </summary>
-    /// <param name="_timeInForce"> Условие времени действия ордера </param>
-    /// <returns> Условие времени действия ордера </returns>
-    [DataMember('timeInForce')]
+    /// <summary> Получает или устанавливает режим исполнения </summary>
+    /// <param name="_timeInForce"> Условие временного периода действия ордера </param>
+    /// <returns> Условие временного периода действия ордера </returns>
     public str parmTimeInForce(str _timeInForce = timeInForce)
     {
         timeInForce = _timeInForce;
@@ -195,10 +197,9 @@ public class RMarketJson_Binance_CreateOrder
 			<Method>
 				<Name>parmType</Name>
 				<Source><![CDATA[
-    /// <summary> Получает или устанавливает тип ордера ["LIMIT", "MARKET", "STOP_LOSS", "STOP_LOSS_LIMIT", "TAKE_PROFIT", "TAKE_PROFIT_LIMIT", "LIMIT_MAKER"] </summary>
-    /// <param name="_type"> Тип ордера </param>
+    /// <summary> Получает или устанавливает тип ордера </summary>
+    /// <param name="_type"> Тип ордера (LIMIT, MARKET и др.) </param>
     /// <returns> Тип ордера </returns>
-    [DataMember('type')]
     public str parmType(str _type = type)
     {
         type = _type;
@@ -210,10 +211,9 @@ public class RMarketJson_Binance_CreateOrder
 			<Method>
 				<Name>parmSide</Name>
 				<Source><![CDATA[
-    /// <summary> Получает или устанавливает направление ордера ["BUY", "SELL"] </summary>
-    /// <param name="_side"> Направление сделки </param>
-    /// <returns> Направление сделки </returns>
-    [DataMember('side')]
+    /// <summary> Получает или устанавливает направление ордера </summary>
+    /// <param name="_side"> Направление ордера (BUY/SELL) </param>
+    /// <returns> Направление ордера </returns>
     public str parmSide(str _side = side)
     {
         side = _side;
@@ -228,26 +228,10 @@ public class RMarketJson_Binance_CreateOrder
     /// <summary> Получает или устанавливает список исполнений </summary>
     /// <param name="_fills"> Список частичных исполнений ордера </param>
     /// <returns> Список частичных исполнений ордера </returns>
-    [DataMember('fills'), DataCollectionAttribute(Types::Class, classStr(RMarketJson_Binance_CreateOrder_Fill))]
     public List parmFills(List _fills = fills)
     {
         fills = _fills;
         return fills;
-    }
-
-]]></Source>
-			</Method>
-			<Method>
-				<Name>parmSelfTradePreventionMode</Name>
-				<Source><![CDATA[
-    /// <summary> Получает или устанавливает режим предотвращения самоторговли ["EXPIRE_TAKER", "EXPIRE_MAKER", "EXPIRE_BOTH", "NONE"] </summary>
-    /// <param name="_selfTradePreventionMode"> Режим предотвращения самоторговли </param>
-    /// <returns> Режим предотвращения самоторговли </returns>
-    [DataMember('selfTradePreventionMode')]
-    public str parmSelfTradePreventionMode(str _selfTradePreventionMode = selfTradePreventionMode)
-    {
-        selfTradePreventionMode = _selfTradePreventionMode;
-        return selfTradePreventionMode;
     }
 
 ]]></Source>

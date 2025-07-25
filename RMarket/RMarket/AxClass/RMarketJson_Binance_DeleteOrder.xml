@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RMarketJson_Binance_DeleteOrder</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[DataContractAttribute]
+class RMarketJson_Binance_DeleteOrder
+{
+    private str symbol;
+    private int64 orderId;
+    private str origClientOrderId;
+    private str newClientOrderId;
+    private int64 recvWindow;
+    private int64 timestamp;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmSymbol</Name>
+				<Source><![CDATA[
+    /// <summary>Получает или устанавливает торговую пару</summary>
+    /// <param name="_symbol">Идентификатор торговой пары (например, BTCUSDT)</param>
+    /// <returns>Торговая пара</returns>
+    [DataMemberAttribute('symbol')]
+    public str parmSymbol(str _symbol = symbol)
+    {
+        symbol = _symbol;
+        return symbol;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmOrderId</Name>
+				<Source><![CDATA[
+    /// <summary>Получает или устанавливает ID ордера</summary>
+    /// <param name="_orderId">Системный идентификатор ордера</param>
+    /// <returns>Идентификатор ордера</returns>
+    [DataMemberAttribute('orderId')]
+    public int64 parmOrderId(int64 _orderId = orderId)
+    {
+        orderId = _orderId;
+        return orderId;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmOrigClientOrderId</Name>
+				<Source><![CDATA[
+    /// <summary>Получает или устанавливает оригинальный клиентский ID</summary>
+    /// <param name="_origClientOrderId">Идентификатор, заданный при создании</param>
+    /// <returns>Оригинальный клиентский ID</returns>
+    [DataMemberAttribute('origClientOrderId')]
+    public str parmOrigClientOrderId(str _origClientOrderId = origClientOrderId)
+    {
+        origClientOrderId = _origClientOrderId;
+        return origClientOrderId;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmNewClientOrderId</Name>
+				<Source><![CDATA[
+    /// <summary>Получает или устанавливает новый клиентский ID</summary>
+    /// <param name="_newClientOrderId">Альтернативный идентификатор ордера</param>
+    /// <returns>Новый клиентский ID</returns>
+    [DataMemberAttribute('newClientOrderId')]
+    public str parmNewClientOrderId(str _newClientOrderId = newClientOrderId)
+    {
+        newClientOrderId = _newClientOrderId;
+        return newClientOrderId;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmRecvWindow</Name>
+				<Source><![CDATA[
+    /// <summary>Получает или устанавливает окно получения данных</summary>
+    /// <param name="_recvWindow">Временное окно в миллисекундах</param>
+    /// <returns>Окно получения данных</returns>
+    [DataMemberAttribute('recvWindow')]
+    public int64 parmRecvWindow(int64 _recvWindow = recvWindow)
+    {
+        recvWindow = _recvWindow;
+        return recvWindow;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmTimestamp</Name>
+				<Source><![CDATA[
+    /// <summary>Получает или устанавливает метку времени</summary>
+    /// <param name="_timestamp">Текущее время в миллисекундах</param>
+    /// <returns>Метка времени</returns>
+    [DataMemberAttribute('timestamp')]
+    public int64 parmTimestamp(int64 _timestamp = timestamp)
+    {
+        timestamp = _timestamp;
+        return timestamp;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

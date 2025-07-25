@@ -4,7 +4,7 @@
 	<IsPublic>true</IsPublic>
 	<Attributes>
 		<AxAttribute>
-			<Name>DataContract</Name>
+			<Name>DataContractAttribute</Name>
 			<Parameters />
 		</AxAttribute>
 	</Attributes>

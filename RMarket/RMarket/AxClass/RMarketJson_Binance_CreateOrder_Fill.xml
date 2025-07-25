@@ -3,7 +3,7 @@
 	<Name>RMarketJson_Binance_CreateOrder_Fill</Name>
 	<SourceCode>
 		<Declaration><![CDATA[
-[DataContract]
+[DataContractAttribute]
 public class RMarketJson_Binance_CreateOrder_Fill
 {
     private str price;
@@ -18,9 +18,9 @@ public class RMarketJson_Binance_CreateOrder_Fill
 			<Method>
 				<Name>parmPrice</Name>
 				<Source><![CDATA[
-    /// <summary> Получает или устанавливает цену исполнения </summary>
-    /// <param name="_price"> Цена исполненной части </param>
-    /// <returns> Цена исполненной части </returns>
+    /// <summary>Цена исполнения</summary>
+    /// <param name="_price">Цена одной единицы актива</param>
+    /// <returns>Цена исполнения</returns>
     [DataMember('price')]
     public str parmPrice(str _price = price)
     {
@@ -33,9 +33,9 @@ public class RMarketJson_Binance_CreateOrder_Fill
 			<Method>
 				<Name>parmQty</Name>
 				<Source><![CDATA[
-    /// <summary> Получает или устанавливает количество исполнения </summary>
-    /// <param name="_qty"> Исполненное количество </param>
-    /// <returns> Исполненное количество </returns>
+    /// <summary>Исполненное количество</summary>
+    /// <param name="_qty">Объем по сделке</param>
+    /// <returns>Исполненное количество</returns>
     [DataMember('qty')]
     public str parmQty(str _qty = qty)
     {
@@ -48,9 +48,9 @@ public class RMarketJson_Binance_CreateOrder_Fill
 			<Method>
 				<Name>parmCommission</Name>
 				<Source><![CDATA[
-    /// <summary> Получает или устанавливает комиссию </summary>
-    /// <param name="_commission"> Сумма комиссии </param>
-    /// <returns> Сумма комиссии </returns>
+    /// <summary>Комиссия</summary>
+    /// <param name="_commission">Размер комиссии</param>
+    /// <returns>Комиссия</returns>
     [DataMember('commission')]
     public str parmCommission(str _commission = commission)
     {
@@ -63,9 +63,9 @@ public class RMarketJson_Binance_CreateOrder_Fill
 			<Method>
 				<Name>parmCommissionAsset</Name>
 				<Source><![CDATA[
-    /// <summary> Получает или устанавливает актив комиссии </summary>
-    /// <param name="_commissionAsset"> Актив, в котором взимается комиссия </param>
-    /// <returns> Актив, в котором взимается комиссия </returns>
+    /// <summary>Актив комиссии</summary>
+    /// <param name="_commissionAsset">Валюта комиссии</param>
+    /// <returns>Актив комиссии</returns>
     [DataMember('commissionAsset')]
     public str parmCommissionAsset(str _commissionAsset = commissionAsset)
     {
@@ -78,9 +78,9 @@ public class RMarketJson_Binance_CreateOrder_Fill
 			<Method>
 				<Name>parmTradeId</Name>
 				<Source><![CDATA[
-    /// <summary> Получает или устанавливает ID сделки </summary>
-    /// <param name="_tradeId"> Идентификатор сделки </param>
-    /// <returns> Идентификатор сделки </returns>
+    /// <summary>ID сделки</summary>
+    /// <param name="_tradeId">Уникальный идентификатор сделки</param>
+    /// <returns>ID сделки</returns>
     [DataMember('tradeId')]
     public int64 parmTradeId(int64 _tradeId = tradeId)
     {

@@ -19,14 +19,6 @@
 		</AxClassMemberVariable>
 		<AxClassMemberVariable>
 			<Tags></Tags>
-			<Type>Int64</Type>
-			<TypeName></TypeName>
-			<Name>orderId</Name>
-			<Attributes />
-			<Visibility>Private</Visibility>
-		</AxClassMemberVariable>
-		<AxClassMemberVariable>
-			<Tags></Tags>
 			<Type>String</Type>
 			<TypeName></TypeName>
 			<Name>origClientOrderId</Name>
@@ -35,25 +27,89 @@
 		</AxClassMemberVariable>
 		<AxClassMemberVariable>
 			<Tags></Tags>
+			<Type>Int64</Type>
+			<TypeName></TypeName>
+			<Name>orderId</Name>
+			<Attributes />
+			<Visibility>Private</Visibility>
+		</AxClassMemberVariable>
+		<AxClassMemberVariable>
+			<Tags></Tags>
+			<Type>Int64</Type>
+			<TypeName></TypeName>
+			<Name>orderListId</Name>
+			<Attributes />
+			<Visibility>Private</Visibility>
+		</AxClassMemberVariable>
+		<AxClassMemberVariable>
+			<Tags></Tags>
 			<Type>String</Type>
 			<TypeName></TypeName>
-			<Name>newClientOrderId</Name>
+			<Name>clientOrderId</Name>
 			<Attributes />
 			<Visibility>Private</Visibility>
 		</AxClassMemberVariable>
 		<AxClassMemberVariable>
 			<Tags></Tags>
-			<Type>Int64</Type>
+			<Type>String</Type>
 			<TypeName></TypeName>
-			<Name>recvWindow</Name>
+			<Name>price</Name>
 			<Attributes />
 			<Visibility>Private</Visibility>
 		</AxClassMemberVariable>
 		<AxClassMemberVariable>
 			<Tags></Tags>
-			<Type>Int64</Type>
+			<Type>String</Type>
 			<TypeName></TypeName>
-			<Name>timestamp</Name>
+			<Name>origQty</Name>
+			<Attributes />
+			<Visibility>Private</Visibility>
+		</AxClassMemberVariable>
+		<AxClassMemberVariable>
+			<Tags></Tags>
+			<Type>String</Type>
+			<TypeName></TypeName>
+			<Name>executedQty</Name>
+			<Attributes />
+			<Visibility>Private</Visibility>
+		</AxClassMemberVariable>
+		<AxClassMemberVariable>
+			<Tags></Tags>
+			<Type>String</Type>
+			<TypeName></TypeName>
+			<Name>cummulativeQuoteQty</Name>
+			<Attributes />
+			<Visibility>Private</Visibility>
+		</AxClassMemberVariable>
+		<AxClassMemberVariable>
+			<Tags></Tags>
+			<Type>String</Type>
+			<TypeName></TypeName>
+			<Name>status</Name>
+			<Attributes />
+			<Visibility>Private</Visibility>
+		</AxClassMemberVariable>
+		<AxClassMemberVariable>
+			<Tags></Tags>
+			<Type>String</Type>
+			<TypeName></TypeName>
+			<Name>timeInForce</Name>
+			<Attributes />
+			<Visibility>Private</Visibility>
+		</AxClassMemberVariable>
+		<AxClassMemberVariable>
+			<Tags></Tags>
+			<Type>String</Type>
+			<TypeName></TypeName>
+			<Name>type</Name>
+			<Attributes />
+			<Visibility>Private</Visibility>
+		</AxClassMemberVariable>
+		<AxClassMemberVariable>
+			<Tags></Tags>
+			<Type>String</Type>
+			<TypeName></TypeName>
+			<Name>side</Name>
 			<Attributes />
 			<Visibility>Private</Visibility>
 		</AxClassMemberVariable>
@@ -64,7 +120,7 @@
 			<Visibility>Public</Visibility>
 			<Attributes>
 				<AxAttribute>
-					<Name>DataMemberAttribute</Name>
+					<Name>DataMember</Name>
 					<Parameters>
 						<AxAttributeParameter>
 							<TypeValue>'symbol'</TypeValue>
@@ -89,40 +145,11 @@
 			</ReturnType>
 		</Method>
 		<Method>
-			<Name>parmOrderId</Name>
-			<Visibility>Public</Visibility>
-			<Attributes>
-				<AxAttribute>
-					<Name>DataMemberAttribute</Name>
-					<Parameters>
-						<AxAttributeParameter>
-							<TypeValue>'orderId'</TypeValue>
-							<AdditionalData />
-						</AxAttributeParameter>
-					</Parameters>
-				</AxAttribute>
-			</Attributes>
-			<Parameters>
-				<AxMethodParameter>
-					<Tags></Tags>
-					<Type>Int64</Type>
-					<TypeName></TypeName>
-					<DefaultValue>orderId</DefaultValue>
-					<Name>_orderId</Name>
-				</AxMethodParameter>
-			</Parameters>
-			<ReturnType>
-				<Tags></Tags>
-				<Type>Int64</Type>
-				<TypeName></TypeName>
-			</ReturnType>
-		</Method>
-		<Method>
 			<Name>parmOrigClientOrderId</Name>
 			<Visibility>Public</Visibility>
 			<Attributes>
 				<AxAttribute>
-					<Name>DataMemberAttribute</Name>
+					<Name>DataMember</Name>
 					<Parameters>
 						<AxAttributeParameter>
 							<TypeValue>'origClientOrderId'</TypeValue>
@@ -147,14 +174,72 @@
 			</ReturnType>
 		</Method>
 		<Method>
-			<Name>parmNewClientOrderId</Name>
+			<Name>parmOrderId</Name>
 			<Visibility>Public</Visibility>
 			<Attributes>
 				<AxAttribute>
-					<Name>DataMemberAttribute</Name>
+					<Name>DataMember</Name>
 					<Parameters>
 						<AxAttributeParameter>
-							<TypeValue>'newClientOrderId'</TypeValue>
+							<TypeValue>'orderId'</TypeValue>
+							<AdditionalData />
+						</AxAttributeParameter>
+					</Parameters>
+				</AxAttribute>
+			</Attributes>
+			<Parameters>
+				<AxMethodParameter>
+					<Tags></Tags>
+					<Type>Int64</Type>
+					<TypeName></TypeName>
+					<DefaultValue>orderId</DefaultValue>
+					<Name>_orderId</Name>
+				</AxMethodParameter>
+			</Parameters>
+			<ReturnType>
+				<Tags></Tags>
+				<Type>Int64</Type>
+				<TypeName></TypeName>
+			</ReturnType>
+		</Method>
+		<Method>
+			<Name>parmOrderListId</Name>
+			<Visibility>Public</Visibility>
+			<Attributes>
+				<AxAttribute>
+					<Name>DataMember</Name>
+					<Parameters>
+						<AxAttributeParameter>
+							<TypeValue>'orderListId'</TypeValue>
+							<AdditionalData />
+						</AxAttributeParameter>
+					</Parameters>
+				</AxAttribute>
+			</Attributes>
+			<Parameters>
+				<AxMethodParameter>
+					<Tags></Tags>
+					<Type>Int64</Type>
+					<TypeName></TypeName>
+					<DefaultValue>orderListId</DefaultValue>
+					<Name>_orderListId</Name>
+				</AxMethodParameter>
+			</Parameters>
+			<ReturnType>
+				<Tags></Tags>
+				<Type>Int64</Type>
+				<TypeName></TypeName>
+			</ReturnType>
+		</Method>
+		<Method>
+			<Name>parmClientOrderId</Name>
+			<Visibility>Public</Visibility>
+			<Attributes>
+				<AxAttribute>
+					<Name>DataMember</Name>
+					<Parameters>
+						<AxAttributeParameter>
+							<TypeValue>'clientOrderId'</TypeValue>
 							<AdditionalData />
 						</AxAttributeParameter>
 					</Parameters>
@@ -165,8 +250,8 @@
 					<Tags></Tags>
 					<Type>String</Type>
 					<TypeName></TypeName>
-					<DefaultValue>newClientOrderId</DefaultValue>
-					<Name>_newClientOrderId</Name>
+					<DefaultValue>clientOrderId</DefaultValue>
+					<Name>_clientOrderId</Name>
 				</AxMethodParameter>
 			</Parameters>
 			<ReturnType>
@@ -176,14 +261,14 @@
 			</ReturnType>
 		</Method>
 		<Method>
-			<Name>parmRecvWindow</Name>
+			<Name>parmPrice</Name>
 			<Visibility>Public</Visibility>
 			<Attributes>
 				<AxAttribute>
-					<Name>DataMemberAttribute</Name>
+					<Name>DataMember</Name>
 					<Parameters>
 						<AxAttributeParameter>
-							<TypeValue>'recvWindow'</TypeValue>
+							<TypeValue>'price'</TypeValue>
 							<AdditionalData />
 						</AxAttributeParameter>
 					</Parameters>
@@ -192,27 +277,27 @@
 			<Parameters>
 				<AxMethodParameter>
 					<Tags></Tags>
-					<Type>Int64</Type>
+					<Type>String</Type>
 					<TypeName></TypeName>
-					<DefaultValue>recvWindow</DefaultValue>
-					<Name>_recvWindow</Name>
+					<DefaultValue>price</DefaultValue>
+					<Name>_price</Name>
 				</AxMethodParameter>
 			</Parameters>
 			<ReturnType>
 				<Tags></Tags>
-				<Type>Int64</Type>
+				<Type>String</Type>
 				<TypeName></TypeName>
 			</ReturnType>
 		</Method>
 		<Method>
-			<Name>parmTimestamp</Name>
+			<Name>parmOrigQty</Name>
 			<Visibility>Public</Visibility>
 			<Attributes>
 				<AxAttribute>
-					<Name>DataMemberAttribute</Name>
+					<Name>DataMember</Name>
 					<Parameters>
 						<AxAttributeParameter>
-							<TypeValue>'timestamp'</TypeValue>
+							<TypeValue>'origQty'</TypeValue>
 							<AdditionalData />
 						</AxAttributeParameter>
 					</Parameters>
@@ -221,15 +306,189 @@
 			<Parameters>
 				<AxMethodParameter>
 					<Tags></Tags>
-					<Type>Int64</Type>
+					<Type>String</Type>
 					<TypeName></TypeName>
-					<DefaultValue>timestamp</DefaultValue>
-					<Name>_timestamp</Name>
+					<DefaultValue>origQty</DefaultValue>
+					<Name>_origQty</Name>
 				</AxMethodParameter>
 			</Parameters>
 			<ReturnType>
 				<Tags></Tags>
-				<Type>Int64</Type>
+				<Type>String</Type>
+				<TypeName></TypeName>
+			</ReturnType>
+		</Method>
+		<Method>
+			<Name>parmExecutedQty</Name>
+			<Visibility>Public</Visibility>
+			<Attributes>
+				<AxAttribute>
+					<Name>DataMember</Name>
+					<Parameters>
+						<AxAttributeParameter>
+							<TypeValue>'executedQty'</TypeValue>
+							<AdditionalData />
+						</AxAttributeParameter>
+					</Parameters>
+				</AxAttribute>
+			</Attributes>
+			<Parameters>
+				<AxMethodParameter>
+					<Tags></Tags>
+					<Type>String</Type>
+					<TypeName></TypeName>
+					<DefaultValue>executedQty</DefaultValue>
+					<Name>_executedQty</Name>
+				</AxMethodParameter>
+			</Parameters>
+			<ReturnType>
+				<Tags></Tags>
+				<Type>String</Type>
+				<TypeName></TypeName>
+			</ReturnType>
+		</Method>
+		<Method>
+			<Name>parmCummulativeQuoteQty</Name>
+			<Visibility>Public</Visibility>
+			<Attributes>
+				<AxAttribute>
+					<Name>DataMember</Name>
+					<Parameters>
+						<AxAttributeParameter>
+							<TypeValue>'cummulativeQuoteQty'</TypeValue>
+							<AdditionalData />
+						</AxAttributeParameter>
+					</Parameters>
+				</AxAttribute>
+			</Attributes>
+			<Parameters>
+				<AxMethodParameter>
+					<Tags></Tags>
+					<Type>String</Type>
+					<TypeName></TypeName>
+					<DefaultValue>cummulativeQuoteQty</DefaultValue>
+					<Name>_cummulativeQuoteQty</Name>
+				</AxMethodParameter>
+			</Parameters>
+			<ReturnType>
+				<Tags></Tags>
+				<Type>String</Type>
+				<TypeName></TypeName>
+			</ReturnType>
+		</Method>
+		<Method>
+			<Name>parmStatus</Name>
+			<Visibility>Public</Visibility>
+			<Attributes>
+				<AxAttribute>
+					<Name>DataMember</Name>
+					<Parameters>
+						<AxAttributeParameter>
+							<TypeValue>'status'</TypeValue>
+							<AdditionalData />
+						</AxAttributeParameter>
+					</Parameters>
+				</AxAttribute>
+			</Attributes>
+			<Parameters>
+				<AxMethodParameter>
+					<Tags></Tags>
+					<Type>String</Type>
+					<TypeName></TypeName>
+					<DefaultValue>status</DefaultValue>
+					<Name>_status</Name>
+				</AxMethodParameter>
+			</Parameters>
+			<ReturnType>
+				<Tags></Tags>
+				<Type>String</Type>
+				<TypeName></TypeName>
+			</ReturnType>
+		</Method>
+		<Method>
+			<Name>parmTimeInForce</Name>
+			<Visibility>Public</Visibility>
+			<Attributes>
+				<AxAttribute>
+					<Name>DataMember</Name>
+					<Parameters>
+						<AxAttributeParameter>
+							<TypeValue>'timeInForce'</TypeValue>
+							<AdditionalData />
+						</AxAttributeParameter>
+					</Parameters>
+				</AxAttribute>
+			</Attributes>
+			<Parameters>
+				<AxMethodParameter>
+					<Tags></Tags>
+					<Type>String</Type>
+					<TypeName></TypeName>
+					<DefaultValue>timeInForce</DefaultValue>
+					<Name>_timeInForce</Name>
+				</AxMethodParameter>
+			</Parameters>
+			<ReturnType>
+				<Tags></Tags>
+				<Type>String</Type>
+				<TypeName></TypeName>
+			</ReturnType>
+		</Method>
+		<Method>
+			<Name>parmType</Name>
+			<Visibility>Public</Visibility>
+			<Attributes>
+				<AxAttribute>
+					<Name>DataMember</Name>
+					<Parameters>
+						<AxAttributeParameter>
+							<TypeValue>'type'</TypeValue>
+							<AdditionalData />
+						</AxAttributeParameter>
+					</Parameters>
+				</AxAttribute>
+			</Attributes>
+			<Parameters>
+				<AxMethodParameter>
+					<Tags></Tags>
+					<Type>String</Type>
+					<TypeName></TypeName>
+					<DefaultValue>type</DefaultValue>
+					<Name>_type</Name>
+				</AxMethodParameter>
+			</Parameters>
+			<ReturnType>
+				<Tags></Tags>
+				<Type>String</Type>
+				<TypeName></TypeName>
+			</ReturnType>
+		</Method>
+		<Method>
+			<Name>parmSide</Name>
+			<Visibility>Public</Visibility>
+			<Attributes>
+				<AxAttribute>
+					<Name>DataMember</Name>
+					<Parameters>
+						<AxAttributeParameter>
+							<TypeValue>'side'</TypeValue>
+							<AdditionalData />
+						</AxAttributeParameter>
+					</Parameters>
+				</AxAttribute>
+			</Attributes>
+			<Parameters>
+				<AxMethodParameter>
+					<Tags></Tags>
+					<Type>String</Type>
+					<TypeName></TypeName>
+					<DefaultValue>side</DefaultValue>
+					<Name>_side</Name>
+				</AxMethodParameter>
+			</Parameters>
+			<ReturnType>
+				<Tags></Tags>
+				<Type>String</Type>
 				<TypeName></TypeName>
 			</ReturnType>
 		</Method>

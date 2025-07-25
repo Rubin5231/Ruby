@@ -4,14 +4,21 @@
 	<SourceCode>
 		<Declaration><![CDATA[
 [DataContractAttribute]
-class RMarketJson_Binance_DeleteOrder
+public class RMarketJson_Binance_DeleteOrder
 {
     private str symbol;
-    private int64 orderId;
     private str origClientOrderId;
-    private str newClientOrderId;
-    private int64 recvWindow;
-    private int64 timestamp;
+    private int64 orderId;
+    private int64 orderListId;
+    private str clientOrderId;
+    private str price;
+    private str origQty;
+    private str executedQty;
+    private str cummulativeQuoteQty;
+    private str status;
+    private str timeInForce;
+    private str type;
+    private str side;
 
 }
 ]]></Declaration>
@@ -19,10 +26,10 @@ class RMarketJson_Binance_DeleteOrder
 			<Method>
 				<Name>parmSymbol</Name>
 				<Source><![CDATA[
-    /// <summary>Получает или устанавливает торговую пару</summary>
-    /// <param name="_symbol">Идентификатор торговой пары (например, BTCUSDT)</param>
+    /// <summary>Торговая пара</summary>
+    /// <param name="_symbol">Идентификатор торговой пары</param>
     /// <returns>Торговая пара</returns>
-    [DataMemberAttribute('symbol')]
+    [DataMember('symbol')]
     public str parmSymbol(str _symbol = symbol)
     {
         symbol = _symbol;
@@ -32,27 +39,12 @@ class RMarketJson_Binance_DeleteOrder
 ]]></Source>
 			</Method>
 			<Method>
-				<Name>parmOrderId</Name>
-				<Source><![CDATA[
-    /// <summary>Получает или устанавливает ID ордера</summary>
-    /// <param name="_orderId">Системный идентификатор ордера</param>
-    /// <returns>Идентификатор ордера</returns>
-    [DataMemberAttribute('orderId')]
-    public int64 parmOrderId(int64 _orderId = orderId)
-    {
-        orderId = _orderId;
-        return orderId;
-    }
-
-]]></Source>
-			</Method>
-			<Method>
 				<Name>parmOrigClientOrderId</Name>
 				<Source><![CDATA[
-    /// <summary>Получает или устанавливает оригинальный клиентский ID</summary>
-    /// <param name="_origClientOrderId">Идентификатор, заданный при создании</param>
+    /// <summary>Оригинальный клиентский ID</summary>
+    /// <param name="_origClientOrderId">ID ордера при создании</param>
     /// <returns>Оригинальный клиентский ID</returns>
-    [DataMemberAttribute('origClientOrderId')]
+    [DataMember('origClientOrderId')]
     public str parmOrigClientOrderId(str _origClientOrderId = origClientOrderId)
     {
         origClientOrderId = _origClientOrderId;
@@ -62,46 +54,166 @@ class RMarketJson_Binance_DeleteOrder
 ]]></Source>
 			</Method>
 			<Method>
-				<Name>parmNewClientOrderId</Name>
+				<Name>parmOrderId</Name>
 				<Source><![CDATA[
-    /// <summary>Получает или устанавливает новый клиентский ID</summary>
-    /// <param name="_newClientOrderId">Альтернативный идентификатор ордера</param>
+    /// <summary>Уникальный ID ордера</summary>
+    /// <param name="_orderId">Идентификатор, присвоенный биржей</param>
+    /// <returns>Уникальный ID ордера</returns>
+    [DataMember('orderId')]
+    public int64 parmOrderId(int64 _orderId = orderId)
+    {
+        orderId = _orderId;
+        return orderId;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmOrderListId</Name>
+				<Source><![CDATA[
+    /// <summary>ID списка ордеров</summary>
+    /// <param name="_orderListId">Идентификатор для OCO-ордеров</param>
+    /// <returns>ID списка ордеров</returns>
+    [DataMember('orderListId')]
+    public int64 parmOrderListId(int64 _orderListId = orderListId)
+    {
+        orderListId = _orderListId;
+        return orderListId;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmClientOrderId</Name>
+				<Source><![CDATA[
+    /// <summary>Новый клиентский ID</summary>
+    /// <param name="_clientOrderId">Идентификатор при отмене</param>
     /// <returns>Новый клиентский ID</returns>
-    [DataMemberAttribute('newClientOrderId')]
-    public str parmNewClientOrderId(str _newClientOrderId = newClientOrderId)
+    [DataMember('clientOrderId')]
+    public str parmClientOrderId(str _clientOrderId = clientOrderId)
     {
-        newClientOrderId = _newClientOrderId;
-        return newClientOrderId;
+        clientOrderId = _clientOrderId;
+        return clientOrderId;
     }
 
 ]]></Source>
 			</Method>
 			<Method>
-				<Name>parmRecvWindow</Name>
+				<Name>parmPrice</Name>
 				<Source><![CDATA[
-    /// <summary>Получает или устанавливает окно получения данных</summary>
-    /// <param name="_recvWindow">Временное окно в миллисекундах</param>
-    /// <returns>Окно получения данных</returns>
-    [DataMemberAttribute('recvWindow')]
-    public int64 parmRecvWindow(int64 _recvWindow = recvWindow)
+    /// <summary>Цена ордера</summary>
+    /// <param name="_price">Цена, по которой был размещен ордер</param>
+    /// <returns>Цена ордера</returns>
+    [DataMember('price')]
+    public str parmPrice(str _price = price)
     {
-        recvWindow = _recvWindow;
-        return recvWindow;
+        price = _price;
+        return price;
     }
 
 ]]></Source>
 			</Method>
 			<Method>
-				<Name>parmTimestamp</Name>
+				<Name>parmOrigQty</Name>
 				<Source><![CDATA[
-    /// <summary>Получает или устанавливает метку времени</summary>
-    /// <param name="_timestamp">Текущее время в миллисекундах</param>
-    /// <returns>Метка времени</returns>
-    [DataMemberAttribute('timestamp')]
-    public int64 parmTimestamp(int64 _timestamp = timestamp)
+    /// <summary>Исходное количество</summary>
+    /// <param name="_origQty">Первоначальный объем ордера</param>
+    /// <returns>Исходное количество</returns>
+    [DataMember('origQty')]
+    public str parmOrigQty(str _origQty = origQty)
     {
-        timestamp = _timestamp;
-        return timestamp;
+        origQty = _origQty;
+        return origQty;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmExecutedQty</Name>
+				<Source><![CDATA[
+    /// <summary>Исполненное количество</summary>
+    /// <param name="_executedQty">Объем, исполненный до отмены</param>
+    /// <returns>Исполненное количество</returns>
+    [DataMember('executedQty')]
+    public str parmExecutedQty(str _executedQty = executedQty)
+    {
+        executedQty = _executedQty;
+        return executedQty;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmCummulativeQuoteQty</Name>
+				<Source><![CDATA[
+    /// <summary>Суммарная стоимость</summary>
+    /// <param name="_cummulativeQuoteQty">Накопленная стоимость исполнений</param>
+    /// <returns>Суммарная стоимость</returns>
+    [DataMember('cummulativeQuoteQty')]
+    public str parmCummulativeQuoteQty(str _cummulativeQuoteQty = cummulativeQuoteQty)
+    {
+        cummulativeQuoteQty = _cummulativeQuoteQty;
+        return cummulativeQuoteQty;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmStatus</Name>
+				<Source><![CDATA[
+    /// <summary>Статус ордера</summary>
+    /// <param name="_status">Статус после отмены (CANCELED)</param>
+    /// <returns>Статус ордера</returns>
+    [DataMember('status')]
+    public str parmStatus(str _status = status)
+    {
+        status = _status;
+        return status;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmTimeInForce</Name>
+				<Source><![CDATA[
+    /// <summary>Условие исполнения</summary>
+    /// <param name="_timeInForce">GTC, IOC и т.д.</param>
+    /// <returns>Условие исполнения</returns>
+    [DataMember('timeInForce')]
+    public str parmTimeInForce(str _timeInForce = timeInForce)
+    {
+        timeInForce = _timeInForce;
+        return timeInForce;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmType</Name>
+				<Source><![CDATA[
+    /// <summary>Тип ордера</summary>
+    /// <param name="_type">Тип ордера (LIMIT, MARKET и т.д.)</param>
+    /// <returns>Тип ордера</returns>
+    [DataMember('type')]
+    public str parmType(str _type = type)
+    {
+        type = _type;
+        return type;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmSide</Name>
+				<Source><![CDATA[
+    /// <summary>Направление сделки</summary>
+    /// <param name="_side">BUY или SELL</param>
+    /// <returns>Направление сделки</returns>
+    [DataMember('side')]
+    public str parmSide(str _side = side)
+    {
+        side = _side;
+        return side;
     }
 
 ]]></Source>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
-	<Name>RMarketJson_Bybit_CreateOrder_Result</Name>
+	<Name>RMarketJson_Bybit_Order_Result</Name>
 	<SourceCode>
 		<Declaration><![CDATA[
 [DataContractAttribute]
-public class RMarketJson_Bybit_CreateOrder_Result
+public class RMarketJson_Bybit_Order_Result
 {
     private str orderId;
     private str orderLinkId;
@@ -37,6 +37,7 @@ public class RMarketJson_Bybit_CreateOrder_Result
     private str updatedTime;
 
     }
+
 ]]></Declaration>
 		<Methods>
 			<Method>
